@@ -1,0 +1,81 @@
+Base de datos de arrays:
+estudiantes[]
+moderadores[]
+(ambos deben id auto-incremental)
+
+Modulo 0 con matriz de likes
+formato del modulo 0 :
+
+            id. 456     id. 876     id. 111
+id. 456         0           0           1   
+
+id. 876         0           0           0
+
+id. 111         1           1           0
+
+
+
+Apenas inicio el programa: (condicion de 4 estudiantes y un moderador)
+    1. Logueo (si es estudiante verificar si está activo)
+    2. Registro
+
+(Luego del logueo [email-contraseña] )Menu de estudiante y Menu de moderador (de acuerdo al rol)
+(Busqueda en array del email, la contraseña y el estado).
+
+MENU ESTUDIANTE:
+
+gestionar perfil
+    editar
+    eliminar (estado del usuario)
+
+
+    TP 2 - Algoritmos
+
+- Indicar la declarativa de variables utilizadas, en especial, las referidas a las variables del tipo array (dimensiones, tamaño de cada arreglo y su tipo de datos).
+- Primer menú: Logueo o registro.
+    - Estudiantes en array. Mín 4, max 8.
+    - Moderadores en array. Min 1, max 4.
+    - Para acceder al logeo, tiene que haber al menos 1 moderador y 4 estudiantes cargados.
+- Menu para estudiante y moderador.
+    - Email y contraseña. Depende del tipo de user, mostrar menu correspondiente.
+    - 3 intentos como máximo.
+    - Checkear que el user esté “activo” además del mail y pass.
+- Menú para moderador:
+    - 1.Gestionar usuarios
+        - a. Desactivar usuario
+        - b. Volver
+    - 2. Gestionar Reportes
+        - a. Ver reportes
+        - b. Volver
+    - 3. Reportes estadísticos
+
+Módulo 0. Procedimiento que recorre la matriz de likes y llenarla de 0 y 1 de manera aleatoria. Así ya hay interacción entre los estudiantes.
+
+Módulo 1. Que del menú funcione
+
+“1. Gestionar mi perfil”(Editar y eliminar, con cartel de confirmación. Si se elige “si”, cambiar estado de user a “inactivo” 
+y llevar al login), 
+
+“2. Gestionar candidatos”(Ver: todos los estudiantes, en variable “me-gusta” permitir ingresar nombre. 
+Verificar que esté bien escrito, 
+y Reportar: pedir id o nombre, y motivo. 
+Validar que exista, dar de alta un reporte con id del user actual, id del reportado, motivo y estado inicial 0), 
+
+"3. Matcheos (En construccion)"
+
+“4. Reportes estadísticos”(con qué % de todos los candidatos posibles se matcheo, a cuántos se le puso MG pero no han devuelto
+ MG, cuántos nos dieron MG a los cuales no se le dió MG. 
+ Lo demás “En construcción.
+
+
+Módulo 3. 
+Menú moderadores. 
+“1. Gestionar usuarios” 
+(Desactivar usuario: ingresar id o nombre, si existe, mostrar pantalla identica a Eliminar perfil, y Volver). 
+“2. Gestionar reportes”(Ver: Puede tener estado 0, 1 y 2. y Volver)
+0-> reporte todaviaa no ha sido visto por el moredador
+1-> el reporte ha sido tomado y el reportado ha sido desactivado
+2-> el reporte ha sido ignorado
+
+Bonus track 1: edades
+Bonus track 2: matcheos combinados.
