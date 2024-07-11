@@ -23,7 +23,7 @@ estudiante1_rol = ""
 estudiante1_fecha = date(1994, 6, 20)
 estudiante1_bio ="Hola"
 estudiante1_hobbies = "Andar a caballo"
-estudiante1_megusta = ''
+estudiante1_megusta = 'fdhgsdfg'
 #Datos estudiante dos
 estudiante2_mail = "estudiante2@ayed.com"
 estudiante2_contrasenia = "333444"
