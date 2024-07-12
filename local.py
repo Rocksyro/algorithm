@@ -34,6 +34,26 @@ estudiantes[2][6] = "Hola esta es mi biografia"
 estudiantes[2][7] = "Andar a caballo es mi hobbie"
 estudiantes[2][8] = "s"
 
+moderadores[0][0] = "1"
+moderadores[0][1] = "moderador1@ayed.com"
+moderadores[0][2] = "111222"
+moderadores[0][3] = "Pedro Castillo"
+moderadores[0][4] = "Moderador"
+moderadores[0][5] = "date(1994, 6, 20)"
+moderadores[0][6] = "Hola esta es mi biografia"
+moderadores[0][7] = "Andar a caballo es mi hobbie"
+moderadores[0][8] = "s"
+
+moderadores[1][0] = "2"
+moderadores[1][1] = "moderador2@ayed.com"
+moderadores[1][2] = "333444"
+moderadores[1][3] = "Florencia Abascal"
+moderadores[1][4] = "Moderador"
+moderadores[1][5] = "date(2000, 4, 20)"
+moderadores[1][6] = "Hola esta es mi biografia"
+moderadores[1][7] = "Andar a caballo es mi hobbie"
+moderadores[1][8] = "s"
+
 # -------------------------------------------
 # Funcion obtenerPassword (para que en vez de la password aparezcan asteriscos)
 # VARIABLES - TIPO DE DATOS:
@@ -41,81 +61,56 @@ estudiantes[2][8] = "s"
 
 
 def obtenerPassword():
-   password = pwinput.pwinput('Introduce tu contraseña: ')
-   return password
+    password = pwinput.pwinput('Introduce tu contraseña: ')
+    return password
 
 
-
-
-
-def login(estudiante_logueado, estudiantes):
-    intentos = 1
+def login(usuario_logueado, estudiantes):
+    intentos = 0
     # Mientras el contador sea menor o igual a 3 y no este logeado
     print('LOGIN')
     print('--------------------')
-    # Pedir al usuario igresar usuario y contraseña
-    email = input("Ingresar email: ")
-    password = obtenerPassword()
-    resultadoBusqueda = buscarUsuario(estudiantes, email)
-    print(resultadoBusqueda)
-    if (resultadoBusqueda != (-1)):
-        while (intentos < 3 and estudiante_logueado == ''):
-            if(estudiantes[resultadoBusqueda][2] == password):
-                 estudiante_logueado = estudiantes[resultadoBusqueda][1]
-                 print("login exitoso!")
-            else:
-                 intentos+=1
-                 password = obtenerPassword()
+    while (intentos < 3 and usuario_logueado == ''):
+        print(intentos)
+        # Pedir al usuario igresar usuario y contraseña
+        email = input("Ingresar email: ")
+        resultadoBusqueda = buscarUsuario(estudiantes, email)
 
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        #Si el dato de usuario concuerda con el mail, y el de password con contraseña,
-        #almacenar a ese estudiante específico en la variable estudiante y asignarle ese mismo rol.
-      #  for i in range (len(estudiantes)-1):
-  #          if(estudiantes[i][3] == email and estudiantes[i][4] == password):
-         #       estudiante_logueado = estudiantes[i]
-        #    else:
-                #Si no se pudo logear sumar uno al contador de intentos
-                #Si no se pudo logear sumar uno al contador de intentos
-                #Si no se pudo logear sumar uno al contador de intentos
-     #             intentos = intentos + 1
-     #         if (intentos < 3):
-                #Se le muestra que los datos ingresados fueron incorrectos
-          #        print("Datos incorrectos, vuelva a intentar.")
-        #          print('--------------------')
+        if (resultadoBusqueda != -1):
+            while (intentos < 3 and usuario_logueado == ''):
+                password = obtenerPassword()
+                if (estudiantes[resultadoBusqueda][2] == password):
+                    usuario_logueado = estudiantes[resultadoBusqueda][1]
+                    print("login exitoso! usuario")
+                else:
+                    intentos = intentos + 1
+        else:
+            resultadoBusqueda = buscarUsuario(moderadores, email)
+
+            if (resultadoBusqueda != -1):
+                while (intentos < 3 and usuario_logueado == ''):
+                    password = obtenerPassword()
+                    if (moderadores[resultadoBusqueda][2] == password):
+                        usuario_logueado = estudiantes[resultadoBusqueda][1]
+                        print("login exitoso! moderador")
+                    else:
+                        intentos = intentos + 1
+            else:
+                password = obtenerPassword()
+                intentos = intentos + 1
 
 
 def buscarUsuario(array, usuario):
-            contadorPosicion = 0
-            print(len(array))
-            while ((array[contadorPosicion][1] != usuario) and contadorPosicion<=(len(array)-1)  ):
-                contadorPosicion+=1
-            if (array[contadorPosicion][1] == usuario):
-                return contadorPosicion
-            else:
-                return -1
-                
+    contadorPosicion = 0
+
+    while ((array[contadorPosicion][1] != usuario) and contadorPosicion <= (len(array)-2)):
+        contadorPosicion += 1
+
+    if (array[contadorPosicion][1] == usuario):
+        return contadorPosicion
+    else:
+        return -1
 
 
-#PROGRAMA PRINCIPAL
+# PROGRAMA PRINCIPAL
 login('', estudiantes)
