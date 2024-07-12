@@ -111,6 +111,60 @@ def buscarUsuario(array, usuario):
     else:
         return -1
 
+# estudiantes[2][0] = "3"
+# estudiantes[2][1] = "estudiante3@ayed.com"
+# estudiantes[2][2] = "555666"
+# estudiantes[2][4] = "Estudiante"
+# estudiantes[2][3] = "Raul Gimenez"
+# estudiantes[2][5] = "date(2002, 10, 9)"
+# estudiantes[2][6] = "Hola esta es mi biografia"
+# estudiantes[2][7] = "Andar a caballo es mi hobbie"
+# estudiantes[2][8] = "s"
+
+
+def buscarEspacioVacio(a):
+    i = 0
+    while (i < (len(a)) and a[i][0] != ''):
+
+        i = i+1
+        if (i == 7 and a[i][0] != ''):
+            return -1
+    return i
+
+
+def registro(array):
+
+    i = buscarEspacioVacio(array)
+    print("espacio vacio: ", i)
+    if (i == (-1)):
+        print("No hay mas espacio para registros.")
+    else:
+        array[i][0] = i+1
+        print("Ingrese email:")
+        array[i][1] = input()
+        print("Ingrese contraseña:")
+        array[i][2] = input()
+        print("Ingrese nombre y apellido:")
+        array[i][3] = input()
+        array[i][4] = "Estudiante"
+        array[i][8] = "s"
+
+    for j in range(8):
+        print(array[i][j])
+
 
 # PROGRAMA PRINCIPAL
-login('', estudiantes)
+
+print("1. Login")
+print("2. Registro")
+print("0. Salir")
+opc = input()
+while (opc != 0):
+    if (opc == 1):
+        login('', estudiantes)
+    else:
+        registro(estudiantes)
+    print("1. Login")
+    print("2. Registro")
+    print("0. Salir")
+    opc = input()
