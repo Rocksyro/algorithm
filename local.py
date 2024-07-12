@@ -70,17 +70,19 @@ def login(usuario_logueado, estudiantes):
     # Mientras el contador sea menor o igual a 3 y no este logeado
     print('LOGIN')
     print('--------------------')
-    while (intentos < 3 and usuario_logueado == ''):
+    while (intentos < 3 and usuario_logueado[0] == ''):
         print(intentos)
         # Pedir al usuario igresar usuario y contraseña
         email = input("Ingresar email: ")
         resultadoBusqueda = buscarUsuario(estudiantes, email)
 
         if (resultadoBusqueda != -1):
-            while (intentos < 3 and usuario_logueado == ''):
+            while (intentos < 3 and usuario_logueado[0] == ''):
                 password = obtenerPassword()
                 if (estudiantes[resultadoBusqueda][2] == password):
-                    usuario_logueado = estudiantes[resultadoBusqueda][1]
+                    usuario_logueado = estudiantes[resultadoBusqueda]
+                    print(estudiantes[resultadoBusqueda])
+                    print(usuario_logueado)
                     print("login exitoso! usuario")
                 else:
                     intentos = intentos + 1
@@ -88,10 +90,10 @@ def login(usuario_logueado, estudiantes):
             resultadoBusqueda = buscarUsuario(moderadores, email)
 
             if (resultadoBusqueda != -1):
-                while (intentos < 3 and usuario_logueado == ''):
+                while (intentos < 3 and usuario_logueado[0] == ''):
                     password = obtenerPassword()
                     if (moderadores[resultadoBusqueda][2] == password):
-                        usuario_logueado = estudiantes[resultadoBusqueda][1]
+                        usuario_logueado = estudiantes[resultadoBusqueda]
                         print("login exitoso! moderador")
                     else:
                         intentos = intentos + 1
@@ -154,17 +156,22 @@ def registro(array):
 
 
 # PROGRAMA PRINCIPAL
-
+usuario_logueado = ['']*9 
 print("1. Login")
 print("2. Registro")
 print("0. Salir")
-opc = input()
+opc = int(input())
 while (opc != 0):
     if (opc == 1):
-        login('', estudiantes)
+        login(usuario_logueado, estudiantes)
+        print(usuario_logueado)
+        if(usuario_logueado[4] == "Estudiante"):
+            print("menuEstudiante")
+        elif(usuario_logueado[4] == "Moderador"):
+            print("menuModerador")
     else:
         registro(estudiantes)
     print("1. Login")
     print("2. Registro")
     print("0. Salir")
-    opc = input()
+    opc = int(input())
