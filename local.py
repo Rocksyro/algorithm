@@ -80,7 +80,8 @@ def login(usuario_logueado, estudiantes):
             while (intentos < 3 and usuario_logueado[0] == ''):
                 password = obtenerPassword()
                 if (estudiantes[resultadoBusqueda][2] == password):
-                    usuario_logueado = estudiantes[resultadoBusqueda]
+                    for i in range(len(estudiantes)):
+                        usuario_logueado[i] = estudiantes[resultadoBusqueda][i]
                     print(estudiantes[resultadoBusqueda])
                     print(usuario_logueado)
                     print("login exitoso! usuario")
@@ -93,7 +94,8 @@ def login(usuario_logueado, estudiantes):
                 while (intentos < 3 and usuario_logueado[0] == ''):
                     password = obtenerPassword()
                     if (moderadores[resultadoBusqueda][2] == password):
-                        usuario_logueado = estudiantes[resultadoBusqueda]
+                        for i in range(len(moderadores)):
+                            usuario_logueado[i] = moderadores[resultadoBusqueda][i]
                         print("login exitoso! moderador")
                     else:
                         intentos = intentos + 1
@@ -156,7 +158,7 @@ def registro(array):
 
 
 # PROGRAMA PRINCIPAL
-usuario_logueado = ['']*9 
+usuario_logueado = ['', '', '', '', '', '', '', '']
 print("1. Login")
 print("2. Registro")
 print("0. Salir")
@@ -165,9 +167,9 @@ while (opc != 0):
     if (opc == 1):
         login(usuario_logueado, estudiantes)
         print(usuario_logueado)
-        if(usuario_logueado[4] == "Estudiante"):
+        if (usuario_logueado[4] == "Estudiante"):
             print("menuEstudiante")
-        elif(usuario_logueado[4] == "Moderador"):
+        elif (usuario_logueado[4] == "Moderador"):
             print("menuModerador")
     else:
         registro(estudiantes)
