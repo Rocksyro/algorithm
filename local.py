@@ -163,7 +163,7 @@ print("0. Salir")
 opc = int(input())
 while (opc != 0):
     if (opc == 1):
-        login(usuario_logueado, estudiantes)
+        login(usuario_logueado[:], estudiantes)
         print(usuario_logueado)
         if(usuario_logueado[4] == "Estudiante"):
             print("menuEstudiante")
