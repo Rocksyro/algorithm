@@ -1,5 +1,11 @@
 Base de datos de arrays:
-estudiantes[]
+estudiantes[[0]*8 for n in range (9)]
+
+id	nombre	mail	contra	rol	fecha	bio	hobbies		activo	
+
+
+
+
 moderadores[]
 (ambos deben id auto-incremental)
 
