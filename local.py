@@ -1,68 +1,74 @@
 import pwinput
 import os
-
+from datetime import date, datetime
 estudiantes = [['']*9 for n in range(8)]
 
 moderadores = [['']*9 for n in range(4)]
 
-estudiantes[0][0] = "1"                                         #Tanto el ID de cada estudiante como de cada moderador va a ser siempre un número entero auto-incremental, que comienza en 0.
+# Tanto el ID de cada estudiante como de cada moderador va a ser siempre un número entero auto-incremental, que comienza en 0.
+estudiantes[0][0] = "0"
 estudiantes[0][1] = "estudiante1@ayed.com"
 estudiantes[0][2] = "111222"
 estudiantes[0][3] = "Pedro Castillo"
 estudiantes[0][4] = "Estudiante"
-estudiantes[0][5] = "date(1994, 6, 20)"
+estudiantes[0][5] = "2000-04-23"
 estudiantes[0][6] = "Hola esta es mi biografia"
 estudiantes[0][7] = "Andar a caballo es mi hobbie"
 estudiantes[0][8] = "s"
 
-estudiantes[1][0] = "2"
+estudiantes[1][0] = "1"
 estudiantes[1][1] = "estudiante2@ayed.com"
 estudiantes[1][2] = "333444"
 estudiantes[1][3] = "Florencia Abascal"
 estudiantes[1][4] = "Estudiante"
-estudiantes[1][5] = "date(2000, 4, 20)"
+estudiantes[1][5] = "2000-07-13"
 estudiantes[1][6] = "Hola esta es mi biografia"
 estudiantes[1][7] = "Andar a caballo es mi hobbie"
 estudiantes[1][8] = "s"
 
-estudiantes[2][0] = "3"
+estudiantes[2][0] = "2"
 estudiantes[2][1] = "estudiante3@ayed.com"
 estudiantes[2][2] = "555666"
 estudiantes[2][3] = "Raul Gimenez"
 estudiantes[2][4] = "Estudiante"
-estudiantes[2][5] = "date(2002, 10, 9)"
+estudiantes[2][5] = "2000-07-14"
 estudiantes[2][6] = "Hola esta es mi biografia"
 estudiantes[2][7] = "Andar a caballo es mi hobbie"
 estudiantes[2][8] = "s"
 
-moderadores[0][0] = "1"
+
+moderadores[0][0] = "0"
 moderadores[0][1] = "moderador1@ayed.com"
 moderadores[0][2] = "111222"
 moderadores[0][3] = "Pedro Castillo"
 moderadores[0][4] = "Moderador"
-moderadores[0][5] = "date(1994, 6, 20)"
+moderadores[0][5] = "2000-07-12"
 moderadores[0][6] = "Hola esta es mi biografia"
 moderadores[0][7] = "Andar a caballo es mi hobbie"
 moderadores[0][8] = "s"
 
-moderadores[1][0] = "2"
+moderadores[1][0] = "1"
 moderadores[1][1] = "moderador2@ayed.com"
 moderadores[1][2] = "333444"
 moderadores[1][3] = "Florencia Abascal"
 moderadores[1][4] = "Moderador"
-moderadores[1][5] = "date(2000, 4, 20)"
+moderadores[1][5] = "2000-07-12"
 moderadores[1][6] = "Hola esta es mi biografia"
 moderadores[1][7] = "Andar a caballo es mi hobbie"
 moderadores[1][8] = "s"
 
+usuario_logueado = ['']*9
 # -------------------------------------------
 # Funcion obtenerPassword (para que en vez de la password aparezcan asteriscos)
 # VARIABLES - TIPO DE DATOS:
 # password - STRING
 
-#Funcion limpiarConsola (Funcion dedicada a limpiar la consola para no saturar la pantalla de informacion)
+# Funcion limpiarConsola (Funcion dedicada a limpiar la consola para no saturar la pantalla de informacion)
+
+
 def limpiarConsola():
     os.system('cls' if os.name == 'nt' else 'clear')
+
 
 def obtenerPassword():
     password = pwinput.pwinput('Introduce tu contraseña: ')
@@ -71,49 +77,52 @@ def obtenerPassword():
 
 def login(usuario_logueado, estudiantes):
     intentos = 0
-    # Mientras el contador sea menor o igual a 3 y no este logeado
-    print('LOGIN')
-    print('--------------------')
-    while (intentos < 3 and usuario_logueado[0] == ''):
-        print(intentos)
-        # Pedir al usuario igresar usuario y contraseña
-        email = input("Ingresar email: ")
-        resultadoBusqueda = buscarUsuario(estudiantes, email)
 
-        if (resultadoBusqueda != -1):
-            while (intentos < 3 and usuario_logueado[0] == ''):
-                password = obtenerPassword()
-                if (estudiantes[resultadoBusqueda][2] == password):
-                    for i in range(len(estudiantes[0])):
-                        usuario_logueado[i] = estudiantes[resultadoBusqueda][i]
-                    print(estudiantes[resultadoBusqueda])
-                    print(usuario_logueado)
-                    print("login exitoso! usuario")
-                else:
-                    intentos = intentos + 1
-        else:
-            resultadoBusqueda = buscarUsuario(moderadores, email)
+    cantidadEstudiantes = buscarEspacioVacio(estudiantes)
+    cantidadModeradores = buscarEspacioVacio(moderadores)
+
+    if ((cantidadEstudiantes != -1 and cantidadEstudiantes >= 3) and (cantidadModeradores != -1 and cantidadModeradores >= 1)):
+        # Mientras el contador sea menor o igual a 3 y no este logeado
+        print('LOGIN')
+        print('--------------------')
+        while (intentos < 3 and usuario_logueado[0] == ''):
+            print(intentos)
+            # Pedir al usuario igresar usuario y contraseña
+            email = input("Ingresar email: ")
+            resultadoBusqueda = buscarUsuario(estudiantes, email)
 
             if (resultadoBusqueda != -1):
                 while (intentos < 3 and usuario_logueado[0] == ''):
                     password = obtenerPassword()
-                    if (moderadores[resultadoBusqueda][2] == password):
-                        for i in range(len(moderadores[0])):
-                            usuario_logueado[i] = moderadores[resultadoBusqueda][i]
-                        print(moderadores[resultadoBusqueda])
-                        print(usuario_logueado)
-                        print("login exitoso! moderador")
+                    if (estudiantes[resultadoBusqueda][2] == password):
+                        for i in range(len(estudiantes[0])):
+                            usuario_logueado[i] = estudiantes[resultadoBusqueda][i]
+                        print("login exitoso! usuario")
                     else:
                         intentos = intentos + 1
             else:
-                password = obtenerPassword()
-                intentos = intentos + 1
+                resultadoBusqueda = buscarUsuario(moderadores, email)
+
+                if (resultadoBusqueda != -1):
+                    while (intentos < 3 and usuario_logueado[0] == ''):
+                        password = obtenerPassword()
+                        if (moderadores[resultadoBusqueda][2] == password):
+                            for i in range(len(moderadores[0])):
+                                usuario_logueado[i] = moderadores[resultadoBusqueda][i]
+                            print("login exitoso! moderador")
+                        else:
+                            intentos = intentos + 1
+                else:
+                    password = obtenerPassword()
+                    intentos = intentos + 1
+    else:
+        print('No hay suficientes usuario creados para el logueo')
 
 
 def buscarUsuario(array, usuario):
     contadorPosicion = 0
 
-    while ((array[contadorPosicion][1] != usuario) and contadorPosicion <= (len(array)-2)):
+    while ((array[contadorPosicion][1] != usuario) and contadorPosicion < (len(array)-1)):
         contadorPosicion += 1
 
     if (array[contadorPosicion][1] == usuario):
@@ -124,12 +133,24 @@ def buscarUsuario(array, usuario):
 
 def buscarEspacioVacio(a):
     i = 0
-    while (i < (len(a)) and a[i][0] != ''):
+    while (i < (len(a) - 1) and a[i][0] != ''):
         i = i+1
-    if (i== (len(a))):
-            return -1
+    if (i == (len(a))):
+        return -1
     else:
         return i
+
+
+def buscarUsuarioCreado(array, email):
+    contadorPosicion = 0
+
+    while (contadorPosicion < (len(array) - 1) and (array[contadorPosicion][1] != email)):
+        contadorPosicion += 1
+
+    if (array[contadorPosicion][1] == email):
+        return contadorPosicion
+    else:
+        return -1
 
 
 def registro(array):
@@ -139,9 +160,18 @@ def registro(array):
     if (i == (-1)):
         print("No hay mas espacio para registros.")
     else:
-        array[i][0] = i+1
-        print("Ingrese email:")
-        array[i][1] = input()
+        array[i][0] = i
+
+        email = input('Ingrese el email:')
+        encontrado = buscarUsuarioCreado(array, email)
+
+        while (encontrado != -1):
+            print('Usuario ya creado, por favor ingrese otro email.')
+            email = input('Ingrese el email:')
+            encontrado = buscarUsuarioCreado(array, email)
+
+        array[i][1] = email
+
         print("Ingrese contraseña:")
         array[i][2] = input()
         print("Ingrese nombre y apellido:")
@@ -152,11 +182,104 @@ def registro(array):
     for j in range(8):
         print(array[i][j])
 
-#Función opMenu (Funcion encargada de manejar las opciones del menu principal)
-#VARIABLES - TIPOS DE DATOS
-#volver_principal - BOOLEANO
-#num_op,letra_op - STRING
-def opMenu(num_op):
+# Función opMenu (Funcion encargada de manejar las opciones del menu principal)
+# VARIABLES - TIPOS DE DATOS
+# volver_principal - BOOLEANO
+# num_op,letra_op - STRING
+
+
+def calcularEdad(fecha_nacimiento):
+    # Convertir el string de fecha de nacimiento a un objeto datetime
+    fecha_nac = datetime.strptime(fecha_nacimiento, "%Y-%m-%d")
+
+    # Obtener la fecha actual
+    hoy = datetime.today()
+
+    # Calcular la diferencia de años
+    edad = hoy.year - fecha_nac.year
+
+    # Ajustar si no ha cumplido años este año
+    if (hoy.month, hoy.day) < (fecha_nac.month, fecha_nac.day):
+        edad -= 1
+
+    return edad
+
+
+def pedirFecha():
+    fecha_actual = date.today()
+
+    anio = int(input("Ingrese el año de nacimiento (YYYY): "))
+    while (anio < 1920 or anio > fecha_actual.year):
+        print("El formato es incorrecto. Vuelva a ingresar: \n")
+        anio = int(input("Ingrese el año de nacimiento (YYYY): "))
+
+    mes = int(input("Ingrese el mes de nacimiento (MM): "))
+    while (mes < 1 or mes > 12):
+        print("El formato es incorrecto. Vuelva a ingresar: \n")
+        mes = int(input("Ingrese el mes de nacimiento (MM): "))
+
+    dia = int(input("Ingrese el día de nacimiento (DD): "))
+    while (dia < 1 or dia > 31):
+        print("El formato es incorrecto. Vuelva a ingresar: \n")
+        dia = int(input("Ingrese el día de nacimiento (DD): "))
+
+    fecha = f'{anio}-{mes}-{dia}'
+    return fecha
+
+
+def editarPerfil(usuario_logueado):
+    print("Datos personales \n---------------\nFecha: ", usuario_logueado[5], "\nBiografía: ",
+          usuario_logueado[6], "\nHobbies: ", usuario_logueado[7], '\n---------------')
+
+    opEdit = input(
+        "1.Fecha \n2.Biografía \n3.Hobbies \n0.Volver\nIngresar qué dato quiere editar (sólo número): ")
+    limpiarConsola()
+
+    while (opEdit != '0'):
+        if (opEdit == "1"):
+            usuario_logueado[5] = pedirFecha()
+            limpiarConsola()
+        elif (opEdit == "2"):
+            usuario_logueado[6] = input("Nueva biografía: ")
+            limpiarConsola()
+        elif (opEdit == '3'):
+            usuario_logueado[7] = input("Agregar nuevo Hobby: ")
+            limpiarConsola()
+        else:
+            print('No has elegido una opcion valida.')
+            print('------------------------')
+
+        print("Datos personales \n---------------\nFecha: ", usuario_logueado[5], "\nBiografía: ",
+              usuario_logueado[6], "\nHobbies: ", usuario_logueado[7], '\n---------------')
+
+        opEdit = input(
+            "1.Fecha \n2.Biografía \n3.Hobbies \n0.Volver\nIngresar qué dato quiere editar (sólo número): ")
+        limpiarConsola()
+
+    estudiantes[int(usuario_logueado[0])][5] = usuario_logueado[5]
+    estudiantes[int(usuario_logueado[0])][6] = usuario_logueado[6]
+    estudiantes[int(usuario_logueado[0])][7] = usuario_logueado[7]
+
+
+def mostrar(a):
+    ultimo = buscarEspacioVacio(a)
+    if ultimo == -1:
+        ultimo = len(a) - 1
+
+    for i in range(ultimo):
+        if (usuario_logueado[0] != a[i][0]):
+            print('Nombre: ', a[i][3])
+            print('Edad: ', calcularEdad(a[i][5]))
+            print('Biografia: ', a[i][6])
+            print('Hobbies: ', a[i][7])
+            print('-------------------------')
+
+
+def verCandidatos():
+    mostrar(estudiantes)
+
+
+def opMenuEstudiante(num_op):
     volver_principal = False
     if num_op == "1":
         while (not volver_principal):
@@ -164,7 +287,7 @@ def opMenu(num_op):
             letra_op = input("Ingrese a, b o c: ")
             limpiarConsola()
             if letra_op == "a":
-                editarPerfil()
+                editarPerfil(usuario_logueado)
             elif letra_op == "b":
                 print("Eliminar perfil (En construcción)")
                 print('---------------')
@@ -175,7 +298,8 @@ def opMenu(num_op):
                 print('---------------')
     elif num_op == "2":
         while (not volver_principal):
-            print("Gestionar candidatos \n--------------- \na.Ver candidatos \nb.Reportar candidatos \nc.Volver")
+            print(
+                "Gestionar candidatos \n--------------- \na.Ver candidatos \nb.Reportar candidatos \nc.Volver")
             letra_op = input("Ingrese a, b o c: ")
             limpiarConsola()
             if letra_op == "a":
@@ -190,7 +314,8 @@ def opMenu(num_op):
                 print('---------------')
     elif num_op == "3":
         while (not volver_principal):
-            print("Matcheos \n--------------- \na.Ver matcheos \nb.Eliminar un matcheo \nc.Volver")
+            print(
+                "Matcheos \n--------------- \na.Ver matcheos \nb.Eliminar un matcheo \nc.Volver")
             letra_op = input("Ingrese a, b o c: ")
             limpiarConsola()
             if letra_op == "a":
@@ -209,21 +334,23 @@ def opMenu(num_op):
             print("4- Reportes estadisticos \n--------------- \na.(En construcción) \nb.(En construcción) \nc.Volver")
             letra_op = input("Ingrese a, b o c: ")
             limpiarConsola()
-            if letra_op == 'c': 
+            if letra_op == 'c':
                 volver_principal = True
             else:
                 print('No has ingresado una opcion valida!')
-                print('---------------') 
+                print('---------------')
     elif num_op == "0":
         print('Se cerro correctamente.')
     else:
         print('No ha ingresado una opcion valida')
         print('------------------------')
 
-#-------------------------------------------
-#Función menu (funcion dedicada al funcionamiento del menu principal)
-#VARIBLES - TIPOS DE DATOS
-#num_op, menu_principal - STRING
+# -------------------------------------------
+# Función menu (funcion dedicada al funcionamiento del menu principal)
+# VARIBLES - TIPOS DE DATOS
+# num_op, menu_principal - STRING
+
+
 def menuEstudiante():
     num_op = ''
 
@@ -232,7 +359,8 @@ def menuEstudiante():
         print(menu_principal)
         num_op = input("Ingresar número de opción (1, 2, 3, 4, 0): ")
         limpiarConsola()
-        opMenu(num_op)
+        opMenuEstudiante(num_op)
+
 
 def menuModerador():
     num_op = ''
@@ -244,11 +372,13 @@ def menuModerador():
         limpiarConsola()
         opMenuModerador(num_op)
 
+
 def opMenuModerador(num_op):
     volver_principal = False
     if num_op == "1":
         while (not volver_principal):
-            print("Gestionar ususarios \n--------------- \na. Desactivar usuario \nb. Volver")
+            print(
+                "Gestionar ususarios \n--------------- \na. Desactivar usuario \nb. Volver")
             letra_op = input("Ingrese a, b: ")
             limpiarConsola()
             if letra_op == "a":
@@ -289,18 +419,17 @@ def opMenuModerador(num_op):
         print('------------------------')
 
 
-
 # PROGRAMA PRINCIPAL
-usuario_logueado = ['']*9
+
 print("1. Login")
 print("2. Registro")
 print("0. Salir")
 opc = int(input())
 while (opc != 0 and usuario_logueado[0] == ''):
     if (opc == 1):
-        login(usuario_logueado, estudiantes)                #En el login faltaria: 
-                                                                #Para acceder a la sección de logueo, deberá haber aunque sea 1 moderador y 4 estudiantes cargados.
-                                                                #Tener en cuenta que, además de ingresar un par usuario / contraseña correctos, también se debe chequear que el estado del usuario sea “ACTIVO” (string). Caso contrario, el login NO será correcto.
+        login(usuario_logueado, estudiantes)  # En el login faltaria:
+        # Para acceder a la sección de logueo, deberá haber aunque sea 1 moderador y 4 estudiantes cargados.
+        # Tener en cuenta que, además de ingresar un par usuario / contraseña correctos, también se debe chequear que el estado del usuario sea “ACTIVO” (string). Caso contrario, el login NO será correcto.
         if (usuario_logueado[4] == "Estudiante"):
             menuEstudiante()
         elif (usuario_logueado[4] == "Moderador"):
