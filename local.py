@@ -1,9 +1,13 @@
 import pwinput
 import os
 from datetime import date, datetime
-estudiantes = [['']*9 for n in range(8)]
+import random
 
+# PRIMERO COLUMNAS, SEGUNDO FILAS
+matrizLikes = [[-1]*8 for n in range(8)]
+estudiantes = [['']*9 for n in range(8)]
 moderadores = [['']*9 for n in range(4)]
+reportes = [[''] * 4 for n in range(49)]
 
 # Tanto el ID de cada estudiante como de cada moderador va a ser siempre un número entero auto-incremental, que comienza en 0.
 estudiantes[0][0] = "0"
@@ -92,6 +96,10 @@ def login(usuario_logueado, estudiantes):
             resultadoBusqueda = buscarUsuario(estudiantes, email)
 
             if (resultadoBusqueda != -1):
+                if (estudiantes[resultadoBusqueda][8] == 'n'):
+                    print('Tu usuario esta desactivado, no puedes loguearte.')
+                    intentos = 3
+
                 while (intentos < 3 and usuario_logueado[0] == ''):
                     password = obtenerPassword()
                     if (estudiantes[resultadoBusqueda][2] == password):
@@ -279,18 +287,34 @@ def verCandidatos():
     mostrar(estudiantes)
 
 
+def desactivarPerfil(usuario_logueado):
+
+    estudiantes[int(usuario_logueado[0])][8] = 'n'
+    usuario_logueado[0] = ''
+    usuario_logueado[1] = ''
+    usuario_logueado[2] = ''
+    usuario_logueado[3] = ''
+    usuario_logueado[4] = ''
+    usuario_logueado[5] = ''
+    usuario_logueado[6] = ''
+    usuario_logueado[7] = ''
+    usuario_logueado[8] = 'n'
+    limpiarConsola()
+    print('Usuario desactivado')
+
+
 def opMenuEstudiante(num_op):
     volver_principal = False
     if num_op == "1":
-        while (not volver_principal):
+        while (not volver_principal and usuario_logueado[8] != 'n'):
             print("Gestionar mi perfil \n--------------- \na.Editar mis datos personales \nb.Eliminar mi perfil \nc.Volver")
             letra_op = input("Ingrese a, b o c: ")
             limpiarConsola()
             if letra_op == "a":
                 editarPerfil(usuario_logueado)
             elif letra_op == "b":
-                print("Eliminar perfil (En construcción)")
-                print('---------------')
+                print("Eliminar perfil")
+                desactivarPerfil(usuario_logueado)
             elif letra_op == "c":
                 volver_principal = True
             else:
@@ -354,7 +378,7 @@ def opMenuEstudiante(num_op):
 def menuEstudiante():
     num_op = ''
 
-    while num_op != '0':
+    while (num_op != '0' and usuario_logueado[8] != 'n'):
         menu_principal = "MENU PRINCIPAL ESTUDIANTE \n------------------ \n1.Gestionar mi perfil \n2.Gestionar candidatos \n3.Matcheos \n4.Reportes estadísticos \n0.Salir"
         print(menu_principal)
         num_op = input("Ingresar número de opción (1, 2, 3, 4, 0): ")
@@ -419,24 +443,38 @@ def opMenuModerador(num_op):
         print('------------------------')
 
 
-# PROGRAMA PRINCIPAL
+def generarInteracciones():
 
+    ultimo = buscarEspacioVacio(estudiantes)
+
+    if (ultimo == -1):
+        ultimo = len(estudiantes)
+
+    for i in range(ultimo):
+        for j in range(ultimo):
+            if (i != j):
+                matrizLikes[i][j] = random.randint(0, 1)
+            else:
+                matrizLikes[i][j] = 0
+
+
+# INICIALIZAMOS MATRIZ DE LIKES CON 0s y 1s DE MANERA RANDOM.
+generarInteracciones()
+# PROGRAMA PRINCIPAL
 print("1. Login")
 print("2. Registro")
 print("0. Salir")
 opc = int(input())
-while (opc != 0 and usuario_logueado[0] == ''):
+while (opc != 0 and usuario_logueado[8] != 's'):
     if (opc == 1):
-        login(usuario_logueado, estudiantes)  # En el login faltaria:
-        # Para acceder a la sección de logueo, deberá haber aunque sea 1 moderador y 4 estudiantes cargados.
-        # Tener en cuenta que, además de ingresar un par usuario / contraseña correctos, también se debe chequear que el estado del usuario sea “ACTIVO” (string). Caso contrario, el login NO será correcto.
+        login(usuario_logueado, estudiantes)
         if (usuario_logueado[4] == "Estudiante"):
             menuEstudiante()
         elif (usuario_logueado[4] == "Moderador"):
             menuModerador()
     elif (opc == 2):
         registro(estudiantes)
-    if (usuario_logueado[0] == ''):
+    if (usuario_logueado[8] != 's'):
         print("1. Login")
         print("2. Registro")
         print("0. Salir")
