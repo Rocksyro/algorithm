@@ -1,10 +1,11 @@
 import pwinput
+import os
 
 estudiantes = [['']*9 for n in range(8)]
 
 moderadores = [['']*9 for n in range(4)]
 
-estudiantes[0][0] = "1"
+estudiantes[0][0] = "1"                                         #Tanto el ID de cada estudiante como de cada moderador va a ser siempre un número entero auto-incremental, que comienza en 0.
 estudiantes[0][1] = "estudiante1@ayed.com"
 estudiantes[0][2] = "111222"
 estudiantes[0][3] = "Pedro Castillo"
@@ -59,6 +60,9 @@ moderadores[1][8] = "s"
 # VARIABLES - TIPO DE DATOS:
 # password - STRING
 
+#Funcion limpiarConsola (Funcion dedicada a limpiar la consola para no saturar la pantalla de informacion)
+def limpiarConsola():
+    os.system('cls' if os.name == 'nt' else 'clear')
 
 def obtenerPassword():
     password = pwinput.pwinput('Introduce tu contraseña: ')
@@ -121,11 +125,11 @@ def buscarUsuario(array, usuario):
 def buscarEspacioVacio(a):
     i = 0
     while (i < (len(a)) and a[i][0] != ''):
-
         i = i+1
-        if (i == 7 and a[i][0] != ''):
+    if (i== (len(a))):
             return -1
-    return i
+    else:
+        return i
 
 
 def registro(array):
@@ -148,6 +152,143 @@ def registro(array):
     for j in range(8):
         print(array[i][j])
 
+#Función opMenu (Funcion encargada de manejar las opciones del menu principal)
+#VARIABLES - TIPOS DE DATOS
+#volver_principal - BOOLEANO
+#num_op,letra_op - STRING
+def opMenu(num_op):
+    volver_principal = False
+    if num_op == "1":
+        while (not volver_principal):
+            print("Gestionar mi perfil \n--------------- \na.Editar mis datos personales \nb.Eliminar mi perfil \nc.Volver")
+            letra_op = input("Ingrese a, b o c: ")
+            limpiarConsola()
+            if letra_op == "a":
+                editarPerfil()
+            elif letra_op == "b":
+                print("Eliminar perfil (En construcción)")
+                print('---------------')
+            elif letra_op == "c":
+                volver_principal = True
+            else:
+                print('No has ingresado una opcion valida!')
+                print('---------------')
+    elif num_op == "2":
+        while (not volver_principal):
+            print("Gestionar candidatos \n--------------- \na.Ver candidatos \nb.Reportar candidatos \nc.Volver")
+            letra_op = input("Ingrese a, b o c: ")
+            limpiarConsola()
+            if letra_op == "a":
+                verCandidatos()
+            elif letra_op == "b":
+                print("Reportar candidatos (En construcción)")
+                print('---------------')
+            elif letra_op == "c":
+                volver_principal = True
+            else:
+                print('No has ingresado una opcion valida!')
+                print('---------------')
+    elif num_op == "3":
+        while (not volver_principal):
+            print("Matcheos \n--------------- \na.Ver matcheos \nb.Eliminar un matcheo \nc.Volver")
+            letra_op = input("Ingrese a, b o c: ")
+            limpiarConsola()
+            if letra_op == "a":
+                print("Ver matcheos (En construcción)")
+                print('---------------')
+            elif letra_op == "b":
+                print("Eliminar un matcheo (En construcción)")
+                print('---------------')
+            elif letra_op == "c":
+                volver_principal = True
+            else:
+                print('No has ingresado una opcion valida!')
+                print('---------------')
+    elif num_op == "4":
+        while (not volver_principal):
+            print("4- Reportes estadisticos \n--------------- \na.(En construcción) \nb.(En construcción) \nc.Volver")
+            letra_op = input("Ingrese a, b o c: ")
+            limpiarConsola()
+            if letra_op == 'c': 
+                volver_principal = True
+            else:
+                print('No has ingresado una opcion valida!')
+                print('---------------') 
+    elif num_op == "0":
+        print('Se cerro correctamente.')
+    else:
+        print('No ha ingresado una opcion valida')
+        print('------------------------')
+
+#-------------------------------------------
+#Función menu (funcion dedicada al funcionamiento del menu principal)
+#VARIBLES - TIPOS DE DATOS
+#num_op, menu_principal - STRING
+def menuEstudiante():
+    num_op = ''
+
+    while num_op != '0':
+        menu_principal = "MENU PRINCIPAL ESTUDIANTE \n------------------ \n1.Gestionar mi perfil \n2.Gestionar candidatos \n3.Matcheos \n4.Reportes estadísticos \n0.Salir"
+        print(menu_principal)
+        num_op = input("Ingresar número de opción (1, 2, 3, 4, 0): ")
+        limpiarConsola()
+        opMenu(num_op)
+
+def menuModerador():
+    num_op = ''
+
+    while num_op != '0':
+        menu_principal = "MENU PRINCIPAL MODERADOR \n------------------ \n1. Gestionar usuarios \n2. Gestionar reportes \n3. Reportes estadísticos \n0. Salir"
+        print(menu_principal)
+        num_op = input("Ingresar número de opción (1, 2, 3, 0): ")
+        limpiarConsola()
+        opMenuModerador(num_op)
+
+def opMenuModerador(num_op):
+    volver_principal = False
+    if num_op == "1":
+        while (not volver_principal):
+            print("Gestionar ususarios \n--------------- \na. Desactivar usuario \nb. Volver")
+            letra_op = input("Ingrese a, b: ")
+            limpiarConsola()
+            if letra_op == "a":
+                print("desactivarUsuario()")
+            elif letra_op == "b":
+                volver_principal = True
+            else:
+                print('No has ingresado una opcion valida!')
+                print('---------------')
+    elif num_op == "2":
+        while (not volver_principal):
+            print("Gestionar reportes \n--------------- \na. Ver reportes \nb. Volver")
+            letra_op = input("Ingrese a, b: ")
+            limpiarConsola()
+            if letra_op == "a":
+                print("verReportes()")
+            elif letra_op == "b":
+                volver_principal = True
+            else:
+                print('No has ingresado una opcion valida!')
+                print('---------------')
+    elif num_op == "3":
+        while (not volver_principal):
+            print("Reportes Estadisticos \n--------------- \na. ? \nb. Volver")
+            letra_op = input("Ingrese a, b: ")
+            limpiarConsola()
+            if letra_op == "a":
+                print("?")
+            elif letra_op == "b":
+                volver_principal = True
+            else:
+                print('No has ingresado una opcion valida!')
+                print('---------------')
+    elif num_op == "0":
+        print('Se cerro correctamente.')
+    else:
+        print('No ha ingresado una opcion valida')
+        print('------------------------')
+
+
 
 # PROGRAMA PRINCIPAL
 usuario_logueado = ['']*9
@@ -157,11 +298,13 @@ print("0. Salir")
 opc = int(input())
 while (opc != 0 and usuario_logueado[0] == ''):
     if (opc == 1):
-        login(usuario_logueado, estudiantes)
+        login(usuario_logueado, estudiantes)                #En el login faltaria: 
+                                                                #Para acceder a la sección de logueo, deberá haber aunque sea 1 moderador y 4 estudiantes cargados.
+                                                                #Tener en cuenta que, además de ingresar un par usuario / contraseña correctos, también se debe chequear que el estado del usuario sea “ACTIVO” (string). Caso contrario, el login NO será correcto.
         if (usuario_logueado[4] == "Estudiante"):
-            print("menuEstudiante")
+            menuEstudiante()
         elif (usuario_logueado[4] == "Moderador"):
-            print("menuModerador")
+            menuModerador()
     elif (opc == 2):
         registro(estudiantes)
     if (usuario_logueado[0] == ''):
