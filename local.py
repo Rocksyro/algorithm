@@ -514,6 +514,37 @@ def desactivarEstudiante():
         print('Estudiante desactivado con exito!')
 
 
+def verReportes():
+
+    ultimo_reporte = buscarEspacioVacio(reportes)
+
+    if (ultimo_reporte == -1):
+        ultimo_reporte = len(reportes)
+
+    for i in range(ultimo_reporte):
+
+        if (estudiantes[int(reportes[i][0])][8] == 's' and estudiantes[int(reportes[i][1])][8] and reportes[i][3] == '0'):
+            print('Reporte numero: ', i)
+            print('Estado del reporte: ', reportes[i][3])
+
+    eleccion = int(input('Ingrese el numero de reporte que desea ver'))
+
+    print('ID usuario reportante: ', reportes[eleccion][0])
+    print('ID usuario reportado: ', reportes[eleccion][1])
+    print('Motivo del reporte: ', reportes[eleccion][2])
+
+    accion = input(
+        'Ignorar reporte (I) o dar de baja al reportado (B)?').capitalize()
+
+    if (accion == 'I'):
+        reportes[eleccion][3] = '2'
+    elif (accion == 'B'):
+        reportes[eleccion][3] = '1'
+        estudiantes[int(reportes[eleccion][1])][8] = 'n'
+    else:
+        print('No has elegido una opcion valida!')
+
+
 def opMenuModerador(num_op):
     volver_principal = False
     if num_op == "1":
@@ -535,7 +566,7 @@ def opMenuModerador(num_op):
             letra_op = input("Ingrese a, b: ")
             limpiarConsola()
             if letra_op == "a":
-                print("verReportes()")
+                verReportes()
             elif letra_op == "b":
                 volver_principal = True
             else:
