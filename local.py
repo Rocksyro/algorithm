@@ -296,18 +296,29 @@ def verCandidatos():
 
 def desactivarPerfil(usuario_logueado):
 
-    estudiantes[int(usuario_logueado[0])][8] = 'n'
-    usuario_logueado[0] = ''
-    usuario_logueado[1] = ''
-    usuario_logueado[2] = ''
-    usuario_logueado[3] = ''
-    usuario_logueado[4] = ''
-    usuario_logueado[5] = ''
-    usuario_logueado[6] = ''
-    usuario_logueado[7] = ''
-    usuario_logueado[8] = 'n'
-    limpiarConsola()
-    print('Usuario desactivado')
+    opc = ''
+    while (opc != 'S' and opc != 'N'):
+        print('ATENCION')
+        print('--------------------')
+        opc = input(
+            'Esta apunto de inhabilitar su perfil, esta seguro de esta accion? S/N').capitalize()
+
+        if (opc != 'S' and opc != 'N'):
+            print('No ha ingresado una opcion valida, vuelva a intentar!')
+
+    if (opc == 'S'):
+        estudiantes[int(usuario_logueado[0])][8] = 'n'
+        usuario_logueado[0] = ''
+        usuario_logueado[1] = ''
+        usuario_logueado[2] = ''
+        usuario_logueado[3] = ''
+        usuario_logueado[4] = ''
+        usuario_logueado[5] = ''
+        usuario_logueado[6] = ''
+        usuario_logueado[7] = ''
+        usuario_logueado[8] = 'n'
+        limpiarConsola()
+        print('Usuario desactivado')
 
 
 def reportarCandidatos():
@@ -350,10 +361,22 @@ def reportarCandidatos():
         print('No hay mas memoria para reportes!')
 
 
+def limpiarUsuarioLogueado(usuario):
+    usuario[0] = ''
+    usuario[1] = ''
+    usuario[2] = ''
+    usuario[3] = ''
+    usuario[4] = ''
+    usuario[5] = ''
+    usuario[6] = ''
+    usuario[7] = ''
+    usuario[8] = ''
+
+
 def opMenuEstudiante(num_op):
     volver_principal = False
     if num_op == "1":
-        while (not volver_principal and usuario_logueado[8] != 'n'):
+        while (not volver_principal):
             print("Gestionar mi perfil \n--------------- \na.Editar mis datos personales \nb.Eliminar mi perfil \nc.Volver")
             letra_op = input("Ingrese a, b o c: ")
             limpiarConsola()
@@ -367,6 +390,9 @@ def opMenuEstudiante(num_op):
             else:
                 print('No has ingresado una opcion valida!')
                 print('---------------')
+
+            if (usuario_logueado[8] == 'n'):
+                volver_principal = True
     elif num_op == "2":
         while (not volver_principal):
             print(
@@ -412,7 +438,8 @@ def opMenuEstudiante(num_op):
                 print('No has ingresado una opcion valida!')
                 print('---------------')
     elif num_op == "0":
-        print('Se cerro correctamente.')
+        print('Se deslogueo correctamente.')
+        limpiarUsuarioLogueado(usuario_logueado)
     else:
         print('No ha ingresado una opcion valida')
         print('------------------------')
@@ -421,12 +448,15 @@ def opMenuEstudiante(num_op):
 def menuEstudiante():
     num_op = ''
 
-    while (num_op != '0' and usuario_logueado[8] != 'n'):
+    while (num_op != '0'):
         menu_principal = "MENU PRINCIPAL ESTUDIANTE \n------------------ \n1.Gestionar mi perfil \n2.Gestionar candidatos \n3.Matcheos \n4.Reportes estadísticos \n0.Salir"
         print(menu_principal)
         num_op = input("Ingresar número de opción (1, 2, 3, 4, 0): ")
         limpiarConsola()
         opMenuEstudiante(num_op)
+
+        if (usuario_logueado[8] == 'n'):
+            num_op = '0'
 
 
 def menuModerador():
@@ -440,6 +470,50 @@ def menuModerador():
         opMenuModerador(num_op)
 
 
+def desactivarEstudiante():
+    print('ESTUDIANTES')
+    print('---------------')
+
+    ultimo_estudiante = buscarEspacioVacio(estudiantes)
+    if (ultimo_estudiante == -1):
+        ultimo_estudiante = len(estudiantes)
+
+    for i in range(ultimo_estudiante):
+        print('ID: ', estudiantes[i][0])
+        print('Nombre: ', estudiantes[i][3])
+        activo = 'Si' if estudiantes[i][8] == 's' else 'No'
+        print('Usuario activo: ', activo)
+        print('-------------------')
+
+    estudiante = input(
+        'Ingrese la ID o nombre del usuario que desea activar/desactivar: ')
+
+    estudiante_encontrado = buscarUsuarioPorNombre(
+        estudiantes, estudiante)
+    if (estudiante_encontrado == -1):
+        estudiante_encontrado = buscarUsuarioPorId(
+            estudiantes, estudiante)
+
+    while (estudiante_encontrado == -1):
+        print('Estudiante no encontrado, vuelva a intentar!')
+        print('--------------------------')
+        estudiante = input(
+            'Ingrese la ID o nombre del usuario que desea activar/desactivar: ')
+
+        estudiante_encontrado = buscarUsuarioPorNombre(
+            estudiantes, estudiante)
+        if (estudiante_encontrado == -1):
+            estudiante_encontrado = buscarUsuarioPorId(
+                estudiantes, estudiante)
+
+    if (estudiantes[estudiante_encontrado][8] == 'n'):
+        estudiantes[estudiante_encontrado][8] = 's'
+        print('Estudiante activado con exito!')
+    else:
+        estudiantes[estudiante_encontrado][8] = 'n'
+        print('Estudiante desactivado con exito!')
+
+
 def opMenuModerador(num_op):
     volver_principal = False
     if num_op == "1":
@@ -449,7 +523,7 @@ def opMenuModerador(num_op):
             letra_op = input("Ingrese a, b: ")
             limpiarConsola()
             if letra_op == "a":
-                print("desactivarUsuario()")
+                desactivarEstudiante()
             elif letra_op == "b":
                 volver_principal = True
             else:
@@ -480,7 +554,8 @@ def opMenuModerador(num_op):
                 print('No has ingresado una opcion valida!')
                 print('---------------')
     elif num_op == "0":
-        print('Se cerro correctamente.')
+        print('Se deslogueo correctamente.')
+        limpiarUsuarioLogueado(usuario_logueado)
     else:
         print('No ha ingresado una opcion valida')
         print('------------------------')
@@ -504,21 +579,29 @@ def generarInteracciones():
 # INICIALIZAMOS MATRIZ DE LIKES CON 0s y 1s DE MANERA RANDOM.
 generarInteracciones()
 # PROGRAMA PRINCIPAL
-print("1. Login")
-print("2. Registro")
-print("0. Salir")
-opc = int(input())
-while (opc != 0 and usuario_logueado[8] != 's'):
-    if (opc == 1):
+opc = ''
+
+while (opc != '0'):
+
+    print("1. Login")
+    print("2. Registro")
+    print("0. Salir")
+    opc = input('Ingrese una opcion: ')
+
+    if (opc == '1'):
         login(usuario_logueado, estudiantes)
         if (usuario_logueado[4] == "Estudiante"):
             menuEstudiante()
         elif (usuario_logueado[4] == "Moderador"):
             menuModerador()
-    elif (opc == 2):
+    elif (opc == '2'):
         registro(estudiantes)
-    if (usuario_logueado[8] != 's'):
+    elif (opc == '0'):
+        print('Saliendo del programa...')
+    else:
+        print('No ha ingresado una opcion valida, vuelva a intentar.')
+        print('-------------------')
         print("1. Login")
         print("2. Registro")
         print("0. Salir")
-        opc = int(input())
+        opc = input('Ingrese una opcion: ')
