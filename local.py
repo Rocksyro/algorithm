@@ -93,7 +93,7 @@ def login(usuario_logueado, estudiantes):
             print(intentos)
             # Pedir al usuario igresar usuario y contraseña
             email = input("Ingresar email: ")
-            resultadoBusqueda = buscarUsuario(estudiantes, email)
+            resultadoBusqueda = buscarUsuarioPorEmail(estudiantes, email)
 
             if (resultadoBusqueda != -1):
                 if (estudiantes[resultadoBusqueda][8] == 'n'):
@@ -109,7 +109,7 @@ def login(usuario_logueado, estudiantes):
                     else:
                         intentos = intentos + 1
             else:
-                resultadoBusqueda = buscarUsuario(moderadores, email)
+                resultadoBusqueda = buscarUsuarioPorEmail(moderadores, email)
 
                 if (resultadoBusqueda != -1):
                     while (intentos < 3 and usuario_logueado[0] == ''):
@@ -127,18 +127,6 @@ def login(usuario_logueado, estudiantes):
         print('No hay suficientes usuario creados para el logueo')
 
 
-def buscarUsuario(array, usuario):
-    contadorPosicion = 0
-
-    while ((array[contadorPosicion][1] != usuario) and contadorPosicion < (len(array)-1)):
-        contadorPosicion += 1
-
-    if (array[contadorPosicion][1] == usuario):
-        return contadorPosicion
-    else:
-        return -1
-
-
 def buscarEspacioVacio(a):
     i = 0
     while (i < (len(a) - 1) and a[i][0] != ''):
@@ -149,13 +137,37 @@ def buscarEspacioVacio(a):
         return i
 
 
-def buscarUsuarioCreado(array, email):
+def buscarUsuarioPorEmail(array, email):
     contadorPosicion = 0
 
     while (contadorPosicion < (len(array) - 1) and (array[contadorPosicion][1] != email)):
         contadorPosicion += 1
 
     if (array[contadorPosicion][1] == email):
+        return contadorPosicion
+    else:
+        return -1
+
+
+def buscarUsuarioPorNombre(array, nombre):
+    contadorPosicion = 0
+
+    while (contadorPosicion < (len(array) - 1) and (array[contadorPosicion][3] != nombre)):
+        contadorPosicion += 1
+
+    if (array[contadorPosicion][3] == nombre):
+        return contadorPosicion
+    else:
+        return -1
+
+
+def buscarUsuarioPorId(array, id):
+    contadorPosicion = 0
+
+    while (contadorPosicion < (len(array) - 1) and (array[contadorPosicion][0] != id)):
+        contadorPosicion += 1
+
+    if (array[contadorPosicion][0] == id):
         return contadorPosicion
     else:
         return -1
@@ -171,12 +183,12 @@ def registro(array):
         array[i][0] = i
 
         email = input('Ingrese el email:')
-        encontrado = buscarUsuarioCreado(array, email)
+        encontrado = buscarUsuarioPorEmail(array, email)
 
         while (encontrado != -1):
             print('Usuario ya creado, por favor ingrese otro email.')
             email = input('Ingrese el email:')
-            encontrado = buscarUsuarioCreado(array, email)
+            encontrado = buscarUsuarioPorEmail(array, email)
 
         array[i][1] = email
 
@@ -189,11 +201,6 @@ def registro(array):
 
     for j in range(8):
         print(array[i][j])
-
-# Función opMenu (Funcion encargada de manejar las opciones del menu principal)
-# VARIABLES - TIPOS DE DATOS
-# volver_principal - BOOLEANO
-# num_op,letra_op - STRING
 
 
 def calcularEdad(fecha_nacimiento):
@@ -303,6 +310,46 @@ def desactivarPerfil(usuario_logueado):
     print('Usuario desactivado')
 
 
+def reportarCandidatos():
+    estudiante_reportado = input(
+        'Ingrese el nombre o la ID del estudiante a reportar.')
+
+    usuario_encontrado = buscarUsuarioPorNombre(
+        estudiantes, estudiante_reportado)
+    if (usuario_encontrado == -1):
+        usuario_encontrado = buscarUsuarioPorId(
+            estudiantes, estudiante_reportado)
+
+    while (usuario_encontrado == -1):
+        print('Usuario a reportar no encontrado, vuelva a intentar!')
+        print('--------------------------')
+        estudiante_reportado = input(
+            'Ingrese el nombre o la ID del estudiante a reportar.')
+
+        usuario_encontrado = buscarUsuarioPorNombre(
+            estudiantes, estudiante_reportado)
+        if (usuario_encontrado == -1):
+            usuario_encontrado = buscarUsuarioPorId(
+                estudiantes, estudiante_reportado)
+
+    motivo = input('Ingrese el motivo del reporte: ')
+
+    posicionReporteNuevo = buscarEspacioVacio(reportes)
+
+    if (posicionReporteNuevo != -1):
+        # ID DEL REPORTANTE
+        reportes[posicionReporteNuevo][0] = usuario_logueado[0]
+        # ID DEL USUARIO A REPORTAR
+        reportes[posicionReporteNuevo][1] = estudiantes[usuario_encontrado][0]
+        # MOTIVO
+        reportes[posicionReporteNuevo][2] = motivo
+        # ESTADO INICIAL DEL REPORTE
+        reportes[posicionReporteNuevo][3] = '0'
+        print('Usuario reportado con exito!')
+    else:
+        print('No hay mas memoria para reportes!')
+
+
 def opMenuEstudiante(num_op):
     volver_principal = False
     if num_op == "1":
@@ -329,8 +376,9 @@ def opMenuEstudiante(num_op):
             if letra_op == "a":
                 verCandidatos()
             elif letra_op == "b":
-                print("Reportar candidatos (En construcción)")
+                print("Reportar candidatos")
                 print('---------------')
+                reportarCandidatos()
             elif letra_op == "c":
                 volver_principal = True
             else:
@@ -368,11 +416,6 @@ def opMenuEstudiante(num_op):
     else:
         print('No ha ingresado una opcion valida')
         print('------------------------')
-
-# -------------------------------------------
-# Función menu (funcion dedicada al funcionamiento del menu principal)
-# VARIBLES - TIPOS DE DATOS
-# num_op, menu_principal - STRING
 
 
 def menuEstudiante():
