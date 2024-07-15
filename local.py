@@ -516,34 +516,46 @@ def desactivarEstudiante():
 
 def verReportes():
 
+
+
     ultimo_reporte = buscarEspacioVacio(reportes)
 
     if (ultimo_reporte == -1):
         ultimo_reporte = len(reportes)
 
     for i in range(ultimo_reporte):
-
-        if (estudiantes[int(reportes[i][0])][8] == 's' and estudiantes[int(reportes[i][1])][8] and reportes[i][3] == '0'):
-            print('Reporte numero: ', i)
+        estadoReportante = estudiantes[int(reportes[i][0])][8]
+        estadoReportado = estudiantes[int(reportes[i][1])][8] 
+        estadoReporte = reportes[i][3]
+        if (estadoReportante == 's' and estadoReportado == "s" and estadoReporte == '0'):
+            print('Reporte numero: ', i+1)
             print('Estado del reporte: ', reportes[i][3])
 
-    eleccion = int(input('Ingrese el numero de reporte que desea ver'))
+    eleccion = int(input('Ingrese el numero de reporte que desea ver. Presione 0 para salir'))
+    while(eleccion < 0 or eleccion > 50):
+        eleccion = int(input('Ingrese el numero de reporte que desea ver. Presione 0 para salir'))
+    
+    estadoReportanteEleccion = estudiantes[int(reportes[eleccion-1][0])][8]
+    estadoReportadoEleccion = estudiantes[int(reportes[eleccion-1][1])][8]
+    estadoReporteEleccion = reportes[eleccion-1][3]
 
-    print('ID usuario reportante: ', reportes[eleccion][0])
-    print('ID usuario reportado: ', reportes[eleccion][1])
-    print('Motivo del reporte: ', reportes[eleccion][2])
+    if(eleccion != 0 and estadoReportanteEleccion == 's' and estadoReportadoEleccion == "s" and estadoReporteEleccion == '0'):
+        print('ID usuario reportante: ', reportes[eleccion-1][0])
+        print('ID usuario reportado: ', reportes[eleccion-1][1])
+        print('Motivo del reporte: ', reportes[eleccion-1][2])
 
-    accion = input(
-        'Ignorar reporte (I) o dar de baja al reportado (B)?').capitalize()
+        accion = input(
+            'Ignorar reporte (I) o dar de baja al reportado (B)?').capitalize()
 
-    if (accion == 'I'):
-        reportes[eleccion][3] = '2'
-    elif (accion == 'B'):
-        reportes[eleccion][3] = '1'
-        estudiantes[int(reportes[eleccion][1])][8] = 'n'
+        if (accion == 'I'):
+            reportes[eleccion-1][3] = '2'
+        elif (accion == 'B'):
+            reportes[eleccion-1][3] = '1'
+            estudiantes[int(reportes[eleccion-1][1])][8] = 'n'
+        else:
+            print('No has elegido una opcion valida!')
     else:
-        print('No has elegido una opcion valida!')
-
+        print('El reporte no se encuentra')
 
 def opMenuModerador(num_op):
     volver_principal = False
