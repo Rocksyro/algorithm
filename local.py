@@ -10,36 +10,10 @@ moderadores = [['']*9 for n in range(4)]
 reportes = [[''] * 4 for n in range(49)]
 
 # Tanto el ID de cada estudiante como de cada moderador va a ser siempre un número entero auto-incremental, que comienza en 0.
-estudiantes[0][0] = "0"
-estudiantes[0][1] = "estudiante1@ayed.com"
-estudiantes[0][2] = "111222"
-estudiantes[0][3] = "Pedro Castillo"
-estudiantes[0][4] = "Estudiante"
-estudiantes[0][5] = "2000-04-23"
-estudiantes[0][6] = "Hola esta es mi biografia"
-estudiantes[0][7] = "Andar a caballo es mi hobbie"
-estudiantes[0][8] = "s"
 
-estudiantes[1][0] = "1"
-estudiantes[1][1] = "estudiante2@ayed.com"
-estudiantes[1][2] = "333444"
-estudiantes[1][3] = "Florencia Abascal"
-estudiantes[1][4] = "Estudiante"
-estudiantes[1][5] = "2000-07-13"
-estudiantes[1][6] = "Hola esta es mi biografia"
-estudiantes[1][7] = "Andar a caballo es mi hobbie"
-estudiantes[1][8] = "s"
-
-estudiantes[2][0] = "2"
-estudiantes[2][1] = "estudiante3@ayed.com"
-estudiantes[2][2] = "555666"
-estudiantes[2][3] = "Raul Gimenez"
-estudiantes[2][4] = "Estudiante"
-estudiantes[2][5] = "2000-07-14"
-estudiantes[2][6] = "Hola esta es mi biografia"
-estudiantes[2][7] = "Andar a caballo es mi hobbie"
-estudiantes[2][8] = "s"
-
+estudiantes[0] = ["1", "estudiante1@ayed.com", "111222", "Pedro Castillo", "Estudiante", "1994-06-20", "Hola esta es mi biografia", "Andar a caballo es mi hobbie", "s"]
+estudiantes[1] = ["2", "estudiante2@ayed.com", "333444", "Florencia Abascal", "Estudiante", "2000-04-20", "Hola esta es mi biografia", "Andar a caballo es mi hobbie", "s"]
+estudiantes[2] = ["3", "estudiante3@ayed.com", "555666", "Raul Gimenez", "Estudiante", "2002-10-9", "Hola esta es mi biografia", "Andar a caballo es mi hobbie", "s"]
 
 moderadores[0][0] = "0"
 moderadores[0][1] = "moderador1@ayed.com"
@@ -289,10 +263,25 @@ def mostrar(a):
             print('Hobbies: ', a[i][7])
             print('-------------------------')
 
-
 def verCandidatos():
     mostrar(estudiantes)
 
+    matchear = input('\nQuiere matchear con algun candidato? Ingrese "S/N": ').capitalize()
+    while(matchear != 'S' and matchear != 'N'):
+        print('---------------')
+        print('No ha ingresado una opcion valida!')
+        print('---------------')
+        matchear = input('Quiere matchear con algun candidato? Ingrese "S/N": ').capitalize()
+
+    if(matchear == 'S'):
+        me_gusta = input('--------------- \nIngrese el nombre de la persona con la que le gustaria matchear: ')
+        limpiarConsola()
+        idEstudianteMeGusta = buscarUsuarioPorNombre(estudiantes, me_gusta)
+        if(idEstudianteMeGusta != -1):
+            matrizLikes[int(usuario_logueado[0])][idEstudianteMeGusta] = 1
+            print('Le has dado un me gusta al usuario: ', estudiantes[idEstudianteMeGusta][3])
+        else:
+            print('No se ha ingresado un nombre de estudiante valido. \n---------------')
 
 def desactivarPerfil(usuario_logueado):
 
@@ -429,7 +418,19 @@ def opMenuEstudiante(num_op):
                 print('---------------')
     elif num_op == "4":
         while (not volver_principal):
-            print("4- Reportes estadisticos \n--------------- \na.(En construcción) \nb.(En construcción) \nc.Volver")
+            print("REPORTES ESTADISTICOS")
+
+            print(matrizLikes)
+
+            ver = matcheosMutuos()
+            print("Porcentaje de matcheos mutuos: ", ver, "%")
+            ver2 = meGustaNoDevueltos()
+            print("Cantidad de me gusta no devueltos: ", ver2)
+            ver3 = leGustoYNoMeGusta()
+            print("Cantidad de le gusto y no me gusta: ", ver3)
+
+
+
             letra_op = input("Ingrese a, b o c: ")
             limpiarConsola()
             if letra_op == 'c':
@@ -525,7 +526,7 @@ def verReportes():
 
     for i in range(ultimo_reporte):
         estadoReportante = estudiantes[int(reportes[i][0])][8]
-        estadoReportado = estudiantes[int(reportes[i][1])][8] 
+        estadoReportado = estudiantes[int(reportes[i][1])][8]
         estadoReporte = reportes[i][3]
         if (estadoReportante == 's' and estadoReportado == "s" and estadoReporte == '0'):
             print('Reporte numero: ', i+1)
@@ -534,7 +535,7 @@ def verReportes():
     eleccion = int(input('Ingrese el numero de reporte que desea ver. Presione 0 para salir'))
     while(eleccion < 0 or eleccion > 50):
         eleccion = int(input('Ingrese el numero de reporte que desea ver. Presione 0 para salir'))
-    
+
     estadoReportanteEleccion = estudiantes[int(reportes[eleccion-1][0])][8]
     estadoReportadoEleccion = estudiantes[int(reportes[eleccion-1][1])][8]
     estadoReporteEleccion = reportes[eleccion-1][3]
@@ -603,6 +604,57 @@ def opMenuModerador(num_op):
         print('No ha ingresado una opcion valida')
         print('------------------------')
 
+def matcheosMutuos():
+
+    acumMeGustaMutuos = 0
+    i=int(usuario_logueado[0])
+    j=0
+
+    while(matrizLikes[i][j] != -1):
+        if(i!=j):
+            if(matrizLikes[i][j] == 1):
+                if(matrizLikes[j][i] == 1):
+                    acumMeGustaMutuos = acumMeGustaMutuos+1
+        j=j+1
+
+    print(acumMeGustaMutuos)
+    print(j-1)
+
+    porcentaje = acumMeGustaMutuos/(j-1)*100
+
+    return porcentaje
+
+def meGustaNoDevueltos():
+    acumMeGustaNoDevueltos = 0
+    i=int(usuario_logueado[0])
+    j=0
+
+    while(matrizLikes[i][j] != -1):
+        if(i!=j):
+            if(matrizLikes[i][j] == 1):
+                if(matrizLikes[j][i] == 0):
+                    acumMeGustaNoDevueltos = acumMeGustaNoDevueltos+1
+        j=j+1
+
+    print(acumMeGustaNoDevueltos)
+
+    return acumMeGustaNoDevueltos
+
+def leGustoYNoMeGusta():
+    acum = 0
+    i=int(usuario_logueado[0])
+    j=0
+
+    while(matrizLikes[i][j] != -1):
+        if(i!=j):
+            if(matrizLikes[i][j] == 0):
+                if(matrizLikes[j][i] == 1):
+                    acum = acum+1
+        j=j+1
+
+    print(acum)
+
+    return acum
 
 def generarInteracciones():
 
