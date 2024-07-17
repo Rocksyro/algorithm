@@ -3,7 +3,7 @@
 edades = [0]*6
 edades = [21, 18, 20, 19, 23, 24]
 
-#Función para mostrar los elementos de un arreglo
+#Procedimiento para mostrar los elementos de un arreglo
 #VARIABLES - TIPO DE DATOS:
 #s - INTEGER
 #z - ARRAY
@@ -12,7 +12,7 @@ def mostrar(z):
     for i in range(s):
         print(z[i])
 
-#Función para ordenar los elementos de un arreglo con el método de la burbuja
+#Procedimiento para ordenar los elementos de un arreglo con el método de la burbuja
 #VARIABLES - TIPO DE DATOS:
 #s, aux - INTEGER
 #z - ARRAY
@@ -58,7 +58,7 @@ def faltantes(z):
             g[i] = 0
     return g
 
-#Función para mostrar los elementos que faltan en la secuencia
+#Procedimiento para mostrar los elementos que faltan en la secuencia
 #s - INTEGER
 #z - ARRAY
 def mostrarfaltantes(z):
