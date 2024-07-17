@@ -1,4 +1,5 @@
-#Inicializamos la matriz edades
+#Definimos y dimensionamos el arreglo edades
+#VARIABLES - TIPO DE DATOS:
 #edades - ARRAY
 edades = [0]*6
 edades = [21, 18, 20, 19, 23, 24]
@@ -59,6 +60,7 @@ def faltantes(z):
     return g
 
 #Procedimiento para mostrar los elementos que faltan en la secuencia
+#VARIABLES - TIPO DE DATOS:
 #s - INTEGER
 #z - ARRAY
 def mostrarfaltantes(z):
@@ -67,6 +69,10 @@ def mostrarfaltantes(z):
         if z[i] != 0:
             print(z[i])
 
+#PRINCIPAL
+#VARIABLES - TIPO DE DATOS:
+#huecos - INTEGER
+#edadesFaltantes - ARRAY
 print("Reporte de edades:")
 mostrar(edades)
 
@@ -74,12 +80,9 @@ ordenar(edades)
 print("Reporte de edades ordenadas de forma creciente:")
 mostrar(edades)
 
-#huecos - INTEGER
 huecos = contarhuecos(edades)
 print("Cantidad de huecos en la secuencia: ",huecos)
 
-#edadesFaltantes - ARRAY
 edadesFaltantes = faltantes(edades)
-
 print("El/los elemento/s faltante/s para tener una secuencia autoincremental es/son:")
 mostrarfaltantes(edadesFaltantes)
