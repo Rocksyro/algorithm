@@ -1,11 +1,14 @@
-edades = ['']*6
+#Inicializamos la matriz edades
+edades = [0]*6
 edades = [21, 18, 20, 19, 23, 24]
 
+#Función para mostrar los elementos de un arreglo
 def mostrar(z):
     s = len(z)
     for i in range(s):
         print(z[i])
 
+#Función para ordenar los elementos de un arreglo
 def ordenar(z):
     s = len(z)
     for i in range(s-1):
@@ -15,6 +18,7 @@ def ordenar(z):
                 z[i] = z[j]
                 z[j] = aux
 
+#Función para contar la cantidad de "huecos" que hay en la secuencia
 def contarhuecos(z):
     s = len(z)
     h = 0
@@ -23,6 +27,7 @@ def contarhuecos(z):
             h = h+1
     return h
 
+#Función que crea un arreglo con los elementos que faltan para completar la secuencia
 def faltantes(z):
     s = len(z)
     g = ['']*(s-1)
@@ -33,6 +38,7 @@ def faltantes(z):
             g[i] = 0
     return g
 
+#Función para mostrar los elementos que faltan en la secuencia
 def mostrarfaltantes(z):
     s = len(z)
     for i in range(s):
