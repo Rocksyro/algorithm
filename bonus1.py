@@ -8,7 +8,7 @@ edades = [21, 18, 26, 19, 23, 28]
 # VARIABLES - TIPO DE DATOS:
 # s - INTEGER
 # z - ARRAY of INTEGER
-def mostrar(z):
+def mostrarBonus1(z):
     s = len(z)
     for i in range(s):
         print(z[i])
@@ -17,7 +17,7 @@ def mostrar(z):
 # VARIABLES - TIPO DE DATOS:
 # s, aux - INTEGER
 # z - ARRAY of INTEGER
-def ordenar(z):
+def ordenarBonus1(z):
     s = len(z)
     for i in range(s-1):
         for j in range((i+1), s):
@@ -30,7 +30,7 @@ def ordenar(z):
 # VARIABLES - TIPO DE DATOS:
 # s, h - INTEGER
 # z - ARRAY of INTEGER
-def contarhuecos(z):
+def contarhuecosBonus1(z):
     s = len(z)
     h = 0
     for i in range(s-1):
@@ -42,7 +42,7 @@ def contarhuecos(z):
 # VARIABLES - TIPO DE DATOS:
 # s - INTEGER
 # z, g - ARRAY of INTEGER
-def faltantes(z):
+def faltantesBonus1(z):
     s = len(z)
     g = [0]*(s-1)
     for i in range(s-1):
@@ -56,7 +56,7 @@ def faltantes(z):
 # VARIABLES - TIPO DE DATOS:
 # s - INTEGER
 # z - ARRAY of INTEGER
-def mostrarfaltantes(z):
+def mostrarfaltantesBonus1(z):
     s = len(z)
     for i in range(s):
         if z[i] != 0:
@@ -67,15 +67,15 @@ def mostrarfaltantes(z):
 # huecos - INTEGER
 # edadesFaltantes - ARRAY of INTEGER
 print("Reporte de edades:")
-mostrar(edades)
+mostrarBonus1(edades)
 
-ordenar(edades)
+ordenarBonus1(edades)
 print("Reporte de edades ordenadas de forma creciente:")
-mostrar(edades)
+mostrarBonus1(edades)
 
-huecos = contarhuecos(edades)
+huecos = contarhuecosBonus1(edades)
 print("Cantidad de huecos en la secuencia: ", huecos)
 
-edadesFaltantes = faltantes(edades)
+edadesFaltantes = faltantesBonus1(edades)
 print("El/los elemento/s faltante/s para tener una secuencia autoincremental es/son:")
-mostrarfaltantes(edadesFaltantes)
+mostrarfaltantesBonus1(edadesFaltantes)

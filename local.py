@@ -492,12 +492,12 @@ def verReportes():
             reportes_contador = + 1
             print('Reporte numero: ', i+1)
             print('Estado del reporte: ', reportes[i][3])
-
+            print('-----------------')
     if (reportes_contador == 0):
         print('No hay reportes para analizar.')
     else:
         eleccion = int(
-            input('Ingrese el numero de reporte que desea ver. Presione 0 para salir'))
+            input('Ingrese el numero de reporte que desea ver o presione 0 para salir'))
 
         while (eleccion < 0 or eleccion > 50):
             eleccion = int(
@@ -515,9 +515,11 @@ def verReportes():
             accion = input('Ignorar reporte (I) o dar de baja al reportado (B)?').capitalize()
             if (accion == 'I'):
                 reportes[eleccion-1][3] = '2'
+                print("Has ignorado la solicitud")
             elif (accion == 'B'):
                 reportes[eleccion-1][3] = '1'
                 estudiantes[int(reportes[eleccion-1][1])][8] = 'n'
+                print("Has aceptado la solicitud. El usuario ha sido dado de baja")
             else:
                 print('No has elegido una opcion valida!')
         else:
@@ -625,14 +627,83 @@ def cantidadMatcheosPosibles(estudiantes):
         (cantidadEstudiantes - 1)
     print('La cantidad de matcheos posibles entre todos los estudiantes es de: ', cantidadMatcheosPosiblesTotales)
 
+###Bonus Track 1 Inicio
+# Definimos y dimensionamos el arreglo edades
+# VARIABLES - TIPO DE DATOS:
+# edades - ARRAY of INTEGER
+edades = [0]*6
+edades = [21, 18, 26, 19, 23, 28]
+# Procedimiento para mostrar los elementos de un arreglo
+# VARIABLES - TIPO DE DATOS:
+# s - INTEGER
+# z - ARRAY of INTEGER
+def mostrarBonus1(z):
+    s = len(z)
+    for i in range(s):
+        print(z[i])
+
+# Procedimiento para ordenar los elementos de un arreglo con el método de la burbuja
+# VARIABLES - TIPO DE DATOS:
+# s, aux - INTEGER
+# z - ARRAY of INTEGER
+def ordenarBonus1(z):
+    s = len(z)
+    for i in range(s-1):
+        for j in range((i+1), s):
+            if z[i] > z[j]:
+                aux = z[i]
+                z[i] = z[j]
+                z[j] = aux
+
+# Función para contar la cantidad de "huecos" que hay en la secuencia
+# VARIABLES - TIPO DE DATOS:
+# s, h - INTEGER
+# z - ARRAY of INTEGER
+def contarhuecosBonus1(z):
+    s = len(z)
+    h = 0
+    for i in range(s-1):
+        if z[i+1] == (z[i]+2):
+            h = h+1
+    return h
+
+# Función que crea un arreglo con los elementos que faltan para completar la secuencia
+# VARIABLES - TIPO DE DATOS:
+# s - INTEGER
+# z, g - ARRAY of INTEGER
+def faltantesBonus1(z):
+    s = len(z)
+    g = [0]*(s-1)
+    for i in range(s-1):
+        if z[i+1] == (z[i]+2):
+            g[i] = z[i]+1
+        else:
+            g[i] = 0
+    return g
+
+# Procedimiento para mostrar los elementos que faltan en la secuencia
+# VARIABLES - TIPO DE DATOS:
+# s - INTEGER
+# z - ARRAY of INTEGER
+def mostrarfaltantesBonus1(z):
+    s = len(z)
+    for i in range(s):
+        if z[i] != 0:
+            print(z[i])
+###Bonus Track 1 Fin
+
+
+
 # INICIALIZAMOS MATRIZ DE LIKES CON 0s y 1s DE MANERA RANDOM.
 generarInteracciones()
 # PROGRAMA PRINCIPAL
 opc = ''
 while (opc != '0'):
+    print("---------------------------------------")
     print("1. Login")
     print("2. Registro")
-    print("3. Cantidad de matcheos posibles")
+    print("3. Cantidad de matcheos posibles") #Bonus Track 2
+    print("4. Reporte de edades") #Bonus Track 1
     print("0. Salir")
     opc = input('Ingrese una opcion: ')
     limpiarConsola()
@@ -646,6 +717,20 @@ while (opc != '0'):
         registro(estudiantes)
     elif (opc == '3'):
         cantidadMatcheosPosibles(estudiantes)
+    elif (opc == '4'):
+        print("Reporte de edades:")
+        mostrarBonus1(edades)
+
+        ordenarBonus1(edades)
+        print("Reporte de edades ordenadas de forma creciente:")
+        mostrarBonus1(edades)
+
+        huecos = contarhuecosBonus1(edades)
+        print("Cantidad de huecos en la secuencia: ", huecos)
+
+        edadesFaltantes = faltantesBonus1(edades)
+        print("El/los elemento/s faltante/s para tener una secuencia autoincremental es/son:")
+        mostrarfaltantesBonus1(edadesFaltantes)
     elif (opc == '0'):
         print('Saliendo del programa...')
     else:
