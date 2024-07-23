@@ -1,6 +1,5 @@
 import pwinput
 import os
-import keyboard
 from datetime import date, datetime
 import random
 
@@ -395,7 +394,6 @@ def opMenuEstudiante(num_op):
         print("Cantidad de le gusto y no me gusta: ", ver3)
         print('---------------------')
         print("Presiona la barra espaciadora para continuar...")
-        keyboard.wait('space')
         limpiarConsola()
     elif num_op == "0":
         print('Se deslogueo correctamente.')
