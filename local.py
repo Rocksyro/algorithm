@@ -383,18 +383,23 @@ def opMenuEstudiante(num_op):
                 print('No has ingresado una opcion valida!')
                 print('---------------')
     elif num_op == "4":
-        print("REPORTES ESTADISTICOS")
-        print('-------------------')
-
-        ver = matcheosMutuos()
-        print("Porcentaje de matcheos mutuos: ", ver, "%")
-        ver2 = meGustaNoDevueltos()
-        print("Cantidad de me gusta no devueltos: ", ver2)
-        ver3 = leGustoYNoMeGusta()
-        print("Cantidad de le gusto y no me gusta: ", ver3)
-        print('---------------------')
-        print("Presiona la barra espaciadora para continuar...")
-        limpiarConsola()
+        while (not volver_principal):
+            print("REPORTES ESTADISTICOS")
+            print('-------------------')
+            ver = matcheosMutuos()
+            print("Porcentaje de matcheos mutuos: ", ver, "%")
+            ver2 = meGustaNoDevueltos()
+            print("Cantidad de me gusta no devueltos: ", ver2)
+            ver3 = leGustoYNoMeGusta()
+            print("Cantidad de le gusto y no me gusta: ", ver3)
+            print('---------------------')
+            num_subOp = int(input("Presione 0 para volver: "))
+            if num_subOp == 0:
+                volver_principal = True
+            else:
+                print('No has ingresado una opcion valida!')
+                print('---------------')
+            limpiarConsola()
     elif num_op == "0":
         print('Se deslogueo correctamente.')
         limpiarUsuarioLogueado(usuario_logueado)
