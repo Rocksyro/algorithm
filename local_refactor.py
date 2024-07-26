@@ -11,17 +11,12 @@ reportes_motivos = [[''] * 2 for n in range(49)]
 reportes_ids = [[-1] * 2 for n in range(49)]
 
 # Tanto el ID de cada estudiante como de cada moderador va a ser siempre un número entero auto-incremental, que comienza en 0.
-estudiantes[0] = ["estudiante1@ayed.com", "111222", "Pedro Castillo", "Estudiante",
-                  "1994-06-20", "Hola esta es mi biografia", "Andar a caballo es mi hobbie", "s"]
-estudiantes[1] = ["estudiante2@ayed.com", "333444", "Florencia Abascal", "Estudiante",
-                  "2000-04-20", "Hola esta es mi biografia", "Andar a caballo es mi hobbie", "s"]
-estudiantes[2] = ["estudiante3@ayed.com", "555666", "Raul Gimenez", "Estudiante",
-                  "2002-10-9", "Hola esta es mi biografia", "Andar a caballo es mi hobbie", "s"]
+estudiantes[0] = ["estudiante1@ayed.com", "111222", "Pedro Castillo", "Estudiante", "1994-06-20", "Hola esta es mi biografia", "Andar a caballo es mi hobbie", "s"]
+estudiantes[1] = ["estudiante2@ayed.com", "333444", "Florencia Abascal", "Estudiante", "2000-04-20", "Hola esta es mi biografia", "Andar a caballo es mi hobbie", "s"]
+estudiantes[2] = ["estudiante3@ayed.com", "555666", "Raul Gimenez", "Estudiante", "2002-10-9", "Hola esta es mi biografia", "Andar a caballo es mi hobbie", "s"]
 
-moderadores[0] = ["moderador1@ayed.com", "111222", "Pipo Castillo", "Moderador",
-                  "2000-07-12", "Hola esta es mi biografia", "Andar a caballo es mi hobbie", "s"]
-moderadores[1] = ["moderador2@ayed.com", "333444", "Jalan Abascal", "Moderador",
-                  "2000-07-12", "Hola esta es mi biografia", "Andar a caballo es mi hobbie", "s"]
+moderadores[0] = ["moderador1@ayed.com", "111222", "Pipo Castillo", "Moderador", "2000-07-12", "Hola esta es mi biografia", "Andar a caballo es mi hobbie", "s"]
+moderadores[1] = ["moderador2@ayed.com", "333444", "Jalan Abascal", "Moderador", "2000-07-12", "Hola esta es mi biografia", "Andar a caballo es mi hobbie", "s"]
 
 usuario_logueado = [-1, 0]
 
