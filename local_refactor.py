@@ -20,16 +20,13 @@ moderadores[1] = ["moderador2@ayed.com", "333444", "Jalan Abascal", "Moderador",
 
 usuario_logueado = [-1, 0]
 
-# Funcion obtenerPassword (para que en vez de la password aparezcan asteriscos)
-# VARIABLES - TIPO DE DATOS:
-# password - STRING
 # Funcion limpiarConsola (Funcion dedicada a limpiar la consola para no saturar la pantalla de informacion)
-
-
 def limpiarConsola():
     os.system('cls' if os.name == 'nt' else 'clear')
 
-
+# Funcion obtenerPassword (para que en vez de la password aparezcan asteriscos)
+# VARIABLES - TIPO DE DATOS:
+# password - STRING
 def obtenerPassword():
     password = pwinput.pwinput('Introduce tu contraseña: ')
     return password
@@ -60,8 +57,7 @@ def login(usuario_logueado, estudiantes, moderadores):
                         for i in range(len(estudiantes[0])):
                             usuario_logueado[0] = resultadoBusqueda
                         limpiarConsola()
-                        print("Login exitoso! bienvenido usuario",
-                              estudiantes[usuario_logueado[0]][2], '.')
+                        print("Login exitoso! bienvenido usuario ",estudiantes[usuario_logueado[0]][2], '.')
                         usuario_logueado[1] = 0
                         print('--------------------')
                     else:
@@ -76,8 +72,7 @@ def login(usuario_logueado, estudiantes, moderadores):
                             for i in range(len(moderadores[0])):
                                 usuario_logueado[0] = resultadoBusqueda
                             limpiarConsola()
-                            print("Login exitoso! bienvenido moderador ",
-                                  moderadores[usuario_logueado[0]][2])
+                            print("Login exitoso! bienvenido moderador ",moderadores[usuario_logueado[0]][2])
                             usuario_logueado[1] = 1
                         else:
                             intentos = intentos + 1

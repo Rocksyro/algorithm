@@ -75,7 +75,7 @@ def limpiarConsola():
 # intentos, cantidadEstudiantes, cantidadModeradores, resultadoBusqueda - INTEGER
 # email, password - STRING
 # estudiantes, moderadores, usuario_logueado - ARRAY OF STRING
-def login(usuario_logueado, estudiantes):
+def login(usuario_logueado, estudiantes, moderadores):
     intentos = 0
     cantidadEstudiantes = buscarEspacioVacioPorPosicion(estudiantes)
     cantidadModeradores = buscarEspacioVacioPorPosicion(moderadores)
@@ -84,23 +84,24 @@ def login(usuario_logueado, estudiantes):
         # Mientras el contador sea menor o igual a 3 y no este logeado
         print('LOGIN')
         print('--------------------')
-        while (intentos < 3 and usuario_logueado[0] == ''):
+        while (intentos < 3 and usuario_logueado[0] == -1):
             # Pedir al usuario igresar usuario y contraseña
             email = input("Ingresar email: ")
             resultadoBusqueda = buscarUsuarioPorEmail(estudiantes, email)
 
             if (resultadoBusqueda != -1):
-                if (estudiantes[resultadoBusqueda][8] == 'n'):
+                if (estudiantes[resultadoBusqueda][7] == 'n'):
                     print('Tu usuario esta desactivado, no puedes loguearte.')
                     intentos = 3
 
-                while (intentos < 3 and usuario_logueado[0] == ''):
+                while (intentos < 3 and usuario_logueado[0] == -1):
                     password = obtenerPassword()
-                    if (estudiantes[resultadoBusqueda][2] == password):
+                    if (estudiantes[resultadoBusqueda][1] == password):
                         for i in range(len(estudiantes[0])):
-                            usuario_logueado[i] = estudiantes[resultadoBusqueda][i]
+                            usuario_logueado[0] = resultadoBusqueda
                         limpiarConsola()
-                        print("Login exitoso! bienvenido usuario", usuario_logueado[3], '.')
+                        print("Login exitoso! bienvenido usuario ",estudiantes[usuario_logueado[0]][2], '.')
+                        usuario_logueado[1] = 0
                         print('--------------------')
                     else:
                         intentos = intentos + 1
@@ -108,13 +109,14 @@ def login(usuario_logueado, estudiantes):
                 resultadoBusqueda = buscarUsuarioPorEmail(moderadores, email)
 
                 if (resultadoBusqueda != -1):
-                    while (intentos < 3 and usuario_logueado[0] == ''):
+                    while (intentos < 3 and usuario_logueado[0] == -1):
                         password = obtenerPassword()
-                        if (moderadores[resultadoBusqueda][2] == password):
+                        if (moderadores[resultadoBusqueda][1] == password):
                             for i in range(len(moderadores[0])):
-                                usuario_logueado[i] = moderadores[resultadoBusqueda][i]
+                                usuario_logueado[0] = resultadoBusqueda
                             limpiarConsola()
-                            print("Login exitoso! bienvenido moderador ", usuario_logueado[3])
+                            print("Login exitoso! bienvenido moderador ",moderadores[usuario_logueado[0]][2])
+                            usuario_logueado[1] = 1
                         else:
                             intentos = intentos + 1
                 else:
@@ -405,10 +407,10 @@ def calcularEdad(fecha_nacimiento):
 # contadorPosicion - INTEGER
 def buscarUsuarioPorNombre(array, nombre):
     contadorPosicion = 0
-    while (contadorPosicion < (len(array) - 1) and (array[contadorPosicion][3] != nombre)):
+    while (contadorPosicion < (len(array) - 1) and (array[contadorPosicion][2] != nombre)):
         contadorPosicion += 1
 
-    if (array[contadorPosicion][3] == nombre):
+    if (array[contadorPosicion][2] == nombre):
         return contadorPosicion
     else:
         return -1
