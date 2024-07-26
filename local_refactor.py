@@ -126,6 +126,7 @@ def buscarUsuarioPorId(array, id):
     else:
         return -1
 
+
 # LLEGUE HASTA ACA
 
 
@@ -196,11 +197,9 @@ def pedirFecha():
 
 
 def editarPerfil(usuario_logueado):
-    print("Datos personales \n---------------\nFecha: ",
-          estudiantes[usuario_logueado[0]][4], "\nBiografía: ", estudiantes[usuario_logueado[0]][5], "\nHobbies: ", estudiantes[usuario_logueado[0]][6], '\n---------------')
+    print("Datos personales \n---------------\nFecha: ", estudiantes[usuario_logueado[0]][4], "\nBiografía: ", estudiantes[usuario_logueado[0]][5], "\nHobbies: ", estudiantes[usuario_logueado[0]][6], '\n---------------')
 
-    opEdit = input(
-        "1.Fecha \n2.Biografía \n3.Hobbies \n0.Volver\nIngresar qué dato quiere editar (sólo número): ")
+    opEdit = input("1.Fecha \n2.Biografía \n3.Hobbies \n0.Volver\nIngresar qué dato quiere editar (sólo número): ")
     limpiarConsola()
 
     while (opEdit != '0'):
@@ -211,17 +210,14 @@ def editarPerfil(usuario_logueado):
             estudiantes[usuario_logueado[0]][5] = input("Nueva biografía: ")
             limpiarConsola()
         elif (opEdit == '3'):
-            estudiantes[usuario_logueado[0]][6] = input(
-                "Agregar nuevo Hobby: ")
+            estudiantes[usuario_logueado[0]][6] = input("Agregar nuevo Hobby: ")
             limpiarConsola()
         else:
             print('No has elegido una opcion valida.')
             print('------------------------')
 
-        print("Datos personales \n---------------\nFecha: ",
-              estudiantes[usuario_logueado[0]][4], "\nBiografía: ", estudiantes[usuario_logueado[0]][5], "\nHobbies: ", estudiantes[usuario_logueado[0]][6], '\n---------------')
-        opEdit = input(
-            "1.Fecha \n2.Biografía \n3.Hobbies \n0.Volver\nIngresar qué dato quiere editar (sólo número): ")
+        print("Datos personales \n---------------\nFecha: ", estudiantes[usuario_logueado[0]][4], "\nBiografía: ", estudiantes[usuario_logueado[0]][5], "\nHobbies: ", estudiantes[usuario_logueado[0]][6], '\n---------------')
+        opEdit = input("1.Fecha \n2.Biografía \n3.Hobbies \n0.Volver\nIngresar qué dato quiere editar (sólo número): ")
         limpiarConsola()
 
 
@@ -232,8 +228,7 @@ def mostrar(a):
 
     for i in range(ultimo):
         if (usuario_logueado[0] != a[i][0]):
-            print(
-                'Nombre: ', a[i][2], '- ♡' if matrizLikes[usuario_logueado[0]][i] == 1 else '')
+            print('Nombre: ', a[i][2], '- ♡' if matrizLikes[usuario_logueado[0]][i] == 1 else '')
             print('Edad: ', calcularEdad(a[i][4]))
             print('Biografia: ', a[i][5])
             print('Hobbies: ', a[i][6])
@@ -242,30 +237,25 @@ def mostrar(a):
 
 def verCandidatos():
     mostrar(estudiantes)
-    matchear = input(
-        '\nQuieres darle like a algun candidato? Ingrese "S/N": ').capitalize()
+    matchear = input('\nQuieres darle like a algun candidato? Ingrese "S/N": ').capitalize()
     while (matchear != 'S' and matchear != 'N'):
         print('---------------')
         print('No ha ingresado una opcion valida!')
         print('---------------')
-        matchear = input(
-            'Quieres darle like a algun candidato? Ingrese "S/N": ').capitalize()
+        matchear = input('Quieres darle like a algun candidato? Ingrese "S/N": ').capitalize()
 
     if (matchear == 'S'):
-        me_gusta = input(
-            '--------------- \nIngrese el nombre de la persona con la que le gustaria matchear: ')
+        me_gusta = input('--------------- \nIngrese el nombre de la persona con la que le gustaria matchear: ')
         limpiarConsola()
         idEstudianteMeGusta = buscarUsuarioPorNombre(estudiantes, me_gusta)
         if (idEstudianteMeGusta != -1):
 
             if (matrizLikes[usuario_logueado[0]][idEstudianteMeGusta] == 1):
                 matrizLikes[usuario_logueado[0]][idEstudianteMeGusta] = 0
-                print('Le has quitado el me gusta al usuario: ',
-                      estudiantes[idEstudianteMeGusta][2])
+                print('Le has quitado el me gusta al usuario: ', estudiantes[idEstudianteMeGusta][2])
             else:
                 matrizLikes[usuario_logueado[0]][idEstudianteMeGusta] = 1
-                print('Le has dado un me gusta al usuario: ',
-                      estudiantes[idEstudianteMeGusta][2])
+                print('Le has dado un me gusta al usuario: ', estudiantes[idEstudianteMeGusta][2])
         else:
             print('No se ha ingresado un nombre de estudiante valido. \n---------------')
 
@@ -275,8 +265,7 @@ def desactivarPerfil(usuario_logueado):
     while (opc != 'S' and opc != 'N'):
         print('ATENCION')
         print('--------------------')
-        opc = input(
-            'Esta apunto de inhabilitar su perfil, esta seguro de esta accion? S/N').capitalize()
+        opc = input('Esta apunto de inhabilitar su perfil, esta seguro de esta accion? S/N').capitalize()
 
         if (opc != 'S' and opc != 'N'):
             print('No ha ingresado una opcion valida, vuelva a intentar!')
@@ -288,29 +277,23 @@ def desactivarPerfil(usuario_logueado):
 
 
 def reportarCandidatos():
-    estudiante_reportado = input(
-        'Ingrese el nombre o la ID del estudiante a reportar: ')
+    estudiante_reportado = input('Ingrese el nombre o la ID del estudiante a reportar: ')
 
     if (estudiante_reportado == usuario_logueado[0]):
         print('No podes reportarte a vos mismo.')
     else:
-        usuario_encontrado = buscarUsuarioPorNombre(
-            estudiantes, estudiante_reportado)
+        usuario_encontrado = buscarUsuarioPorNombre(estudiantes, estudiante_reportado)
         if (usuario_encontrado == -1):
-            usuario_encontrado = buscarUsuarioPorId(
-                estudiantes, estudiante_reportado)
+            usuario_encontrado = buscarUsuarioPorId(estudiantes, estudiante_reportado)
 
         while (usuario_encontrado == -1):
             print('Usuario a reportar no encontrado, vuelva a intentar!')
             print('--------------------------')
-            estudiante_reportado = input(
-                'Ingrese el nombre o la ID del estudiante a reportar: ')
+            estudiante_reportado = input('Ingrese el nombre o la ID del estudiante a reportar: ')
 
-            usuario_encontrado = buscarUsuarioPorNombre(
-                estudiantes, estudiante_reportado)
+            usuario_encontrado = buscarUsuarioPorNombre(estudiantes, estudiante_reportado)
             if (usuario_encontrado == -1):
-                usuario_encontrado = buscarUsuarioPorId(
-                    estudiantes, estudiante_reportado)
+                usuario_encontrado = buscarUsuarioPorId(estudiantes, estudiante_reportado)
 
         motivo = input('Ingrese el motivo del reporte: ')
         posicionReporteNuevo = buscarEspacioVacioPorPosicion(reportes_motivos)
@@ -351,8 +334,7 @@ def opMenuEstudiante(num_op):
                 volver_principal = True
     elif num_op == "2":
         while (not volver_principal):
-            print(
-                "Gestionar candidatos \n--------------- \na.Ver candidatos \nb.Reportar candidatos \nc.Volver")
+            print("Gestionar candidatos \n--------------- \na.Ver candidatos \nb.Reportar candidatos \nc.Volver")
             letra_op = input("Ingrese a, b o c: ").capitalize()
             limpiarConsola()
             if letra_op == "A":
@@ -368,8 +350,7 @@ def opMenuEstudiante(num_op):
                 print('---------------')
     elif num_op == "3":
         while (not volver_principal):
-            print(
-                "Matcheos \n--------------- \na.Ver matcheos \nb.Eliminar un matcheo \nc.Volver")
+            print("Matcheos \n--------------- \na.Ver matcheos \nb.Eliminar un matcheo \nc.Volver")
             letra_op = input("Ingrese a, b o c: ").capitalize()
             limpiarConsola()
             if letra_op == "A":
@@ -446,31 +427,23 @@ def desactivarEstudiante():
         print('Usuario activo: ', activo)
         print('-------------------')
 
-    estudiante = input(
-        'Ingrese la ID o nombre del usuario que desea activar/desactivar: ')
-    estudiante_encontrado = buscarUsuarioPorNombre(
-        estudiantes, estudiante)
+    estudiante = input('Ingrese la ID o nombre del usuario que desea activar/desactivar: ')
+    estudiante_encontrado = buscarUsuarioPorNombre(estudiantes, estudiante)
     if (estudiante_encontrado == -1):
-        estudiante_encontrado = buscarUsuarioPorId(
-            estudiantes, estudiante)
+        estudiante_encontrado = buscarUsuarioPorId(estudiantes, estudiante)
 
     while (estudiante_encontrado == -1):
         print('Estudiante no encontrado, vuelva a intentar!')
         print('--------------------------')
-        estudiante = input(
-            'Ingrese la ID o nombre del usuario que desea activar/desactivar: ')
-        estudiante_encontrado = buscarUsuarioPorNombre(
-            estudiantes, estudiante)
+        estudiante = input('Ingrese la ID o nombre del usuario que desea activar/desactivar: ')
+        estudiante_encontrado = buscarUsuarioPorNombre(estudiantes, estudiante)
         if (estudiante_encontrado == -1):
-            estudiante_encontrado = buscarUsuarioPorId(
-                estudiantes, estudiante)
+            estudiante_encontrado = buscarUsuarioPorId(estudiantes, estudiante)
 
-    confirmacion = input(
-        'Esta seguro que desea continuar con la accion? S/N: ').capitalize()
+    confirmacion = input('Esta seguro que desea continuar con la accion? S/N: ').capitalize()
     while (confirmacion != 'S' and confirmacion != 'N'):
         print('No ha ingresado una opcion valida, vuelta a intentar!')
-        confirmacion = input(
-            'Esta seguro que desea continuar con la accion? S/N: ').capitalize()
+        confirmacion = input('Esta seguro que desea continuar con la accion? S/N: ').capitalize()
 
     if (confirmacion == 'S'):
         if (estudiantes[estudiante_encontrado][7] == 'n'):
@@ -502,12 +475,10 @@ def verReportes():
     if (reportes_contador == 0):
         print('No hay reportes para analizar.')
     else:
-        eleccion = int(
-            input('Ingrese el numero de reporte que desea ver o presione 0 para salir'))
+        eleccion = int(input('Ingrese el numero de reporte que desea ver o presione 0 para salir'))
 
         while (eleccion < 0 or eleccion > 50):
-            eleccion = int(
-                input('Ingrese el numero de reporte que desea ver. Presione 0 para salir'))
+            eleccion = int(input('Ingrese el numero de reporte que desea ver. Presione 0 para salir'))
 
         estadoReportanteEleccion = estudiantes[reportes_ids[eleccion-1][0]][7]
         estadoReportadoEleccion = estudiantes[reportes_ids[eleccion-1][1]][7]
@@ -518,8 +489,7 @@ def verReportes():
             print('ID usuario reportado: ', reportes_ids[eleccion-1][1])
             print('Motivo del reporte: ', reportes_motivos[eleccion-1][0])
 
-            accion = input(
-                'Ignorar reporte (I) o dar de baja al reportado (B)?').capitalize()
+            accion = input('Ignorar reporte (I) o dar de baja al reportado (B)?').capitalize()
             if (accion == 'I'):
                 reportes_motivos[eleccion-1][1] = '2'
                 print("Has ignorado la solicitud")
@@ -537,8 +507,7 @@ def opMenuModerador(num_op):
     volver_principal = False
     if num_op == "1":
         while (not volver_principal):
-            print(
-                "Gestionar ususarios \n--------------- \na. Desactivar usuario \nb. Volver")
+            print("Gestionar ususarios \n--------------- \na. Desactivar usuario \nb. Volver")
             letra_op = input("Ingrese a, b: ")
             limpiarConsola()
             if letra_op == "a":
@@ -642,18 +611,17 @@ def cantidadMatcheosPosibles(estudiantes):
           cantidadMatcheosPosiblesTotales)
 
 
-# Bonus Track 1 Inicio
+### BONUS TRACK 1 - INICIO
 # Definimos y dimensionamos el arreglo edades
 # VARIABLES - TIPO DE DATOS:
 # edades - ARRAY of INTEGER
 edades = [0]*6
 edades = [21, 18, 26, 19, 23, 28]
+
 # Procedimiento para mostrar los elementos de un arreglo
 # VARIABLES - TIPO DE DATOS:
 # s - INTEGER
 # z - ARRAY of INTEGER
-
-
 def mostrarBonus1(z):
     s = len(z)
     for i in range(s):
@@ -663,8 +631,6 @@ def mostrarBonus1(z):
 # VARIABLES - TIPO DE DATOS:
 # s, aux - INTEGER
 # z - ARRAY of INTEGER
-
-
 def ordenarBonus1(z):
     s = len(z)
     for i in range(s-1):
@@ -678,8 +644,6 @@ def ordenarBonus1(z):
 # VARIABLES - TIPO DE DATOS:
 # s, h - INTEGER
 # z - ARRAY of INTEGER
-
-
 def contarhuecosBonus1(z):
     s = len(z)
     h = 0
@@ -692,8 +656,6 @@ def contarhuecosBonus1(z):
 # VARIABLES - TIPO DE DATOS:
 # s - INTEGER
 # z, g - ARRAY of INTEGER
-
-
 def faltantesBonus1(z):
     s = len(z)
     g = [0]*(s-1)
@@ -708,14 +670,12 @@ def faltantesBonus1(z):
 # VARIABLES - TIPO DE DATOS:
 # s - INTEGER
 # z - ARRAY of INTEGER
-
-
 def mostrarfaltantesBonus1(z):
     s = len(z)
     for i in range(s):
         if z[i] != 0:
             print(z[i])
-# Bonus Track 1 Fin
+### BONUS TRACK 1 - FIN
 
 
 # INICIALIZAMOS MATRIZ DE LIKES CON 0s y 1s DE MANERA RANDOM.
@@ -753,8 +713,7 @@ while (opc != '0'):
         print("Cantidad de huecos en la secuencia: ", huecos)
 
         edadesFaltantes = faltantesBonus1(edades)
-        print(
-            "El/los elemento/s faltante/s para tener una secuencia autoincremental es/son:")
+        print("El/los elemento/s faltante/s para tener una secuencia autoincremental es/son:")
         mostrarfaltantesBonus1(edadesFaltantes)
     elif (opc == '0'):
         print('Saliendo del programa...')
