@@ -26,8 +26,39 @@ moderadores[1] = ["moderador2@ayed.com", "333444", "Jalan Abascal", "Moderador",
 # ID del usuario - Tipo de usuario (0 = estudiantes, 1 = moderador)
 usuario_logueado = [-1, -1]
 
-# Funcion limpiarConsola (Funcion dedicada a limpiar la consola para no saturar la pantalla de informacion)
+def buscarEspacioVacioPorPosicion(a):
+    i = 0
+    while (i < (len(a)) and a[i][0] != ''):
+        i = i+1
+    else:
+        return i
 
+
+def buscarUsuarioPorEmail(array, email):
+    contadorPosicion = 0
+    while (contadorPosicion < (len(array) - 1) and (array[contadorPosicion][0] != email)):
+        contadorPosicion += 1
+
+    if (array[contadorPosicion][0] == email):
+        return contadorPosicion
+    else:
+        return -1
+
+#Procedimiento generarInteracciones
+
+def generarInteracciones():
+    ultimo = buscarEspacioVacioPorPosicion(estudiantes)
+    if (ultimo == -1):
+        ultimo = len(estudiantes)
+
+    for i in range(ultimo):
+        for j in range(ultimo):
+            if (i != j):
+                matrizLikes[i][j] = random.randint(0, 1)
+            else:
+                matrizLikes[i][j] = 0
+
+# Procedimiento limpiarConsola (Funcion dedicada a limpiar la consola para no saturar la pantalla de informacion)
 
 def limpiarConsola():
     os.system('cls' if os.name == 'nt' else 'clear')
@@ -95,23 +126,21 @@ def login(usuario_logueado, estudiantes, moderadores):
         print('No hay suficientes usuario creados para el logueo')
 
 
-def buscarEspacioVacioPorPosicion(a):
-    i = 0
-    while (i < (len(a)) and a[i][0] != ''):
-        i = i+1
-    else:
-        return i
+def menuEstudiante():
+    num_op = ''
+    while (num_op != '0'):
+        menu_principal = "MENU PRINCIPAL ESTUDIANTE \n------------------ \n1.Gestionar mi perfil \n2.Gestionar candidatos \n3.Matcheos \n4.Reportes estadísticos \n0.Salir"
+        print(menu_principal)
+        num_op = input("Ingresar número de opción (1, 2, 3, 4, 0): ")
+        limpiarConsola()
+        opMenuEstudiante(num_op)
+
+        if (estudiantes[usuario_logueado[0]][7] == 'n'):
+            num_op = '0'
+            usuario_logueado[0] = -1
+            usuario_logueado[1] = -1
 
 
-def buscarUsuarioPorEmail(array, email):
-    contadorPosicion = 0
-    while (contadorPosicion < (len(array) - 1) and (array[contadorPosicion][0] != email)):
-        contadorPosicion += 1
-
-    if (array[contadorPosicion][0] == email):
-        return contadorPosicion
-    else:
-        return -1
 
 
 def buscarUsuarioPorNombre(array, nombre):
@@ -119,7 +148,7 @@ def buscarUsuarioPorNombre(array, nombre):
     while (contadorPosicion < (len(array) - 1) and (array[contadorPosicion][2] != nombre)):
         contadorPosicion += 1
 
-    if (array[contadorPosicion][2] == nombre):
+    if (array[contadorPosicion][2] == nombre and nombre != ""):
         return contadorPosicion
     else:
         return -1
@@ -136,42 +165,6 @@ def buscarUsuarioPorId(array, b):
     else:
         return -1
 
-
-# LLEGUE HASTA ACA
-
-
-def registro(array):
-    i = buscarEspacioVacioPorPosicion(array)
-
-    if (i == 8):
-        print("No hay mas espacio para registros.")
-    else:
-        print('REGISTRO')
-        print('------------')
-        email = input('Ingrese el email:')
-        encontrado = buscarUsuarioPorEmail(array, email)
-
-        while (encontrado != -1):
-            print('Usuario ya creado, por favor ingrese otro email.')
-            email = input('Ingrese el email:')
-            encontrado = buscarUsuarioPorEmail(array, email)
-
-        array[i][0] = email
-        array[i][1] = obtenerPassword()
-        array[i][2] = input("Ingrese nombre y apellido: ")
-        array[i][3] = "Estudiante"
-        array[i][7] = "s"
-        limpiarConsola()
-        posicion_registrado = buscarEspacioVacioPorPosicion(estudiantes) - 1
-
-        for i in range(posicion_registrado+1):
-            matrizLikes[posicion_registrado][i] = random.randint(0, 1)
-            matrizLikes[i][posicion_registrado] = random.randint(0, 1)
-        matrizLikes[posicion_registrado][posicion_registrado] = 0
-
-    print(matrizLikes)
-
-
 def calcularEdad(fecha_nacimiento):
     # Convertir el string de fecha de nacimiento a un objeto datetime
     fecha_nac = datetime.strptime(fecha_nacimiento, "%Y-%m-%d")
@@ -186,7 +179,6 @@ def calcularEdad(fecha_nacimiento):
     if (hoy.month, hoy.day) < (fecha_nac.month, fecha_nac.day):
         edad -= 1
     return edad
-
 
 def pedirFecha():
     fecha_actual = date.today()
@@ -346,6 +338,154 @@ def reportarCandidatos():
         else:
             print('No hay mas memoria para reportes!')
 
+def desactivarEstudiante():
+    print('ESTUDIANTES')
+    print('---------------')
+    ultimo_estudiante = buscarEspacioVacioPorPosicion(estudiantes)
+    if (ultimo_estudiante == -1):
+        ultimo_estudiante = len(estudiantes)
+
+    for i in range(ultimo_estudiante):
+        print('ID: ', i)
+        print('Nombre: ', estudiantes[i][2])
+        activo = 'Si' if estudiantes[i][7] == 's' else 'No'
+        print('Usuario activo: ', activo)
+        print('-------------------')
+
+    usuario_encontrado = -1
+    opc = input(
+        '1. Por ID \n2. Por Nombre \nIngrese la forma en la que quiere desactivar: ')
+    while (opc != "1" and opc != "2"):
+        opc = input(
+            '1. Por ID \n2. Por Nombre \nIngrese la forma en la que quiere desactivar: ')
+    # Si elige la opcion por ID
+    if (opc == "1"):
+        try:
+            estudiante_desactivado = int(
+                input('Ingrese la ID del estudiante a desactivar: '))
+            usuario_encontrado = buscarUsuarioPorId(
+                estudiantes, estudiante_desactivado)
+        except:
+            print("Ingrese una opcion válida")
+    # Si elige la opcion por Nombre
+    else:
+        estudiante_desactivado = input(
+            "Ingrese el nombre del estudiante a desactivar: ")
+        usuario_encontrado = buscarUsuarioPorNombre(
+            estudiantes, estudiante_desactivado)
+    if (usuario_encontrado != -1):
+        confirmacion = input(
+            'Esta seguro que desea continuar con la accion? S/N: ').capitalize()
+        while (confirmacion != 'S' and confirmacion != 'N'):
+            print('No ha ingresado una opcion valida, vuelta a intentar!')
+            confirmacion = input(
+                'Esta seguro que desea continuar con la accion? S/N: ').capitalize()
+
+        if (confirmacion == 'S'):
+            if (estudiantes[usuario_encontrado][7] == 'n'):
+                estudiantes[usuario_encontrado][7] = 's'
+                print('Estudiante activado con exito!')
+            else:
+                estudiantes[usuario_encontrado][7] = 'n'
+                print('Estudiante desactivado con exito!')
+        else:
+            print('Accion abortada.')
+    else:
+        print("El usuario no se encontró. Ingrese opción válida.")
+
+def verReportes():
+    reportes_contador = 0
+    ultimo_reporte = buscarEspacioVacioPorPosicion(reportes_motivos)
+
+    if (ultimo_reporte == -1):
+        ultimo_reporte = len(reportes_motivos)
+
+    for i in range(ultimo_reporte):
+        estadoReportante = estudiantes[reportes_ids[i][0]][7]
+        estadoReportado = estudiantes[reportes_ids[i][1]][7]
+        estadoReporte = reportes_motivos[i][1]
+        if (estadoReportante == 's' and estadoReportado == "s" and estadoReporte == '0'):
+            reportes_contador = + 1
+            print('Reporte numero: ', i+1)
+            print('Estado del reporte: ', reportes_motivos[i][1])
+            print('-----------------')
+    if (reportes_contador == 0):
+        print('No hay reportes para analizar.')
+    else:
+        eleccion = int(
+            input('Ingrese el numero de reporte que desea ver o presione 0 para salir'))
+
+        while (eleccion < 0 or eleccion > 50):
+            eleccion = int(
+                input('Ingrese el numero de reporte que desea ver. Presione 0 para salir'))
+
+        estadoReportanteEleccion = estudiantes[reportes_ids[eleccion-1][0]][7]
+        estadoReportadoEleccion = estudiantes[reportes_ids[eleccion-1][1]][7]
+        estadoReporteEleccion = reportes_motivos[eleccion-1][1]
+
+        if (eleccion != 0 and estadoReportanteEleccion == 's' and estadoReportadoEleccion == "s" and estadoReporteEleccion == '0'):
+            print('ID usuario reportante: ', reportes_ids[eleccion-1][0])
+            print('ID usuario reportado: ', reportes_ids[eleccion-1][1])
+            print('Motivo del reporte: ', reportes_motivos[eleccion-1][0])
+
+            accion = input(
+                'Ignorar reporte (I) o dar de baja al reportado (B)?').capitalize()
+            if (accion == 'I'):
+                reportes_motivos[eleccion-1][1] = '2'
+                print("Has ignorado la solicitud")
+            elif (accion == 'B'):
+                reportes_motivos[eleccion-1][1] = '1'
+                estudiantes[reportes_ids[eleccion-1][1]][7] = 'n'
+                print("Has aceptado la solicitud. El usuario ha sido dado de baja")
+            else:
+                print('No has elegido una opcion valida!')
+        else:
+            print('El reporte no se encuentra')
+
+#Reportes Estadisticos inicio
+def matcheosMutuos():
+    acumMeGustaMutuos = 0
+    i = usuario_logueado[0]
+    j = 0
+    while (matrizLikes[i][j] != -1):
+        if (i != j):
+            if (matrizLikes[i][j] == 1):
+                if (matrizLikes[j][i] == 1):
+                    if (estudiantes[i][7] != "n" and estudiantes[j][7] != "n"):
+                        acumMeGustaMutuos = acumMeGustaMutuos+1
+        j = j+1
+
+    porcentaje = acumMeGustaMutuos/(j-1)*100
+    return porcentaje
+
+
+def meGustaNoDevueltos():
+    acumMeGustaNoDevueltos = 0
+    i = usuario_logueado[0]
+    j = 0
+    while (matrizLikes[i][j] != -1):
+        if (i != j):
+            if (matrizLikes[i][j] == 1):
+                if (matrizLikes[j][i] == 0):
+                    if (estudiantes[i][7] != "n" and estudiantes[j][7] != "n"):
+                        acumMeGustaNoDevueltos = acumMeGustaNoDevueltos+1
+        j = j+1
+    return acumMeGustaNoDevueltos
+
+
+def leGustoYNoMeGusta():
+    acum = 0
+    i = usuario_logueado[0]
+    j = 0
+    while (matrizLikes[i][j] != -1):
+        if (i != j):
+            if (matrizLikes[i][j] == 0):
+                if (matrizLikes[j][i] == 1):
+                    if (estudiantes[i][7] != "n" and estudiantes[j][7] != "n"):
+                        acum = acum+1
+        j = j+1
+    return acum
+#Reportes Estadisticos fin
 
 def opMenuEstudiante(num_op):
     volver_principal = False
@@ -428,137 +568,6 @@ def opMenuEstudiante(num_op):
         print('------------------------')
 
 
-def menuEstudiante():
-    num_op = ''
-    while (num_op != '0'):
-        menu_principal = "MENU PRINCIPAL ESTUDIANTE \n------------------ \n1.Gestionar mi perfil \n2.Gestionar candidatos \n3.Matcheos \n4.Reportes estadísticos \n0.Salir"
-        print(menu_principal)
-        num_op = input("Ingresar número de opción (1, 2, 3, 4, 0): ")
-        limpiarConsola()
-        opMenuEstudiante(num_op)
-
-        if (estudiantes[usuario_logueado[0]][7] == 'n'):
-            num_op = '0'
-            usuario_logueado[0] = -1
-            usuario_logueado[1] = -1
-
-
-def menuModerador():
-    num_op = ''
-    while num_op != '0':
-        menu_principal = "MENU PRINCIPAL MODERADOR \n------------------ \n1. Gestionar usuarios \n2. Gestionar reportes \n3. Reportes estadísticos \n0. Salir"
-        print(menu_principal)
-        num_op = input("Ingresar número de opción (1, 2, 3, 0): ")
-        limpiarConsola()
-        opMenuModerador(num_op)
-
-
-def desactivarEstudiante():
-    print('ESTUDIANTES')
-    print('---------------')
-    ultimo_estudiante = buscarEspacioVacioPorPosicion(estudiantes)
-    if (ultimo_estudiante == -1):
-        ultimo_estudiante = len(estudiantes)
-
-    for i in range(ultimo_estudiante):
-        print('ID: ', i)
-        print('Nombre: ', estudiantes[i][2])
-        activo = 'Si' if estudiantes[i][7] == 's' else 'No'
-        print('Usuario activo: ', activo)
-        print('-------------------')
-
-    usuario_encontrado = -1
-    opc = input(
-        '1. Por ID \n2. Por Nombre \nIngrese la forma en la que quiere desactivar: ')
-    while (opc != "1" and opc != "2"):
-        opc = input(
-            '1. Por ID \n2. Por Nombre \nIngrese la forma en la que quiere desactivar: ')
-    # Si elige la opcion por ID
-    if (opc == "1"):
-        try:
-            estudiante_desactivado = int(
-                input('Ingrese la ID del estudiante a desactivar: '))
-            usuario_encontrado = buscarUsuarioPorId(
-                estudiantes, estudiante_desactivado)
-        except:
-            print("Ingrese una opcion válida")
-    # Si elige la opcion por Nombre
-    else:
-        estudiante_desactivado = input(
-            "Ingrese el nombre del estudiante a desactivar: ")
-        usuario_encontrado = buscarUsuarioPorNombre(
-            estudiantes, estudiante_desactivado)
-    if (usuario_encontrado != -1):
-        confirmacion = input(
-            'Esta seguro que desea continuar con la accion? S/N: ').capitalize()
-        while (confirmacion != 'S' and confirmacion != 'N'):
-            print('No ha ingresado una opcion valida, vuelta a intentar!')
-            confirmacion = input(
-                'Esta seguro que desea continuar con la accion? S/N: ').capitalize()
-
-        if (confirmacion == 'S'):
-            if (estudiantes[usuario_encontrado][7] == 'n'):
-                estudiantes[usuario_encontrado][7] = 's'
-                print('Estudiante activado con exito!')
-            else:
-                estudiantes[usuario_encontrado][7] = 'n'
-                print('Estudiante desactivado con exito!')
-        else:
-            print('Accion abortada.')
-    else:
-        print("El usuario no se encontró. Ingrese opción válida.")
-
-
-def verReportes():
-    reportes_contador = 0
-    ultimo_reporte = buscarEspacioVacioPorPosicion(reportes_motivos)
-
-    if (ultimo_reporte == -1):
-        ultimo_reporte = len(reportes_motivos)
-
-    for i in range(ultimo_reporte):
-        estadoReportante = estudiantes[reportes_ids[i][0]][7]
-        estadoReportado = estudiantes[reportes_ids[i][1]][7]
-        estadoReporte = reportes_motivos[i][1]
-        if (estadoReportante == 's' and estadoReportado == "s" and estadoReporte == '0'):
-            reportes_contador = + 1
-            print('Reporte numero: ', i+1)
-            print('Estado del reporte: ', reportes_motivos[i][1])
-            print('-----------------')
-    if (reportes_contador == 0):
-        print('No hay reportes para analizar.')
-    else:
-        eleccion = int(
-            input('Ingrese el numero de reporte que desea ver o presione 0 para salir'))
-
-        while (eleccion < 0 or eleccion > 50):
-            eleccion = int(
-                input('Ingrese el numero de reporte que desea ver. Presione 0 para salir'))
-
-        estadoReportanteEleccion = estudiantes[reportes_ids[eleccion-1][0]][7]
-        estadoReportadoEleccion = estudiantes[reportes_ids[eleccion-1][1]][7]
-        estadoReporteEleccion = reportes_motivos[eleccion-1][1]
-
-        if (eleccion != 0 and estadoReportanteEleccion == 's' and estadoReportadoEleccion == "s" and estadoReporteEleccion == '0'):
-            print('ID usuario reportante: ', reportes_ids[eleccion-1][0])
-            print('ID usuario reportado: ', reportes_ids[eleccion-1][1])
-            print('Motivo del reporte: ', reportes_motivos[eleccion-1][0])
-
-            accion = input(
-                'Ignorar reporte (I) o dar de baja al reportado (B)?').capitalize()
-            if (accion == 'I'):
-                reportes_motivos[eleccion-1][1] = '2'
-                print("Has ignorado la solicitud")
-            elif (accion == 'B'):
-                reportes_motivos[eleccion-1][1] = '1'
-                estudiantes[reportes_ids[eleccion-1][1]][7] = 'n'
-                print("Has aceptado la solicitud. El usuario ha sido dado de baja")
-            else:
-                print('No has elegido una opcion valida!')
-        else:
-            print('El reporte no se encuentra')
-
-
 def opMenuModerador(num_op):
     volver_principal = False
     if num_op == "1":
@@ -607,62 +616,44 @@ def opMenuModerador(num_op):
         print('------------------------')
 
 
-def matcheosMutuos():
-    acumMeGustaMutuos = 0
-    i = usuario_logueado[0]
-    j = 0
-    while (matrizLikes[i][j] != -1):
-        if (i != j):
-            if (matrizLikes[i][j] == 1):
-                if (matrizLikes[j][i] == 1):
-                    if (estudiantes[i][7] != "n" and estudiantes[j][7] != "n"):
-                        acumMeGustaMutuos = acumMeGustaMutuos+1
-        j = j+1
+def menuModerador():
+    num_op = ''
+    while num_op != '0':
+        menu_principal = "MENU PRINCIPAL MODERADOR \n------------------ \n1. Gestionar usuarios \n2. Gestionar reportes \n3. Reportes estadísticos \n0. Salir"
+        print(menu_principal)
+        num_op = input("Ingresar número de opción (1, 2, 3, 0): ")
+        limpiarConsola()
+        opMenuModerador(num_op)
 
-    porcentaje = acumMeGustaMutuos/(j-1)*100
-    return porcentaje
+def registro(array):
+    i = buscarEspacioVacioPorPosicion(array)
 
+    if (i == 8):
+        print("No hay mas espacio para registros.")
+    else:
+        print('REGISTRO')
+        print('------------')
+        email = input('Ingrese el email:')
+        encontrado = buscarUsuarioPorEmail(array, email)
 
-def meGustaNoDevueltos():
-    acumMeGustaNoDevueltos = 0
-    i = usuario_logueado[0]
-    j = 0
-    while (matrizLikes[i][j] != -1):
-        if (i != j):
-            if (matrizLikes[i][j] == 1):
-                if (matrizLikes[j][i] == 0):
-                    if (estudiantes[i][7] != "n" and estudiantes[j][7] != "n"):
-                        acumMeGustaNoDevueltos = acumMeGustaNoDevueltos+1
-        j = j+1
-    return acumMeGustaNoDevueltos
+        while (encontrado != -1):
+            print('Usuario ya creado, por favor ingrese otro email.')
+            email = input('Ingrese el email:')
+            encontrado = buscarUsuarioPorEmail(array, email)
 
+        array[i][0] = email
+        array[i][1] = obtenerPassword()
+        array[i][2] = input("Ingrese nombre y apellido: ")
+        array[i][3] = "Estudiante"
+        array[i][4] = pedirFecha()
+        array[i][7] = "s"
+        limpiarConsola()
+        posicion_registrado = buscarEspacioVacioPorPosicion(estudiantes) - 1
 
-def leGustoYNoMeGusta():
-    acum = 0
-    i = usuario_logueado[0]
-    j = 0
-    while (matrizLikes[i][j] != -1):
-        if (i != j):
-            if (matrizLikes[i][j] == 0):
-                if (matrizLikes[j][i] == 1):
-                    if (estudiantes[i][7] != "n" and estudiantes[j][7] != "n"):
-                        acum = acum+1
-        j = j+1
-    return acum
-
-
-def generarInteracciones():
-    ultimo = buscarEspacioVacioPorPosicion(estudiantes)
-    if (ultimo == -1):
-        ultimo = len(estudiantes)
-
-    for i in range(ultimo):
-        for j in range(ultimo):
-            if (i != j):
-                matrizLikes[i][j] = random.randint(0, 1)
-            else:
-                matrizLikes[i][j] = 0
-
+        for i in range(posicion_registrado+1):
+            matrizLikes[posicion_registrado][i] = random.randint(0, 1)
+            matrizLikes[i][posicion_registrado] = random.randint(0, 1)
+        matrizLikes[posicion_registrado][posicion_registrado] = 0
 
 def cantidadMatcheosPosibles(estudiantes):
     cantidadEstudiantes = buscarEspacioVacioPorPosicion(estudiantes)
@@ -670,7 +661,6 @@ def cantidadMatcheosPosibles(estudiantes):
         (cantidadEstudiantes - 1)
     print('La cantidad de matcheos posibles entre todos los estudiantes es de: ',
           cantidadMatcheosPosiblesTotales)
-
 
 # BONUS TRACK 1 - INICIO
 # Definimos y dimensionamos el arreglo edades
