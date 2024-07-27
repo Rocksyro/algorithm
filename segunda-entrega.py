@@ -1,7 +1,27 @@
+# CATEDRA: ALGORITMOS Y ESTRUCTURAS DE DATOS
+# TRABAJO PRACTICO N° 2
+# INTEGRANTES DEL GRUPO: Battocchio, Leandro
+#                        Carle, Rocio
+#                        Kopp, Brenda
+#                        Urquiza, Juan
+#----------------------------------------------------------------
+# Es necesario instalar esta libreria con: 'pip install pwinput' 
+# Importamos el módulo que hará que la contraseña no se vea
 import pwinput
+# Importamos el modulo para poder limpiar la consola
 import os
+#Importamos el modulo para manejar fechas
 from datetime import date, datetime
+#Importamos el módulo para la ruleta
 import random
+
+# VARIABLES - TIPO DE DATOS:
+# matrizLikes - ARRAY OF STRING (8x8)
+# estudiantes - ARRAY OF STRING (8x8)
+# moderadores - ARRAY OF STRING (8x4)
+# reportes_motivos - ARRAY OF STRING(2x49)
+# reportes_ids - ARRAY OF INTEGER(2x49)
+# usuario_logueado - ARRAY OF INTEGER (2x1)
 
 # PRIMERO COLUMNAS, SEGUNDO FILAS
 matrizLikes = [[-1]*8 for n in range(8)]
@@ -11,22 +31,20 @@ reportes_motivos = [[''] * 2 for n in range(49)]
 reportes_ids = [[-1] * 2 for n in range(49)]
 
 # Tanto el ID de cada estudiante como de cada moderador va a ser siempre un número entero auto-incremental, que comienza en 0.
-estudiantes[0] = ["estudiante1@ayed.com", "111222", "Pedro Castillo", "Estudiante",
-                  "1994-06-20", "Hola esta es mi biografia", "Andar a caballo es mi hobbie", "s"]
-estudiantes[1] = ["estudiante2@ayed.com", "333444", "Florencia Abascal", "Estudiante",
-                  "2000-04-20", "Hola qué tal", "Hacer deporte", "s"]
-estudiantes[2] = ["estudiante3@ayed.com", "555666", "Raul Gimenez", "Estudiante",
-                  "2002-10-9", "Soy feli", "Jugar Lol", "s"]
+estudiantes[0] = ["estudiante1@ayed.com", "111222", "Pedro Castillo", "Estudiante", "1994-06-20", "Hola esta es mi biografia", "Andar a caballo es mi hobbie", "s"]
+estudiantes[1] = ["estudiante2@ayed.com", "333444", "Florencia Abascal", "Estudiante", "2000-04-20", "Hola qué tal", "Hacer deporte", "s"]
+estudiantes[2] = ["estudiante3@ayed.com", "555666", "Raul Gimenez", "Estudiante", "2002-10-9", "Soy feli", "Jugar Lol", "s"]
 
-moderadores[0] = ["moderador1@ayed.com", "111222", "Pipo Castillo", "Moderador",
-                  "2000-07-12", "Hola esta es mi biografia", "Andar a caballo es mi hobbie", "s"]
-moderadores[1] = ["moderador2@ayed.com", "333444", "Jalan Abascal", "Moderador",
-                  "2000-07-12", "Hola esta es mi biografia", "Andar a caballo es mi hobbie", "s"]
+moderadores[0] = ["moderador1@ayed.com", "111222", "Pipo Castillo", "Moderador", "2000-07-12", "Hola esta es mi biografia", "Andar a caballo es mi hobbie", "s"]
+moderadores[1] = ["moderador2@ayed.com", "333444", "Jalan Abascal", "Moderador", "2000-07-12", "Hola esta es mi biografia", "Andar a caballo es mi hobbie", "s"]
 
 # ID del usuario - Tipo de usuario (0 = estudiantes, 1 = moderador)
 usuario_logueado = [-1, -1]
 
-
+#Función para buscar espacios vacíos por posición.
+# VARIABLES - TIPO DE DATOS:
+# a - ARRAY OF INTEGER
+# i - INTEGER
 def buscarEspacioVacioPorPosicion(a):
     i = 0
     while (i < (len(a)) and a[i][0] != ''):
@@ -34,7 +52,11 @@ def buscarEspacioVacioPorPosicion(a):
     else:
         return i
 
-
+# Función para buscar usuario por email
+# VARIABLES - TIPO DE DATOS:
+# array - ARRAY OF STRING
+# email - STRING
+# contadorPosicion - INTEGER
 def buscarUsuarioPorEmail(array, email):
     contadorPosicion = 0
     while (contadorPosicion < (len(array) - 1) and (array[contadorPosicion][0] != email)):
@@ -45,9 +67,11 @@ def buscarUsuarioPorEmail(array, email):
     else:
         return -1
 
-# Procedimiento generarInteracciones
-
-
+# Procedimiento para generar interacciones aleatorias en la matriz de "me gusta"
+# VARIABLES - TIPO DE DATOS:
+# ultimo - INTEGER
+# estudiantes - ARRAY OF STRING
+# matrizLikes - ARRAY OF INTEGER
 def generarInteracciones():
     ultimo = buscarEspacioVacioPorPosicion(estudiantes)
     if (ultimo == -1):
@@ -60,22 +84,23 @@ def generarInteracciones():
             else:
                 matrizLikes[i][j] = 0
 
-# Procedimiento limpiarConsola (Funcion dedicada a limpiar la consola para no saturar la pantalla de informacion)
-
-
+# Procedimiento para limpiar la consola (para no saturar la pantalla de información)
 def limpiarConsola():
     os.system('cls' if os.name == 'nt' else 'clear')
 
-# Funcion obtenerPassword (para que en vez de la password aparezcan asteriscos)
+# Procedimiento utilizado para que en vez de la password aparezcan asteriscos
 # VARIABLES - TIPO DE DATOS:
 # password - STRING
-
-
 def obtenerPassword():
     password = pwinput.pwinput('Introduce tu contraseña: ')
     return password
 
-
+# Función para loguearse en el programa
+# VARIABLES - TIPO DE DATOS:
+# usuario_logueado - ARRAY OF INTEGER
+# estudiantes, moderadores - ARRAY OF STRING
+# intentos, cantidadEstudiantes, cantidadModeradores, resultadoBusqueda - INTEGER
+# email, password - STRING
 def login(usuario_logueado, estudiantes, moderadores):
     intentos = 0
     cantidadEstudiantes = buscarEspacioVacioPorPosicion(estudiantes)
@@ -101,8 +126,7 @@ def login(usuario_logueado, estudiantes, moderadores):
                         for i in range(len(estudiantes[0])):
                             usuario_logueado[0] = resultadoBusqueda
                         limpiarConsola()
-                        print("Login exitoso! bienvenido usuario ",
-                              estudiantes[usuario_logueado[0]][2], '.')
+                        print("Login exitoso! bienvenido usuario ", estudiantes[usuario_logueado[0]][2], '.')
                         usuario_logueado[1] = 0
                         print('--------------------')
                     else:
@@ -117,8 +141,7 @@ def login(usuario_logueado, estudiantes, moderadores):
                             for i in range(len(moderadores[0])):
                                 usuario_logueado[0] = resultadoBusqueda
                             limpiarConsola()
-                            print("Login exitoso! bienvenido moderador ",
-                                  moderadores[usuario_logueado[0]][2])
+                            print("Login exitoso! bienvenido moderador ", moderadores[usuario_logueado[0]][2])
                             usuario_logueado[1] = 1
                         else:
                             intentos = intentos + 1
@@ -128,7 +151,11 @@ def login(usuario_logueado, estudiantes, moderadores):
     else:
         print('No hay suficientes usuario creados para el logueo')
 
-
+# Procedimiento para mostrar el menú del rol estudiante
+# VARIABLES - TIPO DE DATOS:
+# num_op, menu_principal - STRING
+# estudiantes - ARRAY OF STRING
+# usuario_logueado - ARRAY OF INTEGER
 def menuEstudiante():
     num_op = ''
     while (num_op != '0'):
@@ -143,7 +170,11 @@ def menuEstudiante():
             usuario_logueado[0] = -1
             usuario_logueado[1] = -1
 
-
+# Función para buscar usuario por nombre
+# VARIABLES - TIPO DE DATOS:
+# array - ARRAY OF STRING
+# nombre - STRING
+# contadorPosicion - INTEGER
 def buscarUsuarioPorNombre(array, nombre):
     contadorPosicion = 0
     while (contadorPosicion < (len(array) - 1) and (array[contadorPosicion][2] != nombre)):
@@ -153,6 +184,7 @@ def buscarUsuarioPorNombre(array, nombre):
         return contadorPosicion
     else:
         return -1
+
 
 # La ID es un Integer
 
