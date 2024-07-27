@@ -23,7 +23,6 @@ import random
 # reportes_ids - ARRAY OF INTEGER(2x49)
 # usuario_logueado - ARRAY OF INTEGER (2x1)
 
-# PRIMERO COLUMNAS, SEGUNDO FILAS
 matrizLikes = [[-1]*8 for n in range(8)]
 estudiantes = [['']*8 for n in range(8)]
 moderadores = [['']*8 for n in range(4)]
@@ -41,7 +40,6 @@ moderadores[1] = ["moderador2@ayed.com", "333444", "Jalan Abascal", "Moderador",
 # ID del usuario - Tipo de usuario (0 = estudiantes, 1 = moderador)
 usuario_logueado = [-1, -1]
 
-#Función para buscar espacios vacíos por posición.
 # VARIABLES - TIPO DE DATOS:
 # a - ARRAY OF INTEGER
 # i - INTEGER
@@ -52,7 +50,6 @@ def buscarEspacioVacioPorPosicion(a):
     else:
         return i
 
-# Función para buscar usuario por email
 # VARIABLES - TIPO DE DATOS:
 # array - ARRAY OF STRING
 # email - STRING
@@ -67,7 +64,6 @@ def buscarUsuarioPorEmail(array, email):
     else:
         return -1
 
-# Procedimiento para generar interacciones aleatorias en la matriz de "me gusta"
 # VARIABLES - TIPO DE DATOS:
 # ultimo - INTEGER
 # estudiantes - ARRAY OF STRING
@@ -84,18 +80,15 @@ def generarInteracciones():
             else:
                 matrizLikes[i][j] = 0
 
-# Procedimiento para limpiar la consola (para no saturar la pantalla de información)
 def limpiarConsola():
     os.system('cls' if os.name == 'nt' else 'clear')
 
-# Procedimiento utilizado para que en vez de la password aparezcan asteriscos
 # VARIABLES - TIPO DE DATOS:
 # password - STRING
 def obtenerPassword():
     password = pwinput.pwinput('Introduce tu contraseña: ')
     return password
 
-# Función para loguearse en el programa
 # VARIABLES - TIPO DE DATOS:
 # usuario_logueado - ARRAY OF INTEGER
 # estudiantes, moderadores - ARRAY OF STRING
@@ -133,7 +126,6 @@ def login(usuario_logueado, estudiantes, moderadores):
                         intentos = intentos + 1
             else:
                 resultadoBusqueda = buscarUsuarioPorEmail(moderadores, email)
-
                 if (resultadoBusqueda != -1):
                     while (intentos < 3 and usuario_logueado[0] == -1):
                         password = obtenerPassword()
@@ -151,7 +143,6 @@ def login(usuario_logueado, estudiantes, moderadores):
     else:
         print('No hay suficientes usuario creados para el logueo')
 
-# Procedimiento para mostrar el menú del rol estudiante
 # VARIABLES - TIPO DE DATOS:
 # num_op, menu_principal - STRING
 # estudiantes - ARRAY OF STRING
@@ -170,7 +161,6 @@ def menuEstudiante():
             usuario_logueado[0] = -1
             usuario_logueado[1] = -1
 
-# Función para buscar usuario por nombre
 # VARIABLES - TIPO DE DATOS:
 # array - ARRAY OF STRING
 # nombre - STRING
@@ -185,12 +175,10 @@ def buscarUsuarioPorNombre(array, nombre):
     else:
         return -1
 
-
-# La ID es un Integer
-
-
+# VARIABLES - TIPO DE DATOS:
+#array - array of string
+#id - integer
 def buscarUsuarioPorId(array, id):
-
     usuario_buscado = array[id]
 
     if (usuario_buscado[0] != ''):
@@ -198,23 +186,22 @@ def buscarUsuarioPorId(array, id):
     else:
         return -1
 
-
+# VARIABLES - TIPO DE DATOS:
+#fecha_nac, hoy - datetime
+#edad - integer
 def calcularEdad(fecha_nacimiento):
-    # Convertir el string de fecha de nacimiento a un objeto datetime
     fecha_nac = datetime.strptime(fecha_nacimiento, "%Y-%m-%d")
-
-    # Obtener la fecha actual
     hoy = datetime.today()
-
     # Calcular la diferencia de años
     edad = hoy.year - fecha_nac.year
-
     # Ajustar si no ha cumplido años este año
     if (hoy.month, hoy.day) < (fecha_nac.month, fecha_nac.day):
         edad -= 1
     return edad
 
-
+# VARIABLES - TIPO DE DATOS:
+#anio, mes, dia - integer
+#fecha - string
 def pedirFecha():
     fecha_actual = date.today()
     anio = int(input("Ingrese el año de nacimiento (YYYY): "))
@@ -235,13 +222,11 @@ def pedirFecha():
     fecha = f'{anio}-{mes}-{dia}'
     return fecha
 
-
+# VARIABLES - TIPO DE DATOS:
+#opEdit - integer
 def editarPerfil(usuario_logueado):
-    print("Datos personales \n---------------\nFecha: ", estudiantes[usuario_logueado[0]][4], "\nBiografía: ",
-          estudiantes[usuario_logueado[0]][5], "\nHobbies: ", estudiantes[usuario_logueado[0]][6], '\n---------------')
-
-    opEdit = input(
-        "1.Fecha \n2.Biografía \n3.Hobbies \n0.Volver\nIngresar qué dato quiere editar (sólo número): ")
+    print("Datos personales \n---------------\nFecha: ", estudiantes[usuario_logueado[0]][4], "\nBiografía: ", estudiantes[usuario_logueado[0]][5], "\nHobbies: ", estudiantes[usuario_logueado[0]][6], '\n---------------')
+    opEdit = input("1.Fecha \n2.Biografía \n3.Hobbies \n0.Volver\nIngresar qué dato quiere editar (sólo número): ")
     limpiarConsola()
 
     while (opEdit != '0'):
@@ -252,20 +237,18 @@ def editarPerfil(usuario_logueado):
             estudiantes[usuario_logueado[0]][5] = input("Nueva biografía: ")
             limpiarConsola()
         elif (opEdit == '3'):
-            estudiantes[usuario_logueado[0]][6] = input(
-                "Agregar nuevo Hobby: ")
+            estudiantes[usuario_logueado[0]][6] = input("Agregar nuevo Hobby: ")
             limpiarConsola()
         else:
             print('No has elegido una opcion valida.')
             print('------------------------')
-
-        print("Datos personales \n---------------\nFecha: ", estudiantes[usuario_logueado[0]][4], "\nBiografía: ",
-              estudiantes[usuario_logueado[0]][5], "\nHobbies: ", estudiantes[usuario_logueado[0]][6], '\n---------------')
-        opEdit = input(
-            "1.Fecha \n2.Biografía \n3.Hobbies \n0.Volver\nIngresar qué dato quiere editar (sólo número): ")
+        print("Datos personales \n---------------\nFecha: ", estudiantes[usuario_logueado[0]][4], "\nBiografía: ", estudiantes[usuario_logueado[0]][5], "\nHobbies: ", estudiantes[usuario_logueado[0]][6], '\n---------------')
+        opEdit = input("1.Fecha \n2.Biografía \n3.Hobbies \n0.Volver\nIngresar qué dato quiere editar (sólo número): ")
         limpiarConsola()
 
-
+# VARIABLES - TIPO DE DATOS:
+#ultimo - integer
+#a - array of string
 def mostrar(a):
     ultimo = buscarEspacioVacioPorPosicion(a)
     if ultimo == -1:
@@ -280,51 +263,47 @@ def mostrar(a):
             print('Hobbies: ', a[i][6])
             print('-------------------------')
 
-
+# VARIABLES - TIPO DE DATOS:
+#matchear - char
+#me_gusta - string
+#idEstudianteMeGusta - integer
 def verCandidatos():
     mostrar(estudiantes)
-    matchear = input(
-        '\nQuieres darle like a algun candidato? Ingrese "S/N": ').capitalize()
+    matchear = input('\nQuieres darle like a algun candidato? Ingrese "S/N": ').capitalize()
     while (matchear != 'S' and matchear != 'N'):
         print('---------------')
         print('No ha ingresado una opcion valida!')
         print('---------------')
-        matchear = input(
-            'Quieres darle like a algun candidato? Ingrese "S/N": ').capitalize()
+        matchear = input('Quieres darle like a algun candidato? Ingrese "S/N": ').capitalize()
 
     if (matchear == 'S'):
-        me_gusta = input(
-            '--------------- \nIngrese el nombre de la persona con la que le gustaria matchear: ')
+        me_gusta = input('--------------- \nIngrese el nombre de la persona con la que le gustaria matchear: ')
         limpiarConsola()
         idEstudianteMeGusta = buscarUsuarioPorNombre(estudiantes, me_gusta)
         if (idEstudianteMeGusta != -1):
-
             if (matrizLikes[usuario_logueado[0]][idEstudianteMeGusta] == 1):
                 matrizLikes[usuario_logueado[0]][idEstudianteMeGusta] = 0
-                print('Le has quitado el me gusta al usuario: ',
-                      estudiantes[idEstudianteMeGusta][2])
+                print('Le has quitado el me gusta al usuario: ', estudiantes[idEstudianteMeGusta][2])
             else:
                 matrizLikes[usuario_logueado[0]][idEstudianteMeGusta] = 1
-                print('Le has dado un me gusta al usuario: ',
-                      estudiantes[idEstudianteMeGusta][2])
+                print('Le has dado un me gusta al usuario: ', estudiantes[idEstudianteMeGusta][2])
         else:
             print('No se ha ingresado un nombre de estudiante valido. \n---------------')
     else:
         limpiarConsola()
 
-
+# VARIABLES - TIPO DE DATOS:
+#opc - char
 def desactivarPerfil(usuario_logueado):
     opc = ''
     while (opc != 'S' and opc != 'N'):
         print('ATENCION')
         print('--------------------')
-        opc = input(
-            'Esta apunto de inhabilitar su perfil, esta seguro de esta accion? S/N: ').capitalize()
+        opc = input('Esta apunto de inhabilitar su perfil, esta seguro de esta accion? S/N: ').capitalize()
 
         if (opc != 'S' and opc != 'N'):
             limpiarConsola()
             print('No ha ingresado una opcion valida, vuelva a intentar!')
-
     if (opc == 'S'):
         estudiantes[usuario_logueado[0]][7] = 'n'
         limpiarConsola()
@@ -332,30 +311,25 @@ def desactivarPerfil(usuario_logueado):
     else:
         limpiarConsola()
 
-
+# VARIABLES - TIPO DE DATOS:
+#usuario_encontrado, opc, estudiante_reportado - integer
+#estudiante_reportado, motivo - string
 def reportarCandidatos():
     print("MENU REPORTAR")
     usuario_encontrado = -1
-    opc = input(
-        '1. Por ID \n2. Por Nombre \nIngrese la forma que quiere reportar: ')
+    opc = input('1. Por ID \n2. Por Nombre \nIngrese la forma que quiere reportar: ')
     while (opc != "1" and opc != "2"):
         opc = input(
             '1. Por ID \n2. Por Nombre \nIngrese la forma que quiere reportar: ')
-    # Si elige la opcion por ID
     if (opc == "1"):
         try:
-            estudiante_reportado = int(
-                input('Ingrese la ID del estudiante a reportar: '))
-            usuario_encontrado = buscarUsuarioPorId(
-                estudiantes, estudiante_reportado)
+            estudiante_reportado = int(input('Ingrese la ID del estudiante a reportar: '))
+            usuario_encontrado = buscarUsuarioPorId(estudiantes, estudiante_reportado)
         except:
             print("Ingrese una opcion válida")
-    # Si elige la opcion por Nombre
     else:
-        estudiante_reportado = input(
-            "Ingrese el nombre del estudiante a reportar: ")
-        usuario_encontrado = buscarUsuarioPorNombre(
-            estudiantes, estudiante_reportado)
+        estudiante_reportado = input("Ingrese el nombre del estudiante a reportar: ")
+        usuario_encontrado = buscarUsuarioPorNombre(estudiantes, estudiante_reportado)
 
     # Continuacion del reporte
     if (usuario_encontrado == usuario_logueado[0]):
@@ -382,7 +356,10 @@ def reportarCandidatos():
             limpiarConsola()
             print('No hay mas memoria para reportes!')
 
-
+# VARIABLES - TIPO DE DATOS:
+#ultimo_estudiante, i, estudiante_desactivado, opc - integer
+#activo - string
+#confirmacion - char
 def desactivarEstudiante():
     print('ESTUDIANTES')
     print('---------------')
@@ -398,25 +375,19 @@ def desactivarEstudiante():
         print('-------------------')
 
     estudiante_desactivado = -1
-    opc = input(
-        '1. Por ID \n2. Por Nombre \nIngrese la forma en la que quiere desactivar: ')
+    opc = input('1. Por ID \n2. Por Nombre \nIngrese la forma en la que quiere desactivar: ')
     while (opc != "1" and opc != "2"):
-        opc = input(
-            '1. Por ID \n2. Por Nombre \nIngrese la forma en la que quiere desactivar: ')
-    # Si elige la opcion por ID
+        opc = input('1. Por ID \n2. Por Nombre \nIngrese la forma en la que quiere desactivar: ')
     if (opc == "1"):
         try:
             estudiante_desactivado = buscarUsuarioPorId(estudiantes, int(
                 input('Ingrese la ID del estudiante a desactivar: ')))
         except:
             print("Ingrese una opcion válida")
-    # Si elige la opcion por Nombre
     else:
-        estudiante_desactivado = buscarUsuarioPorNombre(estudiantes, input(
-            "Ingrese el nombre del estudiante a desactivar: "))
+        estudiante_desactivado = buscarUsuarioPorNombre(estudiantes, input("Ingrese el nombre del estudiante a desactivar: "))
     if (estudiante_desactivado != -1):
-        confirmacion = input(
-            'Esta seguro que desea continuar con la accion? S/N: ').capitalize()
+        confirmacion = input('Esta seguro que desea continuar con la accion? S/N: ').capitalize()
         while (confirmacion != 'S' and confirmacion != 'N'):
             print('No ha ingresado una opcion valida, vuelta a intentar!')
             confirmacion = input(
@@ -434,11 +405,12 @@ def desactivarEstudiante():
     else:
         print("El usuario no se encontró. Ingrese opción válida.")
 
-
+# VARIABLES - TIPO DE DATOS:
+#reportes_contador, ultimo_reporte, i,  estadoReporte, reportes_contador, eleccion, estadoReporteEleccion - integer
+#estadoReportante, estadoReportado, estadoReportadoEleccion, estadoReportanteEleccion, accion - char
 def verReportes():
     reportes_contador = 0
     ultimo_reporte = buscarEspacioVacioPorPosicion(reportes_motivos)
-
     if (ultimo_reporte == -1):
         ultimo_reporte = len(reportes_motivos)
 
@@ -454,9 +426,7 @@ def verReportes():
     if (reportes_contador == 0):
         print('No hay reportes para analizar.')
     else:
-        eleccion = int(
-            input('Ingrese el numero de reporte que desea ver o presione 0 para salir'))
-
+        eleccion = int(input('Ingrese el numero de reporte que desea ver o presione 0 para salir'))
         while (eleccion < 0 or eleccion > 50):
             eleccion = int(
                 input('Ingrese el numero de reporte que desea ver. Presione 0 para salir'))
@@ -470,8 +440,7 @@ def verReportes():
             print('ID usuario reportado: ', reportes_ids[eleccion-1][1])
             print('Motivo del reporte: ', reportes_motivos[eleccion-1][0])
 
-            accion = input(
-                'Ignorar reporte (I) o dar de baja al reportado (B)?').capitalize()
+            accion = input('Ignorar reporte (I) o dar de baja al reportado (B)?').capitalize()
             if (accion == 'I'):
                 reportes_motivos[eleccion-1][1] = '2'
                 print("Has ignorado la solicitud")
@@ -485,8 +454,9 @@ def verReportes():
             print('El reporte no se encuentra')
 
 # Reportes Estadisticos inicio
-
-
+# VARIABLES - TIPO DE DATOS:
+#acumMeGustaMutuos, i, j - integer
+#porcentaje - float
 def matcheosMutuos():
     acumMeGustaMutuos = 0
     i = usuario_logueado[0]
@@ -498,11 +468,11 @@ def matcheosMutuos():
                     if (estudiantes[i][7] != "n" and estudiantes[j][7] != "n"):
                         acumMeGustaMutuos = acumMeGustaMutuos+1
         j = j+1
-
     porcentaje = acumMeGustaMutuos/(j-1)*100
     return porcentaje
 
-
+# VARIABLES - TIPO DE DATOS:
+#acumMeGustaNoDevueltos, i, j - integer
 def meGustaNoDevueltos():
     acumMeGustaNoDevueltos = 0
     i = usuario_logueado[0]
@@ -516,7 +486,8 @@ def meGustaNoDevueltos():
         j = j+1
     return acumMeGustaNoDevueltos
 
-
+# VARIABLES - TIPO DE DATOS:
+#acum, i, j - integer
 def leGustoYNoMeGusta():
     acum = 0
     i = usuario_logueado[0]
@@ -531,6 +502,9 @@ def leGustoYNoMeGusta():
     return acum
 # Reportes Estadisticos fin
 
+# VARIABLES - TIPO DE DATOS:
+#volver_principal - boolean
+#num_op, letra_op - char
 
 def opMenuEstudiante(num_op):
     volver_principal = False
@@ -611,13 +585,14 @@ def opMenuEstudiante(num_op):
         print('No ha ingresado una opcion valida')
         print('------------------------')
 
-
+# VARIABLES - TIPO DE DATOS:
+#volver_principal - boolean
+#num_op, letra_op - char
 def opMenuModerador(num_op):
     volver_principal = False
     if num_op == "1":
         while (not volver_principal):
-            print(
-                "Gestionar ususarios \n--------------- \na. Desactivar usuario \nb. Volver")
+            print("Gestionar ususarios \n--------------- \na. Desactivar usuario \nb. Volver")
             letra_op = input("Ingrese a, b: ")
             limpiarConsola()
             if letra_op == "a":
@@ -659,7 +634,9 @@ def opMenuModerador(num_op):
         print('No ha ingresado una opcion valida')
         print('------------------------')
 
-
+# VARIABLES - TIPO DE DATOS:
+#num_op - char
+#menu_principal - string
 def menuModerador():
     num_op = ''
     while num_op != '0':
@@ -669,10 +646,11 @@ def menuModerador():
         limpiarConsola()
         opMenuModerador(num_op)
 
-
+# VARIABLES - TIPO DE DATOS:
+#i, encontrado, posicion_registrado - int
+#email - string
 def registro(array):
     i = buscarEspacioVacioPorPosicion(array)
-
     if (i == 8):
         print("No hay mas espacio para registros.")
     else:
@@ -680,7 +658,7 @@ def registro(array):
         print('------------')
         email = input('Ingrese el email:')
         encontrado = buscarUsuarioPorEmail(array, email)
-
+        
         while (encontrado != -1):
             print('Usuario ya creado, por favor ingrese otro email.')
             email = input('Ingrese el email:')
@@ -694,23 +672,20 @@ def registro(array):
         array[i][7] = "s"
         limpiarConsola()
         posicion_registrado = buscarEspacioVacioPorPosicion(estudiantes) - 1
-
         for i in range(posicion_registrado+1):
             matrizLikes[posicion_registrado][i] = random.randint(0, 1)
             matrizLikes[i][posicion_registrado] = random.randint(0, 1)
         matrizLikes[posicion_registrado][posicion_registrado] = 0
 
-
+# VARIABLES - TIPO DE DATOS:
+#cantidadEstudiantes, cantidadMatcheosPosiblesTotales - integer
 def cantidadMatcheosPosibles(estudiantes):
     cantidadEstudiantes = buscarEspacioVacioPorPosicion(estudiantes)
     cantidadMatcheosPosiblesTotales = cantidadEstudiantes * \
         (cantidadEstudiantes - 1)
-    print('La cantidad de matcheos posibles entre todos los estudiantes es de: ',
-          cantidadMatcheosPosiblesTotales)
-
+    print('La cantidad de matcheos posibles entre todos los estudiantes es de: ', cantidadMatcheosPosiblesTotales)
 
 # BONUS TRACK 1 - INICIO
-# Definimos y dimensionamos el arreglo edades
 # VARIABLES - TIPO DE DATOS:
 # edades - ARRAY of INTEGER
 edades = [0]*6
@@ -720,8 +695,6 @@ edades = [21, 18, 26, 19, 23, 28]
 # VARIABLES - TIPO DE DATOS:
 # s - INTEGER
 # z - ARRAY of INTEGER
-
-
 def mostrarBonus1(z):
     s = len(z)
     for i in range(s):
@@ -731,8 +704,6 @@ def mostrarBonus1(z):
 # VARIABLES - TIPO DE DATOS:
 # s, aux - INTEGER
 # z - ARRAY of INTEGER
-
-
 def ordenarBonus1(z):
     s = len(z)
     for i in range(s-1):
@@ -741,13 +712,10 @@ def ordenarBonus1(z):
                 aux = z[i]
                 z[i] = z[j]
                 z[j] = aux
-
 # Función para contar la cantidad de "huecos" que hay en la secuencia
 # VARIABLES - TIPO DE DATOS:
 # s, h - INTEGER
 # z - ARRAY of INTEGER
-
-
 def contarhuecosBonus1(z):
     s = len(z)
     h = 0
@@ -755,13 +723,10 @@ def contarhuecosBonus1(z):
         if z[i+1] == (z[i]+2):
             h = h+1
     return h
-
 # Función que crea un arreglo con los elementos que faltan para completar la secuencia
 # VARIABLES - TIPO DE DATOS:
 # s - INTEGER
 # z, g - ARRAY of INTEGER
-
-
 def faltantesBonus1(z):
     s = len(z)
     g = [0]*(s-1)
@@ -771,13 +736,10 @@ def faltantesBonus1(z):
         else:
             g[i] = 0
     return g
-
 # Procedimiento para mostrar los elementos que faltan en la secuencia
 # VARIABLES - TIPO DE DATOS:
 # s - INTEGER
 # z - ARRAY of INTEGER
-
-
 def mostrarfaltantesBonus1(z):
     s = len(z)
     for i in range(s):
@@ -785,10 +747,13 @@ def mostrarfaltantesBonus1(z):
             print(z[i])
 # BONUS TRACK 1 - FIN
 
-
 # INICIALIZAMOS MATRIZ DE LIKES CON 0s y 1s DE MANERA RANDOM.
 generarInteracciones()
 # PROGRAMA PRINCIPAL
+# VARIABLES - TIPO DE DATOS:
+#opc - char
+#huecos - integer
+#edadesFaltantes - array of integers
 opc = ''
 while (opc != '0'):
     print('MENU PRINCIPAL')
@@ -813,17 +778,13 @@ while (opc != '0'):
     elif (opc == '4'):
         print("Reporte de edades:")
         mostrarBonus1(edades)
-
         ordenarBonus1(edades)
         print("Reporte de edades ordenadas de forma creciente:")
         mostrarBonus1(edades)
-
         huecos = contarhuecosBonus1(edades)
         print("Cantidad de huecos en la secuencia: ", huecos)
-
         edadesFaltantes = faltantesBonus1(edades)
-        print(
-            "El/los elemento/s faltante/s para tener una secuencia autoincremental es/son:")
+        print("El/los elemento/s faltante/s para tener una secuencia autoincremental es/son:")
         mostrarfaltantesBonus1(edadesFaltantes)
     elif (opc == '0'):
         print('Saliendo del programa...')
