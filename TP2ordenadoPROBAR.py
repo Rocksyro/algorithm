@@ -34,7 +34,7 @@ estudiantes[2] = ["estudiante3@ayed.com", "555666", "Raul Gimenez", "Estudiante"
 moderadores[0] = ["moderador1@ayed.com", "111222", "Pipo Castillo", "Moderador", "2000-07-12", "Hola esta es mi biografia", "Andar a caballo es mi hobbie", "s"]
 moderadores[1] = ["moderador2@ayed.com", "333444", "Jalan Abascal", "Moderador", "2000-07-12", "Hola esta es mi biografia", "Andar a caballo es mi hobbie", "s"]
 
-usuario_logueado = [-1, 0]
+usuario_logueado = [-1, -1]
 
 # Función para generar interacciones
 # VARIABLES - TIPO DE DATOS:
@@ -89,7 +89,7 @@ def login(usuario_logueado, estudiantes, moderadores):
             # Pedir al usuario igresar usuario y contraseña
             email = input("Ingresar email: ")
             resultadoBusqueda = buscarUsuarioPorEmail(estudiantes, email)
-
+            print(resultadoBusqueda)
             if (resultadoBusqueda != -1):
                 if (estudiantes[resultadoBusqueda][7] == 'n'):
                     print('Tu usuario esta desactivado, no puedes loguearte.')
@@ -133,10 +133,10 @@ def login(usuario_logueado, estudiantes, moderadores):
 # array - ARRAY OF STRING
 def buscarUsuarioPorEmail(array, email):
     contadorPosicion = 0
-    while (contadorPosicion < (len(array) - 1) and (array[contadorPosicion][1] != email)):
+    while (contadorPosicion < (len(array) - 1) and (array[contadorPosicion][0] != email)):
         contadorPosicion += 1
 
-    if (array[contadorPosicion][1] == email):
+    if (array[contadorPosicion][0] == email):
         return contadorPosicion
     else:
         return -1
@@ -246,6 +246,7 @@ def opMenuEstudiante(num_op):
     elif num_op == "0":
         print('Se deslogueo correctamente.')
         usuario_logueado[0] = -1
+        usuario_logueado[1] = -1
     else:
         print('No ha ingresado una opcion valida')
         print('------------------------')
@@ -580,6 +581,7 @@ def opMenuModerador(num_op):
     elif num_op == "0":
         print('Se deslogueo correctamente.')
         usuario_logueado[0] = -1
+        usuario_logueado[1] = -1
     else:
         print('No ha ingresado una opcion valida')
         print('------------------------')
