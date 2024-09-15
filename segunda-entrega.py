@@ -180,7 +180,6 @@ def buscarUsuarioPorNombre(array, nombre):
 #id - integer
 def buscarUsuarioPorId(array, id):
     usuario_buscado = array[id]
-
     if (usuario_buscado[0] != ''):
         return id
     else:
@@ -204,24 +203,26 @@ def calcularEdad(fecha_nacimiento):
 #fecha - string
 def pedirFecha():
     fecha_actual = date.today()
-    anio = int(input("Ingrese el año de nacimiento (YYYY): "))
-    while (anio < 1920 or anio > fecha_actual.year):
-        print("El formato es incorrecto. Vuelva a ingresar: \n")
+    try:
         anio = int(input("Ingrese el año de nacimiento (YYYY): "))
+        while (anio < 1920 or anio > fecha_actual.year):
+            print("El formato es incorrecto. Vuelva a ingresar: \n")
+            anio = int(input("Ingrese el año de nacimiento (YYYY): "))
 
-    mes = int(input("Ingrese el mes de nacimiento (MM): "))
-    while (mes < 1 or mes > 12):
-        print("El formato es incorrecto. Vuelva a ingresar: \n")
         mes = int(input("Ingrese el mes de nacimiento (MM): "))
+        while (mes < 1 or mes > 12):
+            print("El formato es incorrecto. Vuelva a ingresar: \n")
+            mes = int(input("Ingrese el mes de nacimiento (MM): "))
 
-    dia = int(input("Ingrese el día de nacimiento (DD): "))
-    while (dia < 1 or dia > 31):
-        print("El formato es incorrecto. Vuelva a ingresar: \n")
         dia = int(input("Ingrese el día de nacimiento (DD): "))
+        while (dia < 1 or dia > 31):
+            print("El formato es incorrecto. Vuelva a ingresar: \n")
+            dia = int(input("Ingrese el día de nacimiento (DD): "))
 
-    fecha = f'{anio}-{mes}-{dia}'
-    return fecha
-
+        fecha = f'{anio}-{mes}-{dia}'
+        return fecha
+    except:
+        print("Ingrese un dato correcto por favor.")
 # VARIABLES - TIPO DE DATOS:
 #opEdit - integer
 def editarPerfil(usuario_logueado):
@@ -522,7 +523,6 @@ def opMenuEstudiante(num_op):
             else:
                 print('No has ingresado una opcion valida!')
                 print('---------------')
-
             if (estudiantes[usuario_logueado[0]][7] == 'n'):
                 volver_principal = True
     elif num_op == "2":
