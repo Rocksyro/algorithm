@@ -6,7 +6,7 @@
 #                        Urquiza, Juan
 # ----------------------------------------------------------------
 # Es necesario instalar esta libreria con: 'pip install pwinput'
-#import pwinput
+import pwinput
 import os
 import pickle
 from datetime import date, datetime
@@ -260,9 +260,9 @@ def inicializarEstudiantes():
 def limpiarConsola():
     os.system('cls' if os.name == 'nt' else 'clear')
 
-#def obtenerPassword():
- #   password = ('Introduce tu contraseña: ')
- #   return password
+def obtenerPassword():
+    password = pwinput.pwinput('Introduce tu contraseña: ')
+    return password
 
 #esta funcion se utiliza en el login
 def calcularCantidadRegistros(archLogico, archFisico):
@@ -350,8 +350,8 @@ def login():
         while (intentos < 3 and usuario_logueado[0] == -1):
             # Pedir al usuario igresar usuario y contraseña
             email = input("Ingresar email: ")
-            password = input("Ingresar password: ")
-            #  password = obtenerPassword()
+            #password = input("Ingresar password: ")
+            password = obtenerPassword()
             administradorBusqueda = buscarAdministradorPorEmailYPassword(email,password)
             moderadorBusqueda = buscarModeradorPorEmailYPassword(email,password)
             estudianteBusqueda = buscarEstudiantePorEmailYPassword(email,password)
