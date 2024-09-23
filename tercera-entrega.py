@@ -436,9 +436,14 @@ def opMenuEstudiante(num_op):
                 print('No has ingresado una opcion valida!')
                 print('---------------')
     elif num_op == "3":
-        print("En construcción")
-        print('---------------')
-        volver_principal = True
+        print("Matcheos\n--------------- \nEn construcción\n---------------")
+        num_subOp = int(input("Presione 0 para volver: "))
+        if num_subOp == 0:
+            volver_principal = True
+        else:
+            print('No has ingresado una opcion valida!')
+            print('---------------')
+            limpiarConsola()
     elif num_op == "4":
         while (not volver_principal):
             print("REPORTES ESTADISTICOS")
@@ -502,17 +507,10 @@ def opMenuModerador(num_op):
                 print('No has ingresado una opcion valida!')
                 print('---------------')
     elif num_op == "3":
-        while (not volver_principal):
-            print("Reportes Estadisticos \n--------------- \na. ? \nb. Volver")
-            letra_op = input("Ingrese a, b: ")
-            limpiarConsola()
-            if letra_op == "a":
-                print("?")
-            elif letra_op == "b":
-                volver_principal = True
-            else:
-                print('No has ingresado una opcion valida!')
-                print('---------------')
+        print("Reportes estadísticos\n--------------- \nEn construcción\n---------------")
+        num_subOp = int(input("Presione 0 para volver: "))
+        if num_subOp == 0:
+            volver_principal = True
     elif num_op == "0":
         print('Se deslogueo correctamente.')
         usuario_logueado[0] = -1
