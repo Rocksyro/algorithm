@@ -5,15 +5,14 @@
 #                        Kopp, Brenda
 #                        Urquiza, Juan
 # ----------------------------------------------------------------
-# Es necesario instalar esta libreria con: 'pip install pwinput'
-import pwinput
+
+import pwinput # Es necesario instalar esta libreria con: 'pip install pwinput'
 import os
 import pickle
 from datetime import date, datetime
 import random
 import os.path
 import io
-
 
 class Estudiante:
     def __init__(self):
@@ -76,6 +75,7 @@ ArFiReportes = "./archivos/reportes.txt"
 # ID del usuario - Tipo de usuario (0 = estudiantes, 1 = moderador, 2 = administrador)
 usuario_logueado = [-1, -1]
 
+# Función para inicializar los archivos
 def inicializarArchivos():
     global arLoAdministradores, arLoEstudiantes, arLoModeradores, arLoLikes, arLoReportes
 
@@ -102,7 +102,8 @@ def inicializarArchivos():
         arLoReportes = open(ArFiReportes, "w+b")
     else:
         arLoReportes = open(ArFiReportes, "r+b")
-    
+
+# Función para formatear los registros de estudiantes    
 def formatearRegistroEstudiante(registro):
     registro.email = registro.email.ljust(30," ")
     registro.password = registro.password.ljust(30," ")
@@ -117,12 +118,14 @@ def formatearRegistroEstudiante(registro):
     registro.pais = registro.pais.ljust(30," ")
     registro.ciudad = registro.ciudad.ljust(30," ")
     
+# Función para formatear los registros de moderadores
 def formateoModerador(registro):
     registro.email = registro.email.ljust(30," ")
     registro.password = registro.password.ljust(30," ")
     registro.nombre = registro.nombre.ljust(30," ")
     registro.rol = registro.rol.ljust(30," ")
-    
+
+# Función para formatear los registros de administradores
 def formateoAdministrador(registro):
     registro.email = registro.email.ljust(30," ")
     registro.password = registro.password.ljust(30," ")
@@ -147,8 +150,8 @@ def persistirModerador(registro, variableLogica):
     pickle.dump(registro, variableLogica)
     variableLogica.flush()
 
+# Función para precargar los datos de un moderador
 def inicializarModeradores():
-    
     global arLoModeradores
 
     moderador1 = Moderador()
@@ -161,6 +164,7 @@ def inicializarModeradores():
 
     persistirModerador(moderador1, arLoModeradores)
 
+# Función para precargar los datos de un administrador
 def inicializarAdministradores():
     global arLoAdministradores
 
@@ -173,8 +177,8 @@ def inicializarAdministradores():
 
     persistirAdministrador(administrador1, arLoAdministradores)
 
+#Función para precargar los datos de los 4 estudiantes
 def inicializarEstudiantes():
-
     global arLoEstudiantes
 
     estudiante1 = Estudiante()
@@ -256,10 +260,12 @@ def inicializarEstudiantes():
     estudiante4.pais = "argentina"
 
     persistirRegistroEstudiante(estudiante4, arLoEstudiantes)
-1
+
+# Función para limpiar la consola
 def limpiarConsola():
     os.system('cls' if os.name == 'nt' else 'clear')
 
+# Función para que aparezcan asteriscos en la contraseña
 def obtenerPassword():
     password = pwinput.pwinput('Introduce tu contraseña: ')
     return password
@@ -275,6 +281,7 @@ def calcularCantidadRegistros(archLogico, archFisico):
         cantReg = int(tamArch/tamReg)
     return cantReg
 
+# Función para buscar estudiante por mail y contraseña
 def buscarEstudiantePorEmailYPassword(email, password):
     email = email.ljust(30, " ")
     password = password.ljust(30, " ")
@@ -292,6 +299,7 @@ def buscarEstudiantePorEmailYPassword(email, password):
         pos = arLoEstudiantes.tell()  # Actualizar la posición
     return -1  # Si no encuentra coincidencias
 
+# Función para buscar moderador por mail y contraseña
 def buscarModeradorPorEmailYPassword(email, password):
     email = email.ljust(30, " ")
     password = password.ljust(30, " ")
@@ -309,6 +317,7 @@ def buscarModeradorPorEmailYPassword(email, password):
 
     return -1
 
+# Función para buscar administrador por mail y contraseña
 def buscarAdministradorPorEmailYPassword(email, password):
     email = email.ljust(30, " ")
     password = password.ljust(30, " ")
@@ -326,6 +335,7 @@ def buscarAdministradorPorEmailYPassword(email, password):
 
     return -1
 
+# Función para calcular el tamaño de un registro
 def tamanioRegistro(archivo):
     archivo.seek(0,0)
     aux = pickle.load(archivo)
@@ -577,7 +587,8 @@ def opMenuAdministrador(num_op):
         print('No ha ingresado una opcion valida')
         print('------------------------')
 
-# INICIO DEL PROGRAMA
+# PROGRAMA PRINCIPAL
+# Inicialización de los archivos
 inicializarArchivos()
 #cargaUsuario()
 opc = '*'
@@ -602,4 +613,3 @@ while (opc != '0'):
     else:
         print('No ha ingresado una opcion valida, vuelva a intentar.')
         print('-------------------')
-
