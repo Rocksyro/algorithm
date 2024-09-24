@@ -75,7 +75,6 @@ ArFiReportes = "./archivos/reportes.txt"
 # ID del usuario - Tipo de usuario (0 = estudiantes, 1 = moderador, 2 = administrador)
 usuario_logueado = [-1, -1]
 
-# Función para inicializar los archivos
 def inicializarArchivos():
     global arLoAdministradores, arLoEstudiantes, arLoModeradores, arLoLikes, arLoReportes
 
@@ -102,8 +101,7 @@ def inicializarArchivos():
         arLoReportes = open(ArFiReportes, "w+b")
     else:
         arLoReportes = open(ArFiReportes, "r+b")
-
-# Función para formatear los registros de estudiantes    
+ 
 def formatearRegistroEstudiante(registro):
     registro.email = registro.email.ljust(30," ")
     registro.password = registro.password.ljust(30," ")
@@ -150,7 +148,6 @@ def persistirModerador(registro, variableLogica):
     pickle.dump(registro, variableLogica)
     variableLogica.flush()
 
-# Función para precargar los datos de un moderador
 def inicializarModeradores():
     global arLoModeradores
 
@@ -164,7 +161,6 @@ def inicializarModeradores():
 
     persistirModerador(moderador1, arLoModeradores)
 
-# Función para precargar los datos de un administrador
 def inicializarAdministradores():
     global arLoAdministradores
 
@@ -177,7 +173,6 @@ def inicializarAdministradores():
 
     persistirAdministrador(administrador1, arLoAdministradores)
 
-#Función para precargar los datos de los 4 estudiantes
 def inicializarEstudiantes():
     global arLoEstudiantes
 
@@ -261,16 +256,13 @@ def inicializarEstudiantes():
 
     persistirRegistroEstudiante(estudiante4, arLoEstudiantes)
 
-# Función para limpiar la consola
 def limpiarConsola():
     os.system('cls' if os.name == 'nt' else 'clear')
 
-# Función para que aparezcan asteriscos en la contraseña
 def obtenerPassword():
     password = pwinput.pwinput('Introduce tu contraseña: ')
     return password
 
-#esta funcion se utiliza en el login
 def calcularCantidadRegistros(archLogico, archFisico):
     tamArch = os.path.getsize(archFisico)
     cantReg = 0
@@ -280,8 +272,6 @@ def calcularCantidadRegistros(archLogico, archFisico):
         tamReg = archLogico.tell()
         cantReg = int(tamArch/tamReg)
     return cantReg
-
-# Función para buscar estudiante por mail y contraseña
 def buscarEstudiantePorEmailYPassword(email, password):
     email = email.ljust(30, " ")
     password = password.ljust(30, " ")
@@ -299,7 +289,6 @@ def buscarEstudiantePorEmailYPassword(email, password):
         pos = arLoEstudiantes.tell()  # Actualizar la posición
     return -1  # Si no encuentra coincidencias
 
-# Función para buscar moderador por mail y contraseña
 def buscarModeradorPorEmailYPassword(email, password):
     email = email.ljust(30, " ")
     password = password.ljust(30, " ")
@@ -317,7 +306,6 @@ def buscarModeradorPorEmailYPassword(email, password):
 
     return -1
 
-# Función para buscar administrador por mail y contraseña
 def buscarAdministradorPorEmailYPassword(email, password):
     email = email.ljust(30, " ")
     password = password.ljust(30, " ")
@@ -335,7 +323,6 @@ def buscarAdministradorPorEmailYPassword(email, password):
 
     return -1
 
-# Función para calcular el tamaño de un registro
 def tamanioRegistro(archivo):
     archivo.seek(0,0)
     aux = pickle.load(archivo)
@@ -358,7 +345,6 @@ def login():
         print('LOGIN')
         print('--------------------')
         while (intentos < 3 and usuario_logueado[0] == -1):
-            # Pedir al usuario igresar usuario y contraseña
             email = input("Ingresar email: ")
             #password = input("Ingresar password: ")
             password = obtenerPassword()
