@@ -72,8 +72,8 @@ ArFiModeradores = "./archivos/moderadores.txt"
 ArFiLikes = "./archivos/likes.txt"
 ArFiReportes = "./archivos/reportes.txt"
 
-# ID del usuario - Tipo de usuario (0 = estudiantes, 1 = moderador, 2 = administrador)
-usuario_logueado = [-1, -1]
+# ID del usuario - Tipo de usuario (0 = estudiantes, 1 = moderador, 2 = administrador) - Estado (0 = desactivado, 1 = activado)
+usuario_logueado = [-1, -1, -1]
 
 def inicializarArchivos():
     global arLoAdministradores, arLoEstudiantes, arLoModeradores, arLoLikes, arLoReportes
@@ -155,7 +155,7 @@ def inicializarModeradores():
     moderador1.id_mod = 1
     moderador1.email = "m1@ayed.com"
     moderador1.password = "m123"
-    moderador1.activo = "s"
+    moderador1.activo = True
     moderador1.nombre = "moderadornombre"
     moderador1.rol = "moderador"
 
@@ -184,7 +184,7 @@ def inicializarEstudiantes():
     estudiante1.fecha_nacimiento = "1994-06-20"
     estudiante1.bio = "Hola esta es mi biografia"
     estudiante1.hobbies = "Andar a caballo es mi hobbie"
-    estudiante1.activo = "s"
+    estudiante1.activo = True
     estudiante1.sexo = "m"
     estudiante1.ciudad = "Rosario"
     estudiante1.deporte_favorito = "basket"
@@ -204,7 +204,7 @@ def inicializarEstudiantes():
     estudiante2.fecha_nacimiento = "1994-06-20"
     estudiante2.bio = "Hola esta es mi biografia"
     estudiante2.hobbies = "Andar a caballo es mi hobbie"
-    estudiante2.activo = "s"
+    estudiante2.activo = True
     estudiante2.sexo = "m"
     estudiante2.ciudad = "Rosario"
     estudiante2.deporte_favorito = "basket"
@@ -224,7 +224,7 @@ def inicializarEstudiantes():
     estudiante3.fecha_nacimiento = "1994-06-20"
     estudiante3.bio = "Hola esta es mi biografia"
     estudiante3.hobbies = "Andar a caballo es mi hobbie"
-    estudiante3.activo = "s"
+    estudiante3.activo = True
     estudiante3.sexo = "m"
     estudiante3.ciudad = "Rosario"
     estudiante3.deporte_favorito = "basket"
@@ -244,7 +244,7 @@ def inicializarEstudiantes():
     estudiante4.fecha_nacimiento = "1994-06-20"
     estudiante4.bio = "Hola esta es mi biografia"
     estudiante4.hobbies = "Andar a caballo es mi hobbie"
-    estudiante4.activo = "s"
+    estudiante4.activo = True
     estudiante4.sexo = "m"
     estudiante4.ciudad = "Rosario"
     estudiante4.deporte_favorito = "basket"
@@ -387,8 +387,14 @@ def login():
             if (estudianteBusqueda != -1):
                 arLoEstudiantes.seek((estudianteBusqueda - tamRegEstudiante),0)
                 registroEstudiante = pickle.load(arLoEstudiantes) 
-                usuario_logueado[0] = registroEstudiante.id_est
-                usuario_logueado[1] = 0
+                print(registroEstudiante.activo)
+                if(registroEstudiante.activo == False):
+                    print('HOLA perdidaaa')
+                    intentos = 3
+                    print ("Usuario desactivado.")
+                else:
+                    usuario_logueado[0] = registroEstudiante.id_est
+                    usuario_logueado[1] = 0
                 print("usuario logueado: ",usuario_logueado)
             elif(moderadorBusqueda != -1):
                 arLoModeradores.seek((moderadorBusqueda - tamRegModerador),0)
@@ -420,13 +426,13 @@ def opMenuEstudiante(num_op):
             if letra_op == "A":
                 editarPerfil()
             elif letra_op == "B":
-                desactivarPerfil(usuario_logueado)
+                desactivarPerfil()
             elif letra_op == "C":
                 volver_principal = True
             else:
                 print('No has ingresado una opcion valida!')
                 print('---------------')
-            if (estudiantes[usuario_logueado[0]][7] == 'n'):
+            if (usuario_logueado[2] == 0):
                 volver_principal = True
     elif num_op == "2":
         while (not volver_principal):
@@ -489,6 +495,11 @@ def menuEstudiante():
         limpiarConsola()
         opMenuEstudiante(num_op)
 
+        if (usuario_logueado[2] == 0):
+            num_op = '0'
+            usuario_logueado[0] = -1
+            usuario_logueado[1] = -1
+
 def buscarEstudiantePorId():
     tamArchivo = os.path.getsize(ArFiEstudiantes)
     pos = 0
@@ -522,7 +533,7 @@ def editarPerfil():
                 registroAlumno.fecha_nacimiento = pedirFecha()
                 arLoEstudiantes.seek(posEstudiante,0)
                 registroAlumno.fecha_nacimiento = registroAlumno.fecha_nacimiento.ljust(30," ")
-                print(registroAlumnoFormateado.fecha_nacimiento)
+                print(registroAlumno.fecha_nacimiento)
                 pickle.dump(registroAlumno, arLoEstudiantes)
                 arLoEstudiantes.flush()
             limpiarConsola()
@@ -572,21 +583,37 @@ def editarPerfil():
         else:
             print('No has elegido una opcion valida.')
             print('------------------------')
-        datosEstudiante()
-        #print("Datos personales \n---------------\nFecha: ", registroAlumnoFormateado.fecha_nacimiento, "\nBiografía: ", registroAlumnoFormateado.bio, "\nHobbies: ", registroAlumnoFormateado.hobbies,"\nMateria favorita: ", registroAlumnoFormateado.materia_favorita,"\nDeporte favorito: ", registroAlumnoFormateado.deporte_favorito, '\n---------------')
-        opEdit = input("1.Fecha \n2.Biografía \n3.Hobbies \n0.Volver\nIngresar qué dato quiere editar (sólo número): ")
+        print("Datos personales \n---------------\nFecha: ", registroAlumno.fecha_nacimiento, "\nBiografía: ", registroAlumno.bio, "\nHobbies: ", registroAlumno.hobbies,"\nMateria favorita: ", registroAlumno.materia_favorita,"\nDeporte favorito: ", registroAlumno.deporte_favorito, '\n---------------')
+        opEdit = input("1.Fecha \n2.Biografía \n3.Hobbies \n4.Materia favorita \n5.Deporte favorito \n0.Volver \nIngresar qué dato quiere editar (sólo número): ")
         limpiarConsola()
-        
-def datosEstudiante():
-    registroAlumno = Estudiante()
-    posEstudiante = buscarEstudiantePorId()
-    if posEstudiante != -1:
-        arLoEstudiantes.seek(posEstudiante,0)
-        registroAlumno = pickle.load(arLoEstudiantes)
     
     print("Datos personales \n---------------\nFecha: ", registroAlumno.fecha_nacimiento,  "\nBiografía: ", registroAlumno.bio, "\nHobbies: ", registroAlumno.hobbies,"\nMateria favorita: ", registroAlumno.materia_favorita, "\nDeporte favorito: ", registroAlumno.deporte_favorito)
 
+def desactivarPerfil():
+    opc = ''
+    while (opc != 'S' and opc != 'N'):
+        print('ATENCION')
+        print('--------------------')
+        opc = input('Esta apunto de inhabilitar su perfil, esta seguro de esta accion? S/N: ').capitalize()
 
+        if (opc != 'S' and opc != 'N'):
+            limpiarConsola()
+            print('No ha ingresado una opcion valida, vuelva a intentar!')
+    if (opc == 'S'):
+        registroEstudiante = Estudiante()
+        posEstudiante = buscarEstudiantePorId()
+        arLoEstudiantes.seek(posEstudiante, 0)
+        registroEstudiante = pickle.load(arLoEstudiantes)
+        registroEstudiante.activo = False
+        print(registroEstudiante.activo)
+        arLoEstudiantes.seek(posEstudiante, 0)
+        pickle.dump(registroEstudiante, arLoEstudiantes)
+        arLoEstudiantes.flush()
+        #limpiarConsola()
+        print('Usuario desactivado')
+        usuario_logueado[2] = 0
+    else:
+        limpiarConsola()
 
 def opMenuModerador(num_op):
     volver_principal = False
@@ -596,7 +623,7 @@ def opMenuModerador(num_op):
             letra_op = input("Ingrese a, b: ")
             limpiarConsola()
             if letra_op == "a":
-                desactivarEstudiante()
+                desactivarEstudiante() 
             elif letra_op == "b":
                 volver_principal = True
             else:
@@ -696,7 +723,6 @@ def opMenuAdministrador(num_op):
 # PROGRAMA PRINCIPAL
 # Inicialización de los archivos
 inicializarArchivos()
-#cargaUsuario()
 opc = '*'
 while (opc != '0'):
     print('MENU PRINCIPAL')
