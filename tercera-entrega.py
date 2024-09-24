@@ -6,7 +6,7 @@
 #                        Urquiza, Juan
 # ----------------------------------------------------------------
 
-import pwinput # Es necesario instalar esta libreria con: 'pip install pwinput'
+#import pwinput # Es necesario instalar esta libreria con: 'pip install pwinput'
 import os
 import pickle
 from datetime import date, datetime
@@ -259,9 +259,9 @@ def inicializarEstudiantes():
 def limpiarConsola():
     os.system('cls' if os.name == 'nt' else 'clear')
 
-def obtenerPassword():
-    password = pwinput.pwinput('Introduce tu contraseña: ')
-    return password
+# def obtenerPassword():
+#     password = pwinput.pwinput('Introduce tu contraseña: ')
+#     return password
 
 def calcularCantidadRegistros(archLogico, archFisico):
     tamArch = os.path.getsize(archFisico)
@@ -272,6 +272,7 @@ def calcularCantidadRegistros(archLogico, archFisico):
         tamReg = archLogico.tell()
         cantReg = int(tamArch/tamReg)
     return cantReg
+
 def buscarEstudiantePorEmailYPassword(email, password):
     email = email.ljust(30, " ")
     password = password.ljust(30, " ")
@@ -329,6 +330,29 @@ def tamanioRegistro(archivo):
     tamanioRegistro = archivo.tell() 
     return tamanioRegistro
 
+def pedirFecha():
+    fecha_actual = date.today()
+    try:
+        anio = int(input("Ingrese el año de nacimiento (YYYY): "))
+        while (anio < 1920 or anio > fecha_actual.year):
+            print("El formato es incorrecto. Vuelva a ingresar: \n")
+            anio = int(input("Ingrese el año de nacimiento (YYYY): "))
+
+        mes = int(input("Ingrese el mes de nacimiento (MM): "))
+        while (mes < 1 or mes > 12):
+            print("El formato es incorrecto. Vuelva a ingresar: \n")
+            mes = int(input("Ingrese el mes de nacimiento (MM): "))
+
+        dia = int(input("Ingrese el día de nacimiento (DD): "))
+        while (dia < 1 or dia > 31):
+            print("El formato es incorrecto. Vuelva a ingresar: \n")
+            dia = int(input("Ingrese el día de nacimiento (DD): "))
+
+        fecha = f'{anio}-{mes}-{dia}'
+        return fecha
+    except:
+        print("Ingrese un dato correcto por favor.")
+
 # Inicio del Login
 def login():
     intentos = 0
@@ -346,8 +370,8 @@ def login():
         print('--------------------')
         while (intentos < 3 and usuario_logueado[0] == -1):
             email = input("Ingresar email: ")
-            #password = input("Ingresar password: ")
-            password = obtenerPassword()
+            password = input("Ingresar password: ")
+            #password = obtenerPassword()
             administradorBusqueda = buscarAdministradorPorEmailYPassword(email,password)
             moderadorBusqueda = buscarModeradorPorEmailYPassword(email,password)
             estudianteBusqueda = buscarEstudiantePorEmailYPassword(email,password)
@@ -394,7 +418,7 @@ def opMenuEstudiante(num_op):
             letra_op = input("Ingrese a, b o c: ").capitalize()
             limpiarConsola()
             if letra_op == "A":
-                editarPerfil(usuario_logueado)
+                editarPerfil()
             elif letra_op == "B":
                 desactivarPerfil(usuario_logueado)
             elif letra_op == "C":
@@ -464,6 +488,104 @@ def menuEstudiante():
         num_op = input("Ingresar número de opción (1, 2, 3, 4, 0): ")
         limpiarConsola()
         opMenuEstudiante(num_op)
+
+def buscarEstudiantePorId():
+    tamArchivo = os.path.getsize(ArFiEstudiantes)
+    pos = 0
+    estudiante = Estudiante()
+    arLoEstudiantes.seek(0, 0)
+    estudiante = pickle.load(arLoEstudiantes)
+    
+    while ((usuario_logueado[0] == estudiante.id_est) and (pos < tamArchivo)):
+        estudiante = pickle.load(arLoEstudiantes)
+        pos = arLoEstudiantes.tell()
+
+    if usuario_logueado[0] == estudiante.id_est:
+        return (pos-tamArchivo)
+    else:
+        return -1
+
+def editarPerfil():
+    print("Editar perfil")
+    print('----------------')
+    #el estudiante logueado deberá poder modificar la información ingresada para su fecha de nacimiento, biografía, hobbies y cualquier otro campo que crean relevante.
+    opEdit = input("1.Fecha \n2.Biografía \n3.Hobbies \n4.Materia favorita \n5.Deporte favorito \n0.Volver \nIngresar qué dato quiere editar (sólo número): ")
+    limpiarConsola()
+    registroAlumno = Estudiante()
+    
+    while (opEdit != '0'):
+        if (opEdit == "1"):
+            posEstudiante = buscarEstudiantePorId()
+            if posEstudiante != -1:
+                arLoEstudiantes.seek(posEstudiante,0)
+                registroAlumno = pickle.load(arLoEstudiantes)
+                registroAlumno.fecha_nacimiento = pedirFecha()
+                arLoEstudiantes.seek(posEstudiante,0)
+                registroAlumno.fecha_nacimiento = registroAlumno.fecha_nacimiento.ljust(30," ")
+                print(registroAlumnoFormateado.fecha_nacimiento)
+                pickle.dump(registroAlumno, arLoEstudiantes)
+                arLoEstudiantes.flush()
+            limpiarConsola()
+        elif (opEdit == "2"):
+            posEstudiante = buscarEstudiantePorId()
+            if posEstudiante != -1:
+                arLoEstudiantes.seek(posEstudiante,0)
+                registroAlumno = pickle.load(arLoEstudiantes)
+                registroAlumno.bio = input("Agregar nueva Biografia: ")
+                arLoEstudiantes.seek(posEstudiante,0)
+                registroAlumno.bio = registroAlumno.bio.ljust(30," ")
+                pickle.dump(registroAlumno, arLoEstudiantes)
+                arLoEstudiantes.flush()
+            limpiarConsola()
+        elif (opEdit == '3'):
+            posEstudiante = buscarEstudiantePorId()
+            if posEstudiante != -1:
+                arLoEstudiantes.seek(posEstudiante,0)
+                registroAlumno = pickle.load(arLoEstudiantes)
+                registroAlumno.hobbies = input("Agregar nuevos hobbies: ")
+                arLoEstudiantes.seek(posEstudiante,0)
+                registroAlumno.hobbies = registroAlumno.hobbies.ljust(30," ")
+                pickle.dump(registroAlumno, arLoEstudiantes)
+                arLoEstudiantes.flush()
+        elif (opEdit == '4'):
+            posEstudiante = buscarEstudiantePorId()
+            if posEstudiante != -1:
+                arLoEstudiantes.seek(posEstudiante,0)
+                registroAlumno = pickle.load(arLoEstudiantes)
+                registroAlumno.materia_favorita = input("Agregar nueva materia favorita: ")
+                arLoEstudiantes.seek(posEstudiante,0)
+                registroAlumno.materia_favorita = registroAlumno.materia_favorita.ljust(30," ")
+                pickle.dump(registroAlumno, arLoEstudiantes)
+                arLoEstudiantes.flush()
+            limpiarConsola()
+        elif (opEdit == '5'):
+            posEstudiante = buscarEstudiantePorId()
+            if posEstudiante != -1:
+                arLoEstudiantes.seek(posEstudiante,0)
+                registroAlumno = pickle.load(arLoEstudiantes)
+                registroAlumno.deporte_favorito = input("Agregar nuevo deporte favorito: ")
+                arLoEstudiantes.seek(posEstudiante,0)
+                registroAlumno.deporte_favorito = registroAlumno.deporte_favorito.ljust(30," ")
+                pickle.dump(registroAlumno, arLoEstudiantes)
+                arLoEstudiantes.flush()
+            limpiarConsola()
+        else:
+            print('No has elegido una opcion valida.')
+            print('------------------------')
+        datosEstudiante()
+        #print("Datos personales \n---------------\nFecha: ", registroAlumnoFormateado.fecha_nacimiento, "\nBiografía: ", registroAlumnoFormateado.bio, "\nHobbies: ", registroAlumnoFormateado.hobbies,"\nMateria favorita: ", registroAlumnoFormateado.materia_favorita,"\nDeporte favorito: ", registroAlumnoFormateado.deporte_favorito, '\n---------------')
+        opEdit = input("1.Fecha \n2.Biografía \n3.Hobbies \n0.Volver\nIngresar qué dato quiere editar (sólo número): ")
+        limpiarConsola()
+        
+def datosEstudiante():
+    registroAlumno = Estudiante()
+    posEstudiante = buscarEstudiantePorId()
+    if posEstudiante != -1:
+        arLoEstudiantes.seek(posEstudiante,0)
+        registroAlumno = pickle.load(arLoEstudiantes)
+    
+    print("Datos personales \n---------------\nFecha: ", registroAlumno.fecha_nacimiento,  "\nBiografía: ", registroAlumno.bio, "\nHobbies: ", registroAlumno.hobbies,"\nMateria favorita: ", registroAlumno.materia_favorita, "\nDeporte favorito: ", registroAlumno.deporte_favorito)
+
 
 
 def opMenuModerador(num_op):
