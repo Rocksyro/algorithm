@@ -324,8 +324,6 @@ def buscarUsuarioPorNombre(nombre):
         print("while: ", regEstudiante.nombre)
         pos = arLoEstudiantes.tell()
         regEstudiante = pickle.load(arLoEstudiantes)
-        
-        
 
     if nombre == regEstudiante.nombre:
         return (pos)
@@ -333,14 +331,12 @@ def buscarUsuarioPorNombre(nombre):
         return -1
 
 def inicializarInteracciones():
-   
-    
     cantidadEstudiantes = calcularCantidadRegistros(arLoEstudiantes, ArFiEstudiantes)
     
     arLoLikes.seek(0,0)
     print(cantidadEstudiantes)
     for i in range(cantidadEstudiantes):
-       for i in range(cantidadEstudiantes - 1):
+        for i in range(cantidadEstudiantes - 1):
             registroLike =  Likes()
             registroLike.destinatario = -1
             registroLike.remitente = -1
@@ -365,13 +361,11 @@ def buscarUsuarioPorNombreYDevolverID(nombre):
     else:
         return -1
 
-
 def buscarModeradorPorEmailYPassword(email, password):
     email = email.ljust(30, " ")
     password = password.ljust(30, " ")
     tamArchivo = os.path.getsize(ArFiModeradores)
     pos = 0
-
     arLoModeradores.seek(0, 0)
 
     while pos < tamArchivo:
@@ -462,7 +456,7 @@ def login():
             print("adm: ", tamRegAdministrador)
             if (estudianteBusqueda != -1):
                 arLoEstudiantes.seek((estudianteBusqueda - tamRegEstudiante),0)
-                registroEstudiante = pickle.load(arLoEstudiantes) 
+                registroEstudiante = pickle.load(arLoEstudiantes)
                 print(registroEstudiante.activo)
                 if(registroEstudiante.activo == False):
                     intentos = 3
@@ -536,11 +530,7 @@ def reportarCandidatos():
     else:
         limpiarConsola()
         print("Usuario no encontrado o Ingresaste dato inválido")
-
-
-# VARIABLES - TIPO DE DATOS:
-#fecha_nac, hoy - datetime
-#edad - integer
+        
 def calcularEdad(fecha_nacimiento):
     fecha_nac = datetime.strptime(fecha_nacimiento, "%Y-%m-%d")
     hoy = datetime.today()
@@ -563,7 +553,6 @@ def mostrarEstudiantes():
             print("Edad", calcularEdad(e.fecha_nacimiento))
             print("Biografia: ", e.bio)
             print("Hobbies: ", e.hobbies)
-
 
 def borrarLike(remitente,destinatario):
     registro = Likes()
@@ -597,10 +586,6 @@ def buscarLike(remitente,destinatario):
         return pos
     else:
         return -1
-# VARIABLES - TIPO DE DATOS:
-#matchear - char
-#me_gusta - string
-#idEstudianteMeGusta - integer
 
 def buscarEspaciosVaciosLike():
     registroLike = Likes()
@@ -618,7 +603,6 @@ def buscarEspaciosVaciosLike():
         return pos
     else:
         return -1
-    
 
 def verCandidatos():
     mostrarEstudiantes()
@@ -636,7 +620,6 @@ def verCandidatos():
         
         if (idDestinatario != -1):
             likeEncontrado = buscarLike(usuario_logueado[0],idDestinatario)
-            print(likeEncontrado)
             if (likeEncontrado != -1):
                 borrarLike(usuario_logueado[0],idDestinatario)
                 print('Le has quitado el me gusta al usuario: ', idDestinatario)
@@ -646,7 +629,6 @@ def verCandidatos():
                 like.remitente = usuario_logueado[0]
 
                 #Buscar si hay espacios vacios
-
                 posEspacioVacio = buscarEspaciosVaciosLike()
 
                 if(posEspacioVacio != -1):
@@ -659,27 +641,10 @@ def verCandidatos():
                     pickle.dump(like,arLoLikes)
                     arLoLikes.flush
                     print('Le has dado un me gusta al usuario: ', idDestinatario)
-
         else: 
             print('No se ha ingresado un nombre de estudiante valido. \n---------------')
     else:
         limpiarConsola()
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 def opMenuEstudiante(num_op):
     volver_principal = False
@@ -775,8 +740,6 @@ def buscarEstudiantePorId(id):
     while ((id != regEstudiante.id_est) and (arLoEstudiantes.tell() < tamArchivo)):
         pos = arLoEstudiantes.tell()
         regEstudiante = pickle.load(arLoEstudiantes)
-        
-        
 
     if id == regEstudiante.id_est:
         return (pos)
@@ -853,7 +816,6 @@ def editarPerfil():
         print("Datos personales \n---------------\nFecha: ", registroAlumno.fecha_nacimiento, "\nBiografía: ", registroAlumno.bio, "\nHobbies: ", registroAlumno.hobbies,"\nMateria favorita: ", registroAlumno.materia_favorita,"\nDeporte favorito: ", registroAlumno.deporte_favorito, '\n---------------')
         opEdit = input("1.Fecha \n2.Biografía \n3.Hobbies \n4.Materia favorita \n5.Deporte favorito \n0.Volver \nIngresar qué dato quiere editar (sólo número): ")
         limpiarConsola()
-    
     print("Datos personales \n---------------\nFecha: ", registroAlumno.fecha_nacimiento,  "\nBiografía: ", registroAlumno.bio, "\nHobbies: ", registroAlumno.hobbies,"\nMateria favorita: ", registroAlumno.materia_favorita, "\nDeporte favorito: ", registroAlumno.deporte_favorito)
 
 def desactivarPerfil():
@@ -882,6 +844,36 @@ def desactivarPerfil():
         usuario_logueado[2] = 0
     else:
         limpiarConsola()
+
+def desactivarEstudiante():
+    usuario_encontrado = -1
+    opc = input('1. Por ID \n2. Por Nombre \nIngrese la forma en la que quiere desactivar al usuario: ')
+    while (opc != "1" and opc != "2"):
+        opc = input(
+            '1. Por ID \n2. Por Nombre \nIngrese la forma en la que quiere reportar: ')
+    if (opc == "1"):
+        try:
+            estudiante_desactivar = int(input('Ingrese la ID del estudiante a reportar: '))
+            usuario_encontrado = buscarEstudiantePorId(estudiante_desactivar)
+        except:
+            print("Ingrese una opcion válida")
+    else:
+        estudiante_desactivar = input("Ingrese el nombre del estudiante a reportar: ")
+        estudiante_desactivar = estudiante_desactivar.ljust(30, ' ')
+        usuario_encontrado = buscarUsuarioPorNombre(estudiante_desactivar)
+
+    if(usuario_encontrado != -1):
+        arLoEstudiantes.seek(usuario_encontrado, 0)
+        registroUsuarioEncontrado = pickle.load(arLoEstudiantes)
+        registroUsuarioEncontrado.activo = False
+        arLoEstudiantes.seek(usuario_encontrado, 0)
+        pickle.dump(registroUsuarioEncontrado, arLoEstudiantes)
+        arLoEstudiantes.flush()
+        print("Estudiante desactivado con exito")
+        print("------------")
+    else:
+        limpiarConsola()
+        print("Usuario no encontrado o Ingresaste dato inválido")
 
 def opMenuModerador(num_op):
     volver_principal = False
@@ -925,9 +917,9 @@ def opMenuModerador(num_op):
 def menuModerador():
     num_op = ''
     while num_op != '0':
-        menu_principal = "MENU MODERADOR \n------------------ \n1. Gestionar usuarios \n2. Gestionar reportes \n3. Reportes estadísticos \n0. Salir"
+        menu_principal = "MENU MODERADOR \n------------------ \n1. Gestionar usuarios \n2. Gestionar reportes \n0. Volver"
         print(menu_principal)
-        num_op = input("Ingresar número de opción (1, 2, 3, 0): ")
+        num_op = input("Ingresar número de opción (1, 2, 0): ")
         limpiarConsola()
         opMenuModerador(num_op)
 
