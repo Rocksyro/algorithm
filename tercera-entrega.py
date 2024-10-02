@@ -349,26 +349,46 @@ def buscarUsuarioPorNombre(nombre):
         return (pos)
     else:
         return -1
+    
+
+
+def mostrarLikes():
+    e=Likes()
+    arLoLikes.seek(0,0)
+    tamArch=os.path.getsize(ArFiLikes)
+    print("tamaño archivo likes: ", tamArch)
+    print("LIKES")
+    print("----------------------------")
+    while(arLoLikes.tell()<tamArch):
+        e = pickle.load(arLoLikes)
+        print("Destinatario: ", e.destinatario)
+        print("Remitente: ", e.remitente)
+
+
 
 def inicializarInteracciones():
     cantidadEstudiantes = calcularCantidadRegistros(arLoEstudiantes, ArFiEstudiantes)
     
     arLoLikes.seek(0,0)
 
-    for i in range(cantidadEstudiantes):
-        for j in range(cantidadEstudiantes - 1):
+    for i in range(1, cantidadEstudiantes + 1):
+        for j in range(1, cantidadEstudiantes + 1):
             registroLike =  Likes()
 
-            estudianteRandom = random.randint(1, cantidadEstudiantes)
+            daLike = random.randint(0, 1)
 
-            while estudianteRandom == i:
-                estudianteRandom = random.randint(1, cantidadEstudiantes)
+            if i != j:
+                if daLike == 1:
+                        registroLike.destinatario = j
+                        registroLike.remitente = i
+                else:
+                        registroLike.destinatario = -1
+                        registroLike.remitente = i
+                pickle.dump(registroLike, arLoLikes)
+                arLoLikes.flush()
+    
 
-            registroLike.destinatario = estudianteRandom
-            registroLike.remitente = i
-
-            pickle.dump(registroLike, arLoLikes)
-            arLoLikes.flush()
+            
 
 def buscarUsuarioPorNombreYDevolverID(nombre):
     regEstudiante = Estudiante()
@@ -592,6 +612,7 @@ def mostrarEstudiantes():
         e = pickle.load(arLoEstudiantes)
         if((e.activo==True) and (e.id_est != usuario_logueado[0])):
             like = meGusta(e.id_est)
+            print("like: ", like)
             print("Nombre: ", e.nombre, '- ♡' if like else '')
             print("Fecha de Nacimiento: ", e.fecha_nacimiento)
             print("Edad", calcularEdad(e.fecha_nacimiento))
@@ -622,10 +643,12 @@ def buscarLike(remitente,destinatario):
 
     pos = arLoLikes.tell()
     registro=pickle.load(arLoLikes)
-    while ((registro.remitente != remitente) and (registro.destinatario != destinatario) and (arLoLikes.tell()<tamArch)):
+    while (((registro.remitente != remitente) and (registro.destinatario != destinatario)) and (arLoLikes.tell()<tamArch)):
         pos = arLoLikes.tell()
         registro=pickle.load(arLoLikes)
-
+    print("registro del like encontrado - remitente: ", registro.remitente)
+    print("registro del like encontrado - destinatario: ", registro.destinatario)
+    print((registro.remitente == remitente) and (registro.destinatario == destinatario))
     if ((registro.remitente == remitente) and (registro.destinatario == destinatario)):
         print("like encontrado")
         return pos
@@ -640,16 +663,17 @@ def buscarEspaciosVaciosLike():
 
     registroLike = pickle.load(arLoLikes)
 
-    while(registroLike.destinatario != -1 and arLoLikes.tell() < tamArch):
+    while(registroLike.destinatario != -1 and arLoLikes.tell() < tamArch and registroLike.remitente == usuario_logueado[0]):
         pos = arLoLikes.tell()
         registroLike = pickle.load(arLoLikes)
 
-    if(registroLike.destinatario == -1):
+    if(registroLike.destinatario == -1 and registroLike.remitente == usuario_logueado[0]):
         return pos
     else:
         return -1
 
 def verCandidatos():
+    mostrarLikes()      
     mostrarEstudiantes()
     matchear = input('\nQuieres darle like a algun candidato? Ingrese "S/N": ').capitalize()
     while (matchear != 'S' and matchear != 'N'):
@@ -662,9 +686,11 @@ def verCandidatos():
         me_gusta = input('--------------- \nIngrese el nombre de la persona con la que le gustaria matchear: ')
         me_gusta = me_gusta.ljust(30," ")
         idDestinatario = buscarUsuarioPorNombreYDevolverID(me_gusta)
-        
+        print("idDestinatario: ", idDestinatario)
+
         if (idDestinatario != -1):
             likeEncontrado = buscarLike(usuario_logueado[0],idDestinatario)
+            print("Like encontrado: ", likeEncontrado)
             if (likeEncontrado != -1):
                 borrarLike(usuario_logueado[0],idDestinatario)
                 print('Le has quitado el me gusta al usuario: ', idDestinatario)
