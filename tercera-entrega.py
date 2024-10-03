@@ -56,6 +56,7 @@ class Likes:
     def __init__(self):
         self.remitente = 0
         self.destinatario = 0
+        self.estado = 0
 
 class Reportes:
     def __init__(self):
@@ -363,6 +364,7 @@ def mostrarLikes():
         e = pickle.load(arLoLikes)
         print("Destinatario: ", e.destinatario)
         print("Remitente: ", e.remitente)
+        print("Estado: ", e.estado)
 
 
 
@@ -378,12 +380,9 @@ def inicializarInteracciones():
             daLike = random.randint(0, 1)
 
             if i != j:
-                if daLike == 1:
-                        registroLike.destinatario = j
-                        registroLike.remitente = i
-                else:
-                        registroLike.destinatario = -1
-                        registroLike.remitente = i
+                registroLike.destinatario = j
+                registroLike.remitente = i
+                registroLike.estado = daLike            
                 pickle.dump(registroLike, arLoLikes)
                 arLoLikes.flush()
     
@@ -595,11 +594,11 @@ def meGusta(id):
     registroLike = Likes()
     registroLike = pickle.load(arLoLikes)
     
-    while (id != registroLike.destinatario) and (usuario_logueado[0] != registroLike.remitente) and (arLoLikes.tell() < tamArchvoLikes):
+    while (id != registroLike.destinatario) and (usuario_logueado[0] != registroLike.remitente) and (registroLike.estado != 1) and (arLoLikes.tell() < tamArchvoLikes):
         pos = arLoLikes.tell()
         registroLike = pickle.load(arLoLikes)
 
-    return (id == registroLike.destinatario) and (usuario_logueado[0] == registroLike.remitente)
+    return (id == registroLike.destinatario) and (usuario_logueado[0] == registroLike.remitente) and (registroLike.estado == 1)
         
 
 def mostrarEstudiantes():
@@ -635,7 +634,7 @@ def borrarLike(remitente,destinatario):
         pickle.dump(registro,arLoLikes)
         arLoLikes.flush()
 
-def buscarLike(remitente,destinatario):
+def buscarLike(destinatario):
 
     registro = Likes()
     tamArch=os.path.getsize(ArFiLikes)
@@ -643,17 +642,17 @@ def buscarLike(remitente,destinatario):
 
     pos = arLoLikes.tell()
     registro=pickle.load(arLoLikes)
-    while (((registro.remitente != remitente) and (registro.destinatario != destinatario)) and (arLoLikes.tell()<tamArch)):
+    while (((registro.remitente != usuario_logueado[0]) and (registro.destinatario != destinatario)) and (arLoLikes.tell()<tamArch)):
         pos = arLoLikes.tell()
-        registro=pickle.load(arLoLikes)
+        registro = pickle.load(arLoLikes)
     print("registro del like encontrado - remitente: ", registro.remitente)
     print("registro del like encontrado - destinatario: ", registro.destinatario)
-    print((registro.remitente == remitente) and (registro.destinatario == destinatario))
-    if ((registro.remitente == remitente) and (registro.destinatario == destinatario)):
-        print("like encontrado")
-        return pos
-    else:
-        return -1
+    print("pos " , pos)
+    print((registro.remitente == usuario_logueado[0]) and (registro.destinatario == destinatario))
+    
+    print("like encontrado")
+    return pos
+
 
 def buscarEspaciosVaciosLike():
     registroLike = Likes()
@@ -689,29 +688,42 @@ def verCandidatos():
         print("idDestinatario: ", idDestinatario)
 
         if (idDestinatario != -1):
-            likeEncontrado = buscarLike(usuario_logueado[0],idDestinatario)
-            print("Like encontrado: ", likeEncontrado)
-            if (likeEncontrado != -1):
-                borrarLike(usuario_logueado[0],idDestinatario)
-                print('Le has quitado el me gusta al usuario: ', idDestinatario)
+            posLike = buscarLike(idDestinatario)
+            print("Like encontrado: ", posLike)
+            like = Likes()
+            arLoLikes.seek(posLike, 0)
+            like = pickle.load(arLoLikes)
+
+            if like.estado == 0:
+                like.estado = 1
             else:
-                like = Likes()
-                like.destinatario = idDestinatario
-                like.remitente = usuario_logueado[0]
+                like.estado = 0
+            
+            arLoLikes.seek(posLike, 0)
+            pickle.dump(like,arLoLikes)
+            arLoLikes.flush
 
-                #Buscar si hay espacios vacios
-                posEspacioVacio = buscarEspaciosVaciosLike()
+            #if (likeEncontrado != -1):
+            #     borrarLike(usuario_logueado[0],idDestinatario)
+            #     print('Le has quitado el me gusta al usuario: ', idDestinatario)
+            # else:
+            #     like = Likes()
+            #     like.destinatario = idDestinatario
+            #     like.remitente = usuario_logueado[0]
 
-                if(posEspacioVacio != -1):
-                    arLoLikes.seek(posEspacioVacio,1)
-                    pickle.dump(like,arLoLikes)
-                    arLoLikes.flush
-                    print('Le has dado un me gusta al usuario: ', idDestinatario)
-                else:
-                    arLoLikes.seek(0,2)
-                    pickle.dump(like,arLoLikes)
-                    arLoLikes.flush
-                    print('Le has dado un me gusta al usuario: ', idDestinatario)
+            #     Buscar si hay espacios vacios
+            #     posEspacioVacio = buscarEspaciosVaciosLike()
+
+            #     if(posEspacioVacio != -1):
+            #         arLoLikes.seek(posEspacioVacio,1)
+            #         pickle.dump(like,arLoLikes)
+            #         arLoLikes.flush
+            #         print('Le has dado un me gusta al usuario: ', idDestinatario)
+            #     else:
+            #         arLoLikes.seek(0,2)
+            #         pickle.dump(like,arLoLikes)
+            #         arLoLikes.flush
+            #         print('Le has dado un me gusta al usuario: ', idDestinatario)
         else: 
             print('No se ha ingresado un nombre de estudiante valido. \n---------------')
     else:
