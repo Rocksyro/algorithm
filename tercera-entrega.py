@@ -619,57 +619,34 @@ def mostrarEstudiantes():
             print("Hobbies: ", e.hobbies)
             print("----------------------------")
 
-def borrarLike(remitente,destinatario):
+def buscarLike(remitente, destinatario):
+    print("destinatario por parametro: ", destinatario)
     registro = Likes()
     tamArch=os.path.getsize(ArFiLikes)
     arLoLikes.seek(0,0)
     pos = arLoLikes.tell()
     registro=pickle.load(arLoLikes)
-    while ((registro.remitente != remitente) and (registro.destinatario != destinatario) and (arLoLikes.tell()<tamArch)):
-        pos = arLoLikes.tell()
-        registro=pickle.load(arLoLikes)
-    if ((registro.remitente != remitente) and (registro.destinatario != destinatario)):
-        registro.destinatario = -1
-        arLoLikes.seek(pos,0)
-        pickle.dump(registro,arLoLikes)
-        arLoLikes.flush()
+    tamReg = arLoLikes.tell()
+    cantReg = tamArch // tamReg
+    
+    for i in range(cantReg):
+        for j in range(cantReg):
+            if(registro.remitente == remitente and registro.destinatario == destinatario):
+                pos = arLoLikes.tell()
+            else:
+                registro = pickle.load(arLoLikes)
 
-def buscarLike(destinatario):
-
-    registro = Likes()
-    tamArch=os.path.getsize(ArFiLikes)
-    arLoLikes.seek(0,0)
-
-    pos = arLoLikes.tell()
-    registro=pickle.load(arLoLikes)
-    while (((registro.remitente != usuario_logueado[0]) and (registro.destinatario != destinatario)) and (arLoLikes.tell()<tamArch)):
-        pos = arLoLikes.tell()
-        registro = pickle.load(arLoLikes)
+    
+    
+    # while ((registro.destinatario != destinatario) and (arLoLikes.tell()<tamArch)):
+    #     pos = arLoLikes.tell()
+    #     registro = pickle.load(arLoLikes)
     print("registro del like encontrado - remitente: ", registro.remitente)
     print("registro del like encontrado - destinatario: ", registro.destinatario)
     print("pos " , pos)
     print((registro.remitente == usuario_logueado[0]) and (registro.destinatario == destinatario))
-    
-    print("like encontrado")
-    return pos
+    return (pos-tamReg)
 
-
-def buscarEspaciosVaciosLike():
-    registroLike = Likes()
-    tamArch = os.path.getsize(ArFiLikes)
-    arLoLikes.seek(0,0)
-    pos = arLoLikes.tell()
-
-    registroLike = pickle.load(arLoLikes)
-
-    while(registroLike.destinatario != -1 and arLoLikes.tell() < tamArch and registroLike.remitente == usuario_logueado[0]):
-        pos = arLoLikes.tell()
-        registroLike = pickle.load(arLoLikes)
-
-    if(registroLike.destinatario == -1 and registroLike.remitente == usuario_logueado[0]):
-        return pos
-    else:
-        return -1
 
 def verCandidatos():
     mostrarLikes()      
@@ -688,7 +665,7 @@ def verCandidatos():
         print("idDestinatario: ", idDestinatario)
 
         if (idDestinatario != -1):
-            posLike = buscarLike(idDestinatario)
+            posLike = buscarLike(usuario_logueado[0], idDestinatario)
             print("Like encontrado: ", posLike)
             like = Likes()
             arLoLikes.seek(posLike, 0)
@@ -703,31 +680,57 @@ def verCandidatos():
             pickle.dump(like,arLoLikes)
             arLoLikes.flush
 
-            #if (likeEncontrado != -1):
-            #     borrarLike(usuario_logueado[0],idDestinatario)
-            #     print('Le has quitado el me gusta al usuario: ', idDestinatario)
-            # else:
-            #     like = Likes()
-            #     like.destinatario = idDestinatario
-            #     like.remitente = usuario_logueado[0]
 
-            #     Buscar si hay espacios vacios
-            #     posEspacioVacio = buscarEspaciosVaciosLike()
-
-            #     if(posEspacioVacio != -1):
-            #         arLoLikes.seek(posEspacioVacio,1)
-            #         pickle.dump(like,arLoLikes)
-            #         arLoLikes.flush
-            #         print('Le has dado un me gusta al usuario: ', idDestinatario)
-            #     else:
-            #         arLoLikes.seek(0,2)
-            #         pickle.dump(like,arLoLikes)
-            #         arLoLikes.flush
-            #         print('Le has dado un me gusta al usuario: ', idDestinatario)
         else: 
             print('No se ha ingresado un nombre de estudiante valido. \n---------------')
     else:
         limpiarConsola()
+
+def matcheosMutuos():
+    # registro = Likes()
+    # tamArch=os.path.getsize(ArFiLikes)
+    # arLoLikes.seek(0,0)
+    # pos=arLoLikes.tell()
+    # registro=pickle.load(arLoLikes)
+    # tamReg = arLoLikes.tell()
+    # cantReg = tamArch // tamReg
+    # acum=0
+    # for i in range(cantReg):
+    #         if(registro.remitente == usuario_logueado[0] and registro.estado == 1):
+                
+    #             posInvertida=buscarLike(registro.destinatario, usuario_logueado[0])
+    #             arLoLikes.seek(posInvertida,0)
+    #             registro=pickle.load(arLoLikes)
+    #             if(registro.estado == 1):
+    #                 acum=acum+1
+    #         arLoLikes.seek(pos,0)
+    #         pos=arLoLikes.tell()
+    #         registro=pickle.load(arLoLikes)
+            
+    # return acum
+    
+
+
+    registro = Likes()
+    arLoLikes.seek(0, 0)
+    pos = arLoLikes.tell()
+    registro = pickle.load(arLoLikes)
+    tamArchivo = os.path.getsize(ArFiLikes)    
+    acum=0
+
+    while (arLoLikes.tell() < tamArchivo):
+        if(registro.remitente == usuario_logueado[0] and registro.estado == 1):
+                 posInvertida=buscarLike(registro.destinatario, usuario_logueado[0])
+                 arLoLikes.seek(posInvertida,0)
+                 registro=pickle.load(arLoLikes)
+                 if(registro.estado == 1):
+                     acum=acum+1
+        arLoLikes.seek(pos,0)
+        
+        registro=pickle.load(arLoLikes)
+        pos=arLoLikes.tell()
+
+    return acum
 
 def opMenuEstudiante(num_op):
     volver_principal = False
@@ -779,10 +782,10 @@ def opMenuEstudiante(num_op):
             print('-------------------')
             ver = matcheosMutuos()
             print("Porcentaje de matcheos mutuos: ", ver, "%")
-            ver2 = meGustaNoDevueltos()
-            print("Cantidad de me gusta no devueltos: ", ver2)
-            ver3 = leGustoYNoMeGusta()
-            print("Cantidad de le gusto y no me gusta: ", ver3)
+            # ver2 = meGustaNoDevueltos()
+            # print("Cantidad de me gusta no devueltos: ", ver2)
+            # # ver3 = leGustoYNoMeGusta()
+            # print("Cantidad de le gusto y no me gusta: ", ver3)
             print('---------------------')
             num_subOp = int(input("Presione 0 para volver: "))
             if num_subOp == 0:
