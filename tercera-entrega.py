@@ -589,17 +589,18 @@ def calcularEdad(fecha_nacimiento):
 def meGusta(id):
     tamArchvoLikes = os.path.getsize(ArFiLikes)
     arLoLikes.seek(0,0)
-    pos = arLoLikes.tell()
+    bandera = False
 
     registroLike = Likes()
     registroLike = pickle.load(arLoLikes)
     
-    while (id != registroLike.destinatario) and (usuario_logueado[0] != registroLike.remitente) and (registroLike.estado != 1) and (arLoLikes.tell() < tamArchvoLikes):
-        pos = arLoLikes.tell()
+    while (bandera == False) and (arLoLikes.tell() < tamArchvoLikes):
+        if((id == registroLike.destinatario) and (usuario_logueado[0] == registroLike.remitente) and (registroLike.estado == 1)):
+            bandera = True
         registroLike = pickle.load(arLoLikes)
-
-    return (id == registroLike.destinatario) and (usuario_logueado[0] == registroLike.remitente) and (registroLike.estado == 1)
-        
+    
+    return bandera
+    
 
 def mostrarEstudiantes():
     e=Estudiante()
@@ -729,6 +730,52 @@ def matcheosMutuos():
         
         registro=pickle.load(arLoLikes)
         pos=arLoLikes.tell()
+    
+    cantidadEstudiantes = calcularCantidadRegistros(arLoEstudiantes, ArFiEstudiantes)
+    
+    return (acum*100/cantidadEstudiantes)
+
+def meGustaNoDevueltos():
+    registro = Likes()
+    arLoLikes.seek(0, 0)
+    pos = arLoLikes.tell()
+    registro = pickle.load(arLoLikes)
+    tamArchivo = os.path.getsize(ArFiLikes)    
+    acum=0
+
+    while (arLoLikes.tell() < tamArchivo):
+        if(registro.remitente == usuario_logueado[0] and registro.estado == 1):
+                 posInvertida=buscarLike(registro.destinatario, usuario_logueado[0])
+                 arLoLikes.seek(posInvertida,0)
+                 registro=pickle.load(arLoLikes)
+                 if(registro.estado == 0):
+                     acum=acum+1
+        arLoLikes.seek(pos,0)
+        
+        registro=pickle.load(arLoLikes)
+        pos=arLoLikes.tell()
+
+    return acum
+
+def leGustoYNoMeGusta():
+    registro = Likes()
+    arLoLikes.seek(0, 0)
+    pos = arLoLikes.tell()
+    registro = pickle.load(arLoLikes)
+    tamArchivo = os.path.getsize(ArFiLikes)    
+    acum=0
+
+    while (arLoLikes.tell() < tamArchivo):
+        if(registro.remitente == usuario_logueado[0] and registro.estado == 0):
+                 posInvertida=buscarLike(registro.destinatario, usuario_logueado[0])
+                 arLoLikes.seek(posInvertida,0)
+                 registro=pickle.load(arLoLikes)
+                 if(registro.estado == 1):
+                     acum=acum+1
+        arLoLikes.seek(pos,0)
+        
+        registro=pickle.load(arLoLikes)
+        pos=arLoLikes.tell()
 
     return acum
 
@@ -782,10 +829,10 @@ def opMenuEstudiante(num_op):
             print('-------------------')
             ver = matcheosMutuos()
             print("Porcentaje de matcheos mutuos: ", ver, "%")
-            # ver2 = meGustaNoDevueltos()
-            # print("Cantidad de me gusta no devueltos: ", ver2)
-            # # ver3 = leGustoYNoMeGusta()
-            # print("Cantidad de le gusto y no me gusta: ", ver3)
+            ver2 = meGustaNoDevueltos()
+            print("Cantidad de me gusta no devueltos: ", ver2)
+            ver3 = leGustoYNoMeGusta()
+            print("Cantidad de le gusto y no me gusta: ", ver3)
             print('---------------------')
             num_subOp = int(input("Presione 0 para volver: "))
             if num_subOp == 0:
