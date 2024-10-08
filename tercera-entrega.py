@@ -558,9 +558,8 @@ def reportarCandidatos():
             motivo = input('Ingrese el motivo del reporte: ')
             registroReporte = Reportes()
 
-            registroReporte.estado = '0'
-            registroReporte.estado = registroReporte.estado.ljust(30," ")
-
+            registroReporte.estado = 0
+            
             registroReporte.razon_reporte = motivo
             registroReporte.razon_reporte = registroReporte.razon_reporte.ljust(30," ")
 
@@ -1007,6 +1006,38 @@ def desactivarEstudiante():
     else:
         limpiarConsola()
         print("Usuario no encontrado o Ingresaste dato inválido")
+
+def verReportes():
+    i=0
+    r=Reportes()
+    arLoReportes.seek(0,0)
+    tamArch=os.path.getsize(ArFiReportes)
+    print("REPORTES")
+    print("----------------------------")
+    while(arLoReportes.tell()<tamArch):
+        r = pickle.load(arLoReportes)
+        remitente_pos = buscarEstudiantePorId(r.id_reportante)
+        destinatario_pos = buscarEstudiantePorId(r.id_reportado)
+        
+        print("pos remitente", remitente_pos)
+        print("pos destin", destinatario_pos)
+        
+        if(remitente_pos != (-1) and destinatario_pos != (-1)):
+            print("entro al primer if")
+            arLoEstudiantes.seek(remitente_pos,0)
+            remitente = pickle.load(arLoEstudiantes)
+            arLoEstudiantes.seek(destinatario_pos,0)
+            destinatario = pickle.load(arLoEstudiantes)
+            print(remitente.activo)
+            print(destinatario.activo)
+            print(r.estado)
+            print(r.estado == 0 and remitente.activo and destinatario.activo)
+            if(r.estado == 0 and remitente.activo and destinatario.activo):
+                print("Reporte n° ", i)
+                print("Estudiante Reportante - ID ", remitente.id_est, " NOMBRE ", remitente.nombre)
+                print("Estudiante Reportado - ID ", destinatario.id_est, " NOMBRE ", destinatario.nombre)
+                print("Razon del reporte: ", r.razon_reporte)
+                print("----------------------------")
 
 def opMenuModerador(num_op):
     volver_principal = False
