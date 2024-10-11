@@ -1533,12 +1533,24 @@ def opMenuAdministrador(num_op):
         print('No ha ingresado una opcion valida')
         print('------------------------')
 
+def buscarEstudiantePorEmail(email):
+    e = Estudiante()
+    ArLoEstudiantes.seek(0,0)
+    bandera=False
+    email = email.ljust(30, " ")
+    while(ArLoEstudiantes.tell()<os.path.getsize(ArFiEstudiantes)):
+        e = pickle.load(ArLoEstudiantes)
+        if(e.email == email):
+            bandera = True
+    return bandera
 
 def registro():
     e_nuevo = Estudiante()
     cantReg = calcularCantidadRegistros(ArLoEstudiantes, ArFiEstudiantes)
-    print("cant ", cantReg)
     e_nuevo.email = input("Ingrese email: ")
+    while(buscarEstudiantePorEmail(e_nuevo.email) == True):
+        print("El email ingresado ya existe. Vuelva a ingresar otro.")
+        e_nuevo.email = input("Ingrese email: ")
     e_nuevo.password = input("Ingrese password: ")
     e_nuevo.nombre = input("Ingrese nombre: ")
     e_nuevo.rol = "Estudiante"
