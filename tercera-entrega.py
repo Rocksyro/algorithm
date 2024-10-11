@@ -85,6 +85,16 @@ usuario_logueado = [-1, -1, -1]
 
 def cerrarArchivos():
     ArLoEstudiantes.close()
+
+    ArLoAdministradores.close()
+    ArLoReportes.close()
+    ArLoLikes.close()
+    ArLoModeradores.close()
+
+
+def inicializarArchivos():
+    global ArLoAdministradores, ArLoEstudiantes, ArLoModeradores, ArLoLikes, ArLoReportes
+
     ArLoAdministradores.close()
     ArLoReportes.close()
     ArLoLikes.close()
@@ -135,7 +145,7 @@ def formatearRegistroEstudiante(registro):
     registro.nombre = registro.nombre.ljust(30, " ")
     registro.sexo = registro.sexo.ljust(30, " ")
     registro.rol = registro.rol.ljust(30, " ")
-    registro.fecha_nacimiento = registro.fecha_nacimiento.ljust(30, " ")
+    # registro.fecha_nacimiento = registro.fecha_nacimiento.ljust(30, " ")
     registro.bio = registro.bio.ljust(30, " ")
     registro.hobbies = registro.hobbies.ljust(30, " ")
     registro.materia_favorita = registro.materia_favorita.ljust(30, " ")
@@ -230,7 +240,7 @@ def inicializarEstudiantes():
     estudiante1.password = "111222"
     estudiante1.nombre = "Pedro"
     estudiante1.rol = "Estudiante"
-    estudiante1.fecha_nacimiento = "1994-06-20"
+   # estudiante1.fecha_nacimiento = "1994-06-20"
     estudiante1.bio = "Soy estudiante avanzado"
     estudiante1.hobbies = "Me gusta el rock! Tengo una banda con amigos"
     estudiante1.activo = True
@@ -250,7 +260,7 @@ def inicializarEstudiantes():
     estudiante2.password = "333444"
     estudiante2.nombre = "Laura"
     estudiante2.rol = "Estudiante"
-    estudiante2.fecha_nacimiento = "1994-06-20"
+  #  estudiante2.fecha_nacimiento = "1994-06-20"
     estudiante2.bio = "Soy estudiante y me gusta leer"
     estudiante2.hobbies = "Correr, leerr novelas y comer con amigos"
     estudiante2.activo = True
@@ -270,7 +280,7 @@ def inicializarEstudiantes():
     estudiante3.password = "555666"
     estudiante3.nombre = "Andrea"
     estudiante3.rol = "Estudiante"
-    estudiante3.fecha_nacimiento = "1994-06-20"
+  #  estudiante3.fecha_nacimiento = "1994-06-20"
     estudiante3.bio = "Soy una estudiante ingresante"
     estudiante3.hobbies = "Salir los findes"
     estudiante3.activo = True
@@ -290,7 +300,7 @@ def inicializarEstudiantes():
     estudiante4.password = "777888"
     estudiante4.nombre = "Jose"
     estudiante4.rol = "Estudiante"
-    estudiante4.fecha_nacimiento = "1994-06-20"
+ #   estudiante4.fecha_nacimiento = "1994-06-20"
     estudiante4.bio = "Soy estudiante intermedio, y trabajo en un bar"
     estudiante4.hobbies = "Andar en moto. Comer asado con amigos"
     estudiante4.activo = True
@@ -310,7 +320,7 @@ def inicializarEstudiantes():
     estudiante5.password = "777888"
     estudiante5.nombre = "KIKO"
     estudiante5.rol = "Estudiante"
-    estudiante5.fecha_nacimiento = "1994-06-20"
+  #  estudiante5.fecha_nacimiento = "1994-06-20"
     estudiante5.bio = "Soy estudiante intermedio, y trabajo en un bar"
     estudiante5.hobbies = "Andar en moto. Comer asado con amigos"
     estudiante5.activo = True
@@ -336,11 +346,13 @@ def limpiarConsola():
 
 def calcularCantidadRegistros(archLogico, archFisico):
     tamArch = os.path.getsize(archFisico)
+    print("tamArch - en calcular : ", tamArch)
     cantReg = 0
     if (tamArch != 0):
         archLogico.seek(0, 0)
         aux = pickle.load(archLogico)
         tamReg = archLogico.tell()
+        print("tamReg - en calcular : ", tamReg)
         cantReg = int(tamArch/tamReg)
     return cantReg
 
@@ -1450,6 +1462,32 @@ def opMenuAdministrador(num_op):
         print('------------------------')
 
 
+def registro():
+    e_nuevo = Estudiante()
+    cantReg = calcularCantidadRegistros(ArLoEstudiantes, ArFiEstudiantes)
+    print("cant ", cantReg)
+    e_nuevo.id_est = (cantReg + 1)
+    e_nuevo.nombre = input("ingrese nombre: ")
+    e_nuevo.email = "email"
+    e_nuevo.sexo = "sexo"
+    e_nuevo.password = "password"
+    e_nuevo.activo = True
+    e_nuevo.rol = "Estudiante"
+    e_nuevo.hobbies = "hobbies"
+    e_nuevo.materia_favorita = "materia favorita"
+    e_nuevo.materia_debil = "materia debil"
+    e_nuevo.deporte_favorito = "deporte favorito"
+    e_nuevo.bio = "bio"
+    e_nuevo.pais = "pais"
+    e_nuevo.ciudad = "ciudad"
+   # e_nuevo.fecha_nacimiento = pedirFecha()
+    formatearRegistroEstudiante(e_nuevo)
+    ArLoEstudiantes.seek(0, 2)
+    pickle.dump(e_nuevo, ArLoEstudiantes)
+    ArLoEstudiantes.flush()
+    # persistirRegistroEstudiante(e_nuevo, ArLoEstudiantes)
+
+
 # PROGRAMA PRINCIPAL
 # Inicialización de los archivos
 inicializarArchivos()
@@ -1464,14 +1502,15 @@ while (opc != '0'):
     limpiarConsola()
     if (opc == '1'):
         login()
-    if (usuario_logueado[1] == 0):
-        menuEstudiante()
-    elif (usuario_logueado[1] == 1):
-        menuModerador()
-    elif (usuario_logueado[1] == 2):
-        menuAdministrador()
+        if (usuario_logueado[1] == 0):
+            menuEstudiante()
+        elif (usuario_logueado[1] == 1):
+            menuModerador()
+        elif (usuario_logueado[1] == 2):
+            menuAdministrador()
+    elif (opc == '2'):
+        registro()
     elif (opc == '0'):
-        cerrarArchivos()
         print('Saliendo del programa...')
     elif (usuario_logueado[1] == -2):
         print('Cuenta desactivada')
