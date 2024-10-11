@@ -1394,7 +1394,17 @@ def eliminarUsuario():
         pickle.dump(moderadorElegido, ArLoModeradores)
         ArLoModeradores.flush()
 
-
+def buscarModeradorPorEmail(email):
+    m = Moderador()
+    ArLoModeradores.seek(0,0)
+    bandera = False
+    email = email.ljust(30, " ")
+    while(ArLoModeradores.tell()<os.path.getsize(ArFiModeradores)):
+        m = pickle.load(ArLoModeradores)
+        if(m.email == email):
+            bandera = True
+    return bandera
+    
 def darAltaModerador():
     moderador = Moderador()
     cantidadModerador = calcularCantidadRegistros(
@@ -1402,6 +1412,9 @@ def darAltaModerador():
     print(cantidadModerador)
     moderador.id_mod = cantidadModerador + 1
     moderador.email = input('Ingrese email del nuevo mod: ')
+    while(buscarModeradorPorEmail(moderador.email) == True):
+        print("El email ya existe. Vuelva a ingresar otro")
+        moderador.email = input('Ingrese email del nuevo mod: ')
     moderador.password = input('Ingrese password del nuevo mod: ')
     moderador.nombre = input('Ingrese nombre del nuevo mod: ')
     moderador.activo = True
