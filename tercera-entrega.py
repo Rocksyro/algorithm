@@ -548,8 +548,14 @@ def login():
             elif (moderadorBusqueda != -1):
                 ArLoModeradores.seek(moderadorBusqueda, 0)
                 registroModerador = pickle.load(ArLoModeradores)
-                usuario_logueado[0] = registroModerador.id_mod
-                usuario_logueado[1] = 1
+
+                if (registroModerador.activo == False):
+                    intentos = 3
+                    usuario_logueado[1] = -2
+                    print("Usuario desactivado.")
+                else:
+                    usuario_logueado[0] = registroModerador.id_mod
+                    usuario_logueado[1] = 1
                 print("usuario logueado: ", usuario_logueado)
             elif (administradorBusqueda != -1):
                 ArLoAdministradores.seek(administradorBusqueda, 0)
@@ -967,6 +973,23 @@ def buscarEstudiantePorId(id):
         return -1
 
 
+def buscarModeradorPorId(id):
+    regModerador = Moderador()
+    ArLoModeradores.seek(0, 0)
+    pos = ArLoModeradores.tell()
+    regModerador = pickle.load(ArLoModeradores)
+    tamArchivo = os.path.getsize(ArFiModeradores)
+
+    while ((id != regModerador.id_mod) and (ArLoModeradores.tell() < tamArchivo)):
+        pos = ArLoModeradores.tell()
+        regModerador = pickle.load(ArLoModeradores)
+
+    if id == regModerador.id_mod:
+        return (pos)
+    else:
+        return -1
+
+
 def editarPerfil():
     print("Editar perfil")
     print('----------------')
@@ -1320,9 +1343,7 @@ def eliminarUsuario():
             eleccion2 = int(
                 input('Ingrese la ID del estudiante que desea eliminar: '))
 
-        tamReg = tamanioRegistro(ArLoEstudiantes)
-
-        posEstudianteElegido = (eleccion2 - 1) * tamReg
+        posEstudianteElegido = buscarEstudiantePorId(eleccion2)
 
         ArLoEstudiantes.seek(posEstudianteElegido, 0)
         estudianteElegido = pickle.load(ArLoEstudiantes)
@@ -1347,16 +1368,14 @@ def eliminarUsuario():
             eleccion2 = int(
                 input('Ingrese la ID del moderador que desea eliminar: '))
 
-        tamReg = tamanioRegistro(ArLoModeradores)
+        posModeradorElegido = buscarModeradorPorId(eleccion2)
 
-        posModeradorElegido = (eleccion2 - 1) * tamReg
-
-        ArLoEstudiantes.seek(posModeradorElegido, 0)
+        ArLoModeradores.seek(posModeradorElegido, 0)
         moderadorElegido = pickle.load(ArLoModeradores)
 
         moderadorElegido.activo = False
 
-        ArLoEstudiantes.seek(posModeradorElegido, 0)
+        ArLoModeradores.seek(posModeradorElegido, 0)
         pickle.dump(moderadorElegido, ArLoModeradores)
         ArLoModeradores.flush()
 
