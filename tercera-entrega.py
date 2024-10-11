@@ -15,8 +15,6 @@ import os.path
 import io
 
 
-
-
 class Estudiante:
     def __init__(self):
         self.id_est = 0
@@ -88,7 +86,7 @@ usuario_logueado = [-1, -1, -1]
 
 
 def cerrarArchivos():
-    global arLoAdministradores, ArLoEstudiantes, arLoModeradores, arLoLikes, arLoReportes
+    global ArLoAdministradores, ArLoEstudiantes, ArLoModeradores, ArLoLikes, ArLoReportes
     ArLoEstudiantes.close()
     ArLoAdministradores.close()
     ArLoReportes.close()
@@ -140,7 +138,7 @@ def formatearRegistroEstudiante(registro):
     registro.nombre = registro.nombre.ljust(30, " ")
     registro.sexo = registro.sexo.ljust(30, " ")
     registro.rol = registro.rol.ljust(30, " ")
-    registro.fecha_nacimiento = registro.fecha_nacimiento.ljust(30, " ")
+    #registro.fecha_nacimiento = registro.fecha_nacimiento.ljust(30, " ")
     registro.bio = registro.bio.ljust(30, " ")
     registro.hobbies = registro.hobbies.ljust(30, " ")
     registro.materia_favorita = registro.materia_favorita.ljust(30, " ")
@@ -554,8 +552,14 @@ def login():
             elif (moderadorBusqueda != -1):
                 ArLoModeradores.seek(moderadorBusqueda, 0)
                 registroModerador = pickle.load(ArLoModeradores)
-                usuario_logueado[0] = registroModerador.id_mod
-                usuario_logueado[1] = 1
+
+                if (registroModerador.activo == False):
+                    intentos = 3
+                    usuario_logueado[1] = -2
+                    print("Usuario desactivado.")
+                else:
+                    usuario_logueado[0] = registroModerador.id_mod
+                    usuario_logueado[1] = 1
                 print("usuario logueado: ", usuario_logueado)
             elif (administradorBusqueda != -1):
                 ArLoAdministradores.seek(administradorBusqueda, 0)
@@ -942,6 +946,23 @@ def buscarEstudiantePorId(id):
         regEstudiante = pickle.load(ArLoEstudiantes)
 
     if id == regEstudiante.id_est:
+        return (pos)
+    else:
+        return -1
+
+
+def buscarModeradorPorId(id):
+    regModerador = Moderador()
+    ArLoModeradores.seek(0, 0)
+    pos = ArLoModeradores.tell()
+    regModerador = pickle.load(ArLoModeradores)
+    tamArchivo = os.path.getsize(ArFiModeradores)
+
+    while ((id != regModerador.id_mod) and (ArLoModeradores.tell() < tamArchivo)):
+        pos = ArLoModeradores.tell()
+        regModerador = pickle.load(ArLoModeradores)
+
+    if id == regModerador.id_mod:
         return (pos)
     else:
         return -1
@@ -1337,9 +1358,7 @@ def eliminarUsuario():
             eleccion2 = int(
                 input('Ingrese la ID del estudiante que desea eliminar: '))
 
-        tamReg = tamanioRegistro(ArLoEstudiantes)
-
-        posEstudianteElegido = (eleccion2 - 1) * tamReg
+        posEstudianteElegido = buscarEstudiantePorId(eleccion2)
 
         ArLoEstudiantes.seek(posEstudianteElegido, 0)
         estudianteElegido = pickle.load(ArLoEstudiantes)
@@ -1364,16 +1383,14 @@ def eliminarUsuario():
             eleccion2 = int(
                 input('Ingrese la ID del moderador que desea eliminar: '))
 
-        tamReg = tamanioRegistro(ArLoModeradores)
+        posModeradorElegido = buscarModeradorPorId(eleccion2)
 
-        posModeradorElegido = (eleccion2 - 1) * tamReg
-
-        ArLoEstudiantes.seek(posModeradorElegido, 0)
+        ArLoModeradores.seek(posModeradorElegido, 0)
         moderadorElegido = pickle.load(ArLoModeradores)
 
         moderadorElegido.activo = False
 
-        ArLoEstudiantes.seek(posModeradorElegido, 0)
+        ArLoModeradores.seek(posModeradorElegido, 0)
         pickle.dump(moderadorElegido, ArLoModeradores)
         ArLoModeradores.flush()
 
@@ -1537,11 +1554,12 @@ def registro():
     e_nuevo.materia_favorita = "materia favorita"
     e_nuevo.materia_fuerte = "materia fuerte"
     e_nuevo.pais = "pais"
-    e_nuevo = formatearRegistroEstudiante(e_nuevo)
+    e_nuevo.ciudad = "ciudad"
+   # e_nuevo.fecha_nacimiento = pedirFecha()
+    formatearRegistroEstudiante(e_nuevo)
     ArLoEstudiantes.seek(0,2)
     pickle.dump(e_nuevo, ArLoEstudiantes)
     ArLoEstudiantes.flush()
-    inicializarInteracciones()
     #persistirRegistroEstudiante(e_nuevo, ArLoEstudiantes)
 
 # PROGRAMA PRINCIPAL
