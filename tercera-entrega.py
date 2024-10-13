@@ -320,8 +320,8 @@ def inicializarEstudiantes():
     persistirRegistroEstudiante(estudiante4, ArLoEstudiantes)
 
     estudiante5 = Estudiante()
-    estudiante5.email = "estudiante4@ayed.com"
-    estudiante5.password = "777888"
+    estudiante5.email = "estudiante5@ayed.com"
+    estudiante5.password = "999"
     estudiante5.nombre = "KIKO"
     estudiante5.rol = "Estudiante"
     estudiante5.fecha_nacimiento = "1994-06-20"
@@ -387,7 +387,7 @@ def buscarUsuarioPorNombre(nombre):
     tamArchivo = os.path.getsize(ArFiEstudiantes)
 
     while ((nombre != regEstudiante.nombre) and (ArLoEstudiantes.tell() < tamArchivo)):
-        print("while: ", regEstudiante.nombre)
+
         pos = ArLoEstudiantes.tell()
         regEstudiante = pickle.load(ArLoEstudiantes)
 
@@ -401,7 +401,7 @@ def mostrarLikes():
     e = Likes()
     ArLoLikes.seek(0, 0)
     tamArch = os.path.getsize(ArFiLikes)
-    print("tamaño archivo likes: ", tamArch)
+
     print("LIKES")
     print("----------------------------")
     while (ArLoLikes.tell() < tamArch):
@@ -437,9 +437,8 @@ def buscarUsuarioPorNombreYDevolverID(nombre):
     pos = ArLoEstudiantes.tell()
     regEstudiante = pickle.load(ArLoEstudiantes)
     tamArchivo = os.path.getsize(ArFiEstudiantes)
-    print(nombre)
+
     while ((nombre != regEstudiante.nombre) and (ArLoEstudiantes.tell() < tamArchivo)):
-        print("while: ", regEstudiante.nombre)
         pos = ArLoEstudiantes.tell()
         regEstudiante = pickle.load(ArLoEstudiantes)
 
@@ -529,10 +528,6 @@ def login():
     cantidadAdministradores = calcularCantidadRegistros(
         ArLoAdministradores, ArFiAdministradores)
 
-    print(f"Cantidad de Estudiantes: {cantidadEstudiantes}")
-    print(f"Cantidad de Moderadores: {cantidadModeradores}")
-    print(f"Cantidad de Administradores: {cantidadAdministradores}")
-
     if ((cantidadEstudiantes != -1 and cantidadEstudiantes >= 4) and (cantidadModeradores != -1 and cantidadModeradores >= 1) and (cantidadAdministradores != -1 and cantidadAdministradores >= 1)):
         # Mientras el contador sea menor o igual a 4 y no este logeado
         print('LOGIN')
@@ -551,7 +546,7 @@ def login():
             if (estudianteBusqueda != -1):
                 ArLoEstudiantes.seek(estudianteBusqueda, 0)
                 registroEstudiante = pickle.load(ArLoEstudiantes)
-                print(registroEstudiante.activo)
+
                 if (registroEstudiante.activo == False):
                     intentos = 3
                     usuario_logueado[1] = -2
@@ -559,7 +554,7 @@ def login():
                 else:
                     usuario_logueado[0] = registroEstudiante.id_est
                     usuario_logueado[1] = 0
-                print("usuario logueado: ", usuario_logueado)
+                    limpiarConsola()
             elif (moderadorBusqueda != -1):
                 ArLoModeradores.seek(moderadorBusqueda, 0)
                 registroModerador = pickle.load(ArLoModeradores)
@@ -571,13 +566,13 @@ def login():
                 else:
                     usuario_logueado[0] = registroModerador.id_mod
                     usuario_logueado[1] = 1
-                print("usuario logueado: ", usuario_logueado)
+                limpiarConsola()
             elif (administradorBusqueda != -1):
                 ArLoAdministradores.seek(administradorBusqueda, 0)
                 registroAdministradores = pickle.load(ArLoAdministradores)
                 usuario_logueado[0] = registroAdministradores.id_admin
                 usuario_logueado[1] = 2
-                print("usuario logueado: ", usuario_logueado)
+                limpiarConsola()
             else:
                 intentos = intentos+1
                 print("Inicio de sesion incorrecto. Quedan ",
@@ -631,6 +626,7 @@ def reportarCandidatos():
             ArLoReportes.seek(0, 2)
             pickle.dump(registroReporte, ArLoReportes)
             ArLoReportes.flush()
+            limpiarConsola()
     else:
         limpiarConsola()
         print("Usuario no encontrado o Ingresaste dato inválido")
@@ -772,7 +768,6 @@ def verCandidatos():
             '--------------- \nIngrese el nombre de la persona con la que le gustaria matchear: ')
         me_gusta = me_gusta.ljust(30, " ")
         idDestinatario = buscarUsuarioPorNombreYDevolverID(me_gusta)
-        print("idDestinatario: ", idDestinatario)
 
         if (idDestinatario != -1):
             posLike = buscarLike(usuario_logueado[0], idDestinatario)
@@ -836,7 +831,7 @@ def verCandidatos():
             ArLoLikes.seek(posLike, 0)
             pickle.dump(like, ArLoLikes)
             ArLoLikes.flush()
-
+            limpiarConsola()
             print('Le has dado like a: ', me_gusta)
 
         else:
@@ -1137,11 +1132,11 @@ def desactivarPerfil():
     if (opc == 'S'):
         registroEstudiante = Estudiante()
         posEstudiante = buscarEstudiantePorId(usuario_logueado[0])
-        print("pos estudiante", posEstudiante)
+
         ArLoEstudiantes.seek(posEstudiante, 0)
         registroEstudiante = pickle.load(ArLoEstudiantes)
         registroEstudiante.activo = False
-        print(registroEstudiante.activo)
+
         ArLoEstudiantes.seek(posEstudiante, 0)
         pickle.dump(registroEstudiante, ArLoEstudiantes)
         ArLoEstudiantes.flush()
@@ -1153,6 +1148,8 @@ def desactivarPerfil():
 
 
 def desactivarEstudiante():
+    print('DESACTIVAR ESTUDIANTES')
+    print('------------------')
     usuario_encontrado = -1
     opc = input(
         '1. Por ID \n2. Por Nombre \nIngrese la forma en la que quiere desactivar al usuario: ')
@@ -1210,7 +1207,7 @@ def sumarReporteAceptadoModerador():
     m = pickle.load(ArLoModeradores)
     m.aceptados = m.aceptados + 1
     ArLoModeradores.seek(pos, 0)
-    print("m.aceptados = ", m.aceptados)
+
     pickle.dump(m, ArLoModeradores)
     ArLoModeradores.flush()
 
@@ -1294,8 +1291,7 @@ def verReportes():
                 'Ingrese el numero de reporte al que desea acceder: '))
         # Se verifica que el reporte elegido sea valido, ambos usuarios activos, y reporte no visto.
         posReporteElegido = (eleccion - 1) * tamReg
-        print(tamReg)
-        print(posReporteElegido)
+
         ArLoReportes.seek(posReporteElegido, 0)
         reporteElegido = pickle.load(ArLoReportes)
 
@@ -1318,12 +1314,12 @@ def verReportes():
                 print("----------------------------")
 
                 eleccion = input(
-                    'Desea actuar sobre el reporte (A) o ignorarlo (I)? A/I').capitalize()
+                    'Desea actuar sobre el reporte (A) o ignorarlo (I)? A/I: ').capitalize()
 
                 while (eleccion != 'A' and eleccion != 'I'):
                     print('No ha elegido una opcion correcta, vuelva a intentar.')
                     eleccion = input(
-                        'Desea actuar sobre el reporte (A) o ignorarlo (I)? A/I').capitalize()
+                        'Desea actuar sobre el reporte (A) o ignorarlo (I)? A/I: ').capitalize()
 
                 if (eleccion == 'A'):
                     reporteElegido.estado = 1
@@ -1347,6 +1343,8 @@ def verReportes():
                 print('Error al ingresar numero de reporte.')
         else:
             print('Error al ingresar numero de reporte.')
+    else:
+        print('No hay reportes para mostrar.')
 
 
 def opMenuModerador(num_op):
@@ -1488,7 +1486,7 @@ def darAltaModerador():
     moderador = Moderador()
     cantidadModerador = calcularCantidadRegistros(
         ArLoModeradores, ArFiModeradores)
-    print(cantidadModerador)
+
     moderador.id_mod = cantidadModerador + 1
     moderador.email = input('Ingrese email del nuevo mod: ')
     while (buscarModeradorPorEmail(moderador.email) == True):
@@ -1545,6 +1543,8 @@ def calcularMayorModeradorIgnorados():
         m = pickle.load(ArLoModeradores)
         email = m.email
         return email
+    else:
+        return 'No hay gestion de reportes actualmente.'
 
 
 def calcularMayorModeradorAceptados():
@@ -1562,6 +1562,8 @@ def calcularMayorModeradorAceptados():
         m = pickle.load(ArLoModeradores)
         email = m.email
         return email
+    else:
+        return 'No hay gestion de reportes actualmente.'
 
 
 def calcularMayorModeradorAceptadosIgnorados():
@@ -1579,6 +1581,8 @@ def calcularMayorModeradorAceptadosIgnorados():
         m = pickle.load(ArLoModeradores)
         email = m.email
         return email
+    else:
+        return 'No hay gestion de reportes actualmente.'
 
 
 def opMenuAdministrador(num_op):
