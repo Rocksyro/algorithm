@@ -73,6 +73,7 @@ class Reportes:
         self.razon_reporte = ""
         self.estado = 0
 
+
 global ArFiEstudiantes, ArFiAdministradores, ArFiModeradores, ArFiLikes, ArFiReportes, usuario_logueado
 
 ArFiEstudiantes = "./archivos/estudiantes.txt"
@@ -138,7 +139,7 @@ def formatearRegistroEstudiante(registro):
     registro.nombre = registro.nombre.ljust(30, " ")
     registro.sexo = registro.sexo.ljust(30, " ")
     registro.rol = registro.rol.ljust(30, " ")
-    #registro.fecha_nacimiento = registro.fecha_nacimiento.ljust(30, " ")
+    # registro.fecha_nacimiento = registro.fecha_nacimiento.ljust(30, " ")
     registro.bio = registro.bio.ljust(30, " ")
     registro.hobbies = registro.hobbies.ljust(30, " ")
     registro.materia_favorita = registro.materia_favorita.ljust(30, " ")
@@ -199,6 +200,8 @@ def inicializarModeradores():
     moderador1.activo = True
     moderador1.nombre = "moderadornombre"
     moderador1.rol = "moderador"
+    moderador1.ignorados = 0
+    moderador1.aceptados = 0
 
     persistirModerador(moderador1, ArLoModeradores)
 
@@ -209,6 +212,8 @@ def inicializarModeradores():
     moderador2.activo = True
     moderador2.nombre = "moderadornombre2"
     moderador2.rol = "moderador"
+    moderador2.ignorados = 0
+    moderador2.aceptados = 0
 
     persistirModerador(moderador2, ArLoModeradores)
 
@@ -709,7 +714,7 @@ def mostrarModeradoresAdministrador():
 
 
 def buscarLike(remitente, destinatario):
-    
+
     registro = Likes()
     tamArch = os.path.getsize(ArFiLikes)
     ArLoLikes.seek(0, 0)
@@ -1112,6 +1117,7 @@ def desactivarEstudiante():
         limpiarConsola()
         print("Usuario no encontrado o Ingresaste dato inválido")
 
+
 def buscarModeradorPorId(id):
     m = Moderador()
     ArLoModeradores.seek(0, 0)
@@ -1128,26 +1134,29 @@ def buscarModeradorPorId(id):
     else:
         return -1
 
+
 def sumarReporteAceptadoModerador():
     m = Moderador()
     pos = buscarModeradorPorId(usuario_logueado[0])
-    ArLoModeradores.seek(pos,0)
+    ArLoModeradores.seek(pos, 0)
     m = pickle.load(ArLoModeradores)
     m.aceptados = m.aceptados + 1
-    ArLoModeradores.seek(pos,0)
+    ArLoModeradores.seek(pos, 0)
     print("m.aceptados = ", m.aceptados)
-    pickle.dump(m,ArLoModeradores)
+    pickle.dump(m, ArLoModeradores)
     ArLoModeradores.flush()
+
 
 def sumarReporteIgnoradoModerador():
     m = Moderador()
     pos = buscarModeradorPorId(usuario_logueado[0])
-    ArLoModeradores.seek(pos,0)
+    ArLoModeradores.seek(pos, 0)
     m = pickle.load(ArLoModeradores)
     m.ignorados = m.ignorados + 1
-    ArLoModeradores.seek(pos,0)
-    pickle.dump(m,ArLoModeradores)
+    ArLoModeradores.seek(pos, 0)
+    pickle.dump(m, ArLoModeradores)
     ArLoModeradores.flush()
+
 
 def verReportes():
 
@@ -1394,17 +1403,19 @@ def eliminarUsuario():
         pickle.dump(moderadorElegido, ArLoModeradores)
         ArLoModeradores.flush()
 
+
 def buscarModeradorPorEmail(email):
     m = Moderador()
-    ArLoModeradores.seek(0,0)
+    ArLoModeradores.seek(0, 0)
     bandera = False
     email = email.ljust(30, " ")
-    while(ArLoModeradores.tell()<os.path.getsize(ArFiModeradores)):
+    while (ArLoModeradores.tell() < os.path.getsize(ArFiModeradores)):
         m = pickle.load(ArLoModeradores)
-        if(m.email == email):
+        if (m.email == email):
             bandera = True
     return bandera
-    
+
+
 def darAltaModerador():
     moderador = Moderador()
     cantidadModerador = calcularCantidadRegistros(
@@ -1412,13 +1423,15 @@ def darAltaModerador():
     print(cantidadModerador)
     moderador.id_mod = cantidadModerador + 1
     moderador.email = input('Ingrese email del nuevo mod: ')
-    while(buscarModeradorPorEmail(moderador.email) == True):
+    while (buscarModeradorPorEmail(moderador.email) == True):
         print("El email ya existe. Vuelva a ingresar otro")
         moderador.email = input('Ingrese email del nuevo mod: ')
     moderador.password = input('Ingrese password del nuevo mod: ')
     moderador.nombre = input('Ingrese nombre del nuevo mod: ')
     moderador.activo = True
     moderador.rol = "moderador"
+    moderador.ignorados = 0
+    moderador.aceptados = 0
 
     formateoModerador(moderador)
 
@@ -1429,55 +1442,76 @@ def darAltaModerador():
 
 def calcularCantidadReportesIgnorados():
     r = Reportes()
-    ArLoReportes.seek(0,0)
+    ArLoReportes.seek(0, 0)
     acum = 0
-    while(ArLoReportes.tell()<os.path.getsize(ArFiReportes)):
+    while (ArLoReportes.tell() < os.path.getsize(ArFiReportes)):
         r = pickle.load(ArLoReportes)
-        if(r.estado == 2):
+        if (r.estado == 2):
             acum = acum + 1
     return acum
+
 
 def calcularCantidadReportesAceptados():
     r = Reportes()
-    ArLoReportes.seek(0,0)
+    ArLoReportes.seek(0, 0)
     acum = 0
-    while(ArLoReportes.tell()<os.path.getsize(ArFiReportes)):
+    while (ArLoReportes.tell() < os.path.getsize(ArFiReportes)):
         r = pickle.load(ArLoReportes)
-        if(r.estado == 1):
+        if (r.estado == 1):
             acum = acum + 1
     return acum
 
+
 def calcularMayorModeradorIgnorados():
     m = Moderador()
-    ArLoModeradores.seek(0,0)
+    ArLoModeradores.seek(0, 0)
     mayorCantIgn = 0
     while (ArLoModeradores.tell() < os.path.getsize(ArFiModeradores)):
         m = pickle.load(ArLoModeradores)
-        if(m.ignorados > mayorCantIgn):
+        if (m.ignorados > mayorCantIgn):
             mayorCantIgn = m.ignorados
             mayorMod = m.id_mod
-    if(mayorCantIgn != 0):
+    if (mayorCantIgn != 0):
         pos = buscarModeradorPorId(mayorMod)
-        ArLoModeradores.seek(pos,0)
+        ArLoModeradores.seek(pos, 0)
         m = pickle.load(ArLoModeradores)
         email = m.email
         return email
 
+
 def calcularMayorModeradorAceptados():
     m = Moderador()
-    ArLoModeradores.seek(0,0)
+    ArLoModeradores.seek(0, 0)
     mayorCantAcep = 0
     while (ArLoModeradores.tell() < os.path.getsize(ArFiModeradores)):
         m = pickle.load(ArLoModeradores)
-        if(m.aceptados > mayorCantAcep):
+        if (m.aceptados > mayorCantAcep):
             mayorCantAcep = m.aceptados
             mayorMod = m.id_mod
-    if(mayorCantAcep != 0):
+    if (mayorCantAcep != 0):
         pos = buscarModeradorPorId(mayorMod)
-        ArLoModeradores.seek(pos,0)
+        ArLoModeradores.seek(pos, 0)
         m = pickle.load(ArLoModeradores)
         email = m.email
         return email
+
+
+def calcularMayorModeradorAceptadosIgnorados():
+    m = Moderador()
+    ArLoModeradores.seek(0, 0)
+    mayorCantAcepIgn = 0
+    while (ArLoModeradores.tell() < os.path.getsize(ArFiModeradores)):
+        m = pickle.load(ArLoModeradores)
+        if ((m.aceptados + m.ignorados) > mayorCantAcepIgn):
+            mayorCantAcepIgn = m.aceptados + m.ignorados
+            mayorMod = m.id_mod
+    if (mayorCantAcepIgn != 0):
+        pos = buscarModeradorPorId(mayorMod)
+        ArLoModeradores.seek(pos, 0)
+        m = pickle.load(ArLoModeradores)
+        email = m.email
+        return email
+
 
 def opMenuAdministrador(num_op):
     volver_principal = False
@@ -1512,25 +1546,34 @@ def opMenuAdministrador(num_op):
     elif num_op == "3":
         while (not volver_principal):
             print("Reportes Estadisticos \n---------------")
-            
-            cantReportes = calcularCantidadRegistros(ArLoReportes, ArFiReportes)
-            if(cantReportes != 0): 
-                cantRepIgnorados = calcularCantidadReportesIgnorados() 
-                cantRepAceptados = calcularCantidadReportesAceptados() 
+
+            cantReportes = calcularCantidadRegistros(
+                ArLoReportes, ArFiReportes)
+            if (cantReportes != 0):
+                cantRepIgnorados = calcularCantidadReportesIgnorados()
+                cantRepAceptados = calcularCantidadReportesAceptados()
                 mayorModIgn = calcularMayorModeradorIgnorados()
                 mayorModAcep = calcularMayorModeradorAceptados()
+                mayorModAcepMasIgn = calcularMayorModeradorAceptadosIgnorados()
             else:
                 cantRepIgnorados = 0
                 cantRepAceptados = 0
                 mayorModIgn = 0
                 mayorModAcep = 0
                 mayorModProc = 0
-            
+                mayorModAcepMasIgn = 0
+
             print("Cantidad de Reportes: ", cantReportes)
-            print("Porcentaje de Reportes Ignorados: ", cantRepIgnorados*100/cantReportes , " %")
-            print("Porcentaje de Reportes Aceptados: ", cantRepAceptados*100/cantReportes , " %")
-            print("Email del moderador con mayor cantidad de reportes ignorados: ", mayorModIgn)
-            print("Email del moderador con mayor cantidad de reportes aceptados: ", mayorModAcep)
+            print("Porcentaje de Reportes Ignorados: ",
+                  cantRepIgnorados*100/cantReportes, " %")
+            print("Porcentaje de Reportes Aceptados: ",
+                  cantRepAceptados*100/cantReportes, " %")
+            print(
+                "Email del moderador con mayor cantidad de reportes ignorados: ", mayorModIgn)
+            print(
+                "Email del moderador con mayor cantidad de reportes aceptados: ", mayorModAcep)
+            print("Email del moderador con mayor cantidad de reportes aceptados e ignorados: ",
+                  mayorModAcepMasIgn)
 
             letra_op = input("Ingrese s para salir ")
             if letra_op == "s":
@@ -1546,22 +1589,24 @@ def opMenuAdministrador(num_op):
         print('No ha ingresado una opcion valida')
         print('------------------------')
 
+
 def buscarEstudiantePorEmail(email):
     e = Estudiante()
-    ArLoEstudiantes.seek(0,0)
-    bandera=False
+    ArLoEstudiantes.seek(0, 0)
+    bandera = False
     email = email.ljust(30, " ")
-    while(ArLoEstudiantes.tell()<os.path.getsize(ArFiEstudiantes)):
+    while (ArLoEstudiantes.tell() < os.path.getsize(ArFiEstudiantes)):
         e = pickle.load(ArLoEstudiantes)
-        if(e.email == email):
+        if (e.email == email):
             bandera = True
     return bandera
+
 
 def registro():
     e_nuevo = Estudiante()
     cantReg = calcularCantidadRegistros(ArLoEstudiantes, ArFiEstudiantes)
     e_nuevo.email = input("Ingrese email: ")
-    while(buscarEstudiantePorEmail(e_nuevo.email) == True):
+    while (buscarEstudiantePorEmail(e_nuevo.email) == True):
         print("El email ingresado ya existe. Vuelva a ingresar otro.")
         e_nuevo.email = input("Ingrese email: ")
     e_nuevo.password = input("Ingrese password: ")
@@ -1582,10 +1627,11 @@ def registro():
     e_nuevo.ciudad = "ciudad"
    # e_nuevo.fecha_nacimiento = pedirFecha()
     formatearRegistroEstudiante(e_nuevo)
-    ArLoEstudiantes.seek(0,2)
+    ArLoEstudiantes.seek(0, 2)
     pickle.dump(e_nuevo, ArLoEstudiantes)
     ArLoEstudiantes.flush()
-    #persistirRegistroEstudiante(e_nuevo, ArLoEstudiantes)
+    # persistirRegistroEstudiante(e_nuevo, ArLoEstudiantes)
+
 
 # PROGRAMA PRINCIPAL
 # Inicialización de los archivos
