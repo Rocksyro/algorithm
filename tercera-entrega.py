@@ -33,6 +33,7 @@ class Estudiante:
         self.pais = ""
         self.ciudad = ""
         self.activo = bool
+        self.super_like = bool
 
 
 class Moderador:
@@ -251,6 +252,7 @@ def inicializarEstudiantes():
     estudiante1.materia_favorita = "Lengua"
     estudiante1.materia_fuerte = "Ciencias Sociales"
     estudiante1.pais = "Argentina"
+    estudiante1.super_like = True
 
     persistirRegistroEstudiante(estudiante1, ArLoEstudiantes)
 
@@ -271,6 +273,7 @@ def inicializarEstudiantes():
     estudiante2.materia_favorita = "historia"
     estudiante2.materia_fuerte = "biologia"
     estudiante2.pais = "argentina"
+    estudiante2.super_like = True
 
     persistirRegistroEstudiante(estudiante2, ArLoEstudiantes)
 
@@ -291,6 +294,7 @@ def inicializarEstudiantes():
     estudiante3.materia_favorita = "MAtematica"
     estudiante3.materia_fuerte = "Economia"
     estudiante3.pais = "argentina"
+    estudiante3.super_like = True
 
     persistirRegistroEstudiante(estudiante3, ArLoEstudiantes)
 
@@ -311,6 +315,7 @@ def inicializarEstudiantes():
     estudiante4.materia_favorita = "Ed fisica"
     estudiante4.materia_fuerte = "Ed fisica"
     estudiante4.pais = "Argentina"
+    estudiante4.super_like = True
 
     persistirRegistroEstudiante(estudiante4, ArLoEstudiantes)
 
@@ -331,6 +336,7 @@ def inicializarEstudiantes():
     estudiante5.materia_favorita = "Ed fisica"
     estudiante5.materia_fuerte = "Ed fisica"
     estudiante5.pais = "Argentina"
+    estudiante5.super_like = True
 
     persistirRegistroEstudiante(estudiante5, ArLoEstudiantes)
 
@@ -379,7 +385,7 @@ def buscarUsuarioPorNombre(nombre):
     pos = ArLoEstudiantes.tell()
     regEstudiante = pickle.load(ArLoEstudiantes)
     tamArchivo = os.path.getsize(ArFiEstudiantes)
-    print(nombre)
+
     while ((nombre != regEstudiante.nombre) and (ArLoEstudiantes.tell() < tamArchivo)):
         print("while: ", regEstudiante.nombre)
         pos = ArLoEstudiantes.tell()
@@ -749,6 +755,7 @@ def verCandidatos():
             'Quieres darle like a algun candidato? Ingrese "S/N": ').capitalize()
 
     if (matchear == 'S'):
+
         me_gusta = input(
             '--------------- \nIngrese el nombre de la persona con la que le gustaria matchear: ')
         me_gusta = me_gusta.ljust(30, " ")
@@ -757,19 +764,68 @@ def verCandidatos():
 
         if (idDestinatario != -1):
             posLike = buscarLike(usuario_logueado[0], idDestinatario)
-            print("Like encontrado: ", posLike)
+
+            usarSuperLike = False
+            posLogueado = buscarEstudiantePorId(usuario_logueado[0])
+            ArLoEstudiantes.seek(posLogueado, 0)
+            estudianteLogueado = pickle.load(ArLoEstudiantes)
+
+            if (estudianteLogueado.super_like):
+                superLike = input(
+                    'Desea utilizar el super like S/N? ').capitalize()
+
+                while superLike != 'S' and superLike != 'N':
+                    print('No ha ingresado una opcion correcta.')
+                    superLike = input(
+                        'Desea utilizar el super like S/N? ').capitalize()
+
+                if (superLike == 'S'):
+                    usarSuperLike = True
+
             like = Likes()
             ArLoLikes.seek(posLike, 0)
             like = pickle.load(ArLoLikes)
 
             if like.estado == 0:
-                like.estado = 1
+
+                if (usarSuperLike):
+                    like = Likes()
+                    ArLoLikes.seek(posLike, 0)
+                    like = pickle.load(ArLoLikes)
+
+                    like.estado = 1
+                    ArLoLikes.seek(posLike, 0)
+                    pickle.dump(like, ArLoLikes)
+                    ArLoLikes.flush()
+
+                    posLike = buscarLike(idDestinatario, usuario_logueado[0])
+                    ArLoLikes.seek(posLike, 0)
+                    like = pickle.load(ArLoLikes)
+
+                    like.estado = 1
+
+                    ArLoLikes.seek(posLike, 0)
+                    pickle.dump(like, ArLoLikes)
+                    ArLoLikes.flush()
+
+                    estudianteLogueado.super_like = False
+                    ArLoEstudiantes.seek(posLogueado, 0)
+                    pickle.dump(estudianteLogueado, ArLoEstudiantes)
+                    ArLoEstudiantes.flush()
+
+                else:
+                    like.estado = 1
+                    ArLoLikes.seek(posLike, 0)
+                    pickle.dump(like, ArLoLikes)
+                    ArLoLikes.flush()
             else:
                 like.estado = 0
 
             ArLoLikes.seek(posLike, 0)
             pickle.dump(like, ArLoLikes)
-            ArLoLikes.flush
+            ArLoLikes.flush()
+
+            print('Le has dado like a: ', me_gusta)
 
         else:
             print('No se ha ingresado un nombre de estudiante valido. \n---------------')
@@ -1560,7 +1616,6 @@ def opMenuAdministrador(num_op):
                 cantRepAceptados = 0
                 mayorModIgn = 0
                 mayorModAcep = 0
-                mayorModProc = 0
                 mayorModAcepMasIgn = 0
 
             print("Cantidad de Reportes: ", cantReportes)
@@ -1625,6 +1680,7 @@ def registro():
     e_nuevo.materia_fuerte = "materia fuerte"
     e_nuevo.pais = "pais"
     e_nuevo.ciudad = "ciudad"
+    e_nuevo.super_like = True
    # e_nuevo.fecha_nacimiento = pedirFecha()
     formatearRegistroEstudiante(e_nuevo)
     ArLoEstudiantes.seek(0, 2)
