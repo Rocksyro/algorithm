@@ -712,28 +712,41 @@ def mostrarModeradoresAdministrador():
             print("Activo: ", moderador.activo)
             print("----------------------------")
 
+def buscarLike(rem, dest):
+    l = Likes()
+    ArLoLikes.seek(0,0)
+    tamReg = tamanioRegistro(ArLoLikes)
+    pos = -1
+    while(ArLoLikes.tell()<os.path.getsize(ArFiLikes)):
+        l = pickle.load(ArLoLikes)
+        if(l.remitente == rem and l.destinatario == dest):
+            pos = ArLoLikes.tell()
+    return pos-tamReg
 
-def buscarLike(remitente, destinatario):
 
-    registro = Likes()
-    tamArch = os.path.getsize(ArFiLikes)
-    ArLoLikes.seek(0, 0)
-    pos = ArLoLikes.tell()
-    registro = pickle.load(ArLoLikes)
-    tamReg = ArLoLikes.tell()
-    cantReg = tamArch // tamReg
 
-    for i in range(cantReg):
-        for j in range(cantReg):
-            if (registro.remitente == remitente and registro.destinatario == destinatario):
-                pos = ArLoLikes.tell()
-            else:
-                registro = pickle.load(ArLoLikes)
 
-    # while ((registro.destinatario != destinatario) and (ArLoLikes.tell()<tamArch)):
-    #     pos = ArLoLikes.tell()
-    #     registro = pickle.load(ArLoLikes)
-    return (pos-tamReg)
+# def buscarLike(remitente, destinatario):
+
+#     registro = Likes()
+#     tamArch = os.path.getsize(ArFiLikes)
+#     ArLoLikes.seek(0, 0)
+#     pos = ArLoLikes.tell()
+#     registro = pickle.load(ArLoLikes)
+#     tamReg = ArLoLikes.tell()
+#     cantReg = tamArch // tamReg
+
+#     for i in range(cantReg):
+#         for j in range(cantReg):
+#             if (registro.remitente == remitente and registro.destinatario == destinatario):
+#                 pos = ArLoLikes.tell()
+#             else:
+#                 registro = pickle.load(ArLoLikes)
+
+#     # while ((registro.destinatario != destinatario) and (ArLoLikes.tell()<tamArch)):
+#     #     pos = ArLoLikes.tell()
+#     #     registro = pickle.load(ArLoLikes)
+#     return (pos-tamReg)
 
 
 def verCandidatos():
@@ -757,7 +770,6 @@ def verCandidatos():
 
         if (idDestinatario != -1):
             posLike = buscarLike(usuario_logueado[0], idDestinatario)
-            print("Like encontrado: ", posLike)
             like = Likes()
             ArLoLikes.seek(posLike, 0)
             like = pickle.load(ArLoLikes)
