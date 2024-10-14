@@ -6,7 +6,7 @@
 #                        Urquiza, Juan
 # ----------------------------------------------------------------
 
-# import pwinput # Es necesario instalar esta libreria con: 'pip install pwinput'
+import pwinput # Es necesario instalar esta libreria con: 'pip install pwinput'
 import os
 import pickle
 from datetime import date, datetime
@@ -43,7 +43,7 @@ class Moderador:
         self.email = ""
         self.password = ""
         self.activo = bool
-        # Estos no están en el modelo pero los dejo por las dudas los necesitemos
+        # Estos no están en el modelo pero los dejamos por las dudas los necesitemos
         self.nombre = ""
         self.rol = ""
         # Agregamos estos campos para las estadisticas del administrador
@@ -56,7 +56,7 @@ class Admin:
         self.id_admin = 0
         self.email = ""
         self.password = ""
-        # Estos no están en el modelo pero los dejo por las dudas los necesitemos
+        # Estos no están en el modelo pero los dejamos por las dudas los necesitemos
         self.nombre = ""
         self.rol = ""
 
@@ -135,6 +135,7 @@ def inicializarArchivos():
         ArLoReportes = open(ArFiReportes, "r+b")
 
 
+# Función para formatear los registros de estudiantes
 def formatearRegistroEstudiante(registro):
     registro.email = registro.email.ljust(30, " ")
     registro.password = registro.password.ljust(30, " ")
@@ -152,18 +153,17 @@ def formatearRegistroEstudiante(registro):
     registro.ciudad = registro.ciudad.ljust(30, " ")
 
     return registro
+
+
 # Función para formatear los registros de moderadores
-
-
 def formateoModerador(registro):
     registro.email = registro.email.ljust(30, " ")
     registro.password = registro.password.ljust(30, " ")
     registro.nombre = registro.nombre.ljust(30, " ")
     registro.rol = registro.rol.ljust(30, " ")
 
+
 # Función para formatear los registros de administradores
-
-
 def formateoAdministrador(registro):
     registro.email = registro.email.ljust(30, " ")
     registro.password = registro.password.ljust(30, " ")
@@ -348,7 +348,6 @@ def limpiarConsola():
 
 def obtenerPassword():
     password = pwinput.pwinput('Introduce tu contraseña: ')
-    print(type(password))
     return password
 
 
@@ -519,9 +518,8 @@ def pedirFecha():
     except:
         print("Ingrese un dato correcto por favor.")
 
+
 # Inicio del Login
-
-
 def login():
     intentos = 0
     cantidadEstudiantes = calcularCantidadRegistros(
