@@ -78,11 +78,11 @@ class Reportes:
 
 global ArFiEstudiantes, ArFiAdministradores, ArFiModeradores, ArFiLikes, ArFiReportes, usuario_logueado
 
-ArFiEstudiantes = "./archivos/estudiantes.txt"
-ArFiAdministradores = "./archivos/administradores.txt"
-ArFiModeradores = "./archivos/moderadores.txt"
-ArFiLikes = "./archivos/likes.txt"
-ArFiReportes = "./archivos/reportes.txt"
+ArFiEstudiantes = "./estudiantes.txt"
+ArFiAdministradores = "./administradores.txt"
+ArFiModeradores = "./moderadores.txt"
+ArFiLikes = "./likes.txt"
+ArFiReportes = "./reportes.txt"
 
 # ID del usuario - Tipo de usuario (0 = estudiantes, 1 = moderador, 2 = administrador) - Estado (0 = desactivado, 1 = activado)
 usuario_logueado = [-1, -1, -1]
@@ -543,10 +543,6 @@ def login():
                 email, password)
             estudianteBusqueda = buscarEstudiantePorEmailYPassword(
                 email, password)
-
-            print(email)
-            print(password)
-            print(estudianteBusqueda)
 
             if (estudianteBusqueda != -1):
                 ArLoEstudiantes.seek(estudianteBusqueda, 0)
