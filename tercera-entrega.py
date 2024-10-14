@@ -12,7 +12,9 @@ import pickle
 from datetime import date, datetime
 import random
 import os.path
+import pwinput
 import io
+
 
 class Estudiante:
     def __init__(self):
@@ -34,6 +36,7 @@ class Estudiante:
         self.activo = bool
         self.super_like = bool
 
+
 class Moderador:
     def __init__(self):
         self.id_mod = 0
@@ -47,6 +50,7 @@ class Moderador:
         self.ignorados = 0
         self.aceptados = 0
 
+
 class Admin:
     def __init__(self):
         self.id_admin = 0
@@ -56,11 +60,13 @@ class Admin:
         self.nombre = ""
         self.rol = ""
 
+
 class Likes:
     def __init__(self):
         self.remitente = 0
         self.destinatario = 0
         self.estado = 0
+
 
 class Reportes:
     def __init__(self):
@@ -68,6 +74,7 @@ class Reportes:
         self.id_reportado = 0
         self.razon_reporte = ""
         self.estado = 0
+
 
 global ArFiEstudiantes, ArFiAdministradores, ArFiModeradores, ArFiLikes, ArFiReportes, usuario_logueado
 
@@ -80,6 +87,7 @@ ArFiReportes = "./archivos/reportes.txt"
 # ID del usuario - Tipo de usuario (0 = estudiantes, 1 = moderador, 2 = administrador) - Estado (0 = desactivado, 1 = activado)
 usuario_logueado = [-1, -1, -1]
 
+
 def cerrarArchivos():
     global ArLoAdministradores, ArLoEstudiantes, ArLoModeradores, ArLoLikes, ArLoReportes
     ArLoEstudiantes.close()
@@ -87,6 +95,7 @@ def cerrarArchivos():
     ArLoReportes.close()
     ArLoLikes.close()
     ArLoModeradores.close()
+
 
 def inicializarArchivos():
     global ArLoAdministradores, ArLoEstudiantes, ArLoModeradores, ArLoLikes, ArLoReportes
@@ -125,13 +134,14 @@ def inicializarArchivos():
     else:
         ArLoReportes = open(ArFiReportes, "r+b")
 
+
 def formatearRegistroEstudiante(registro):
     registro.email = registro.email.ljust(30, " ")
     registro.password = registro.password.ljust(30, " ")
     registro.nombre = registro.nombre.ljust(30, " ")
     registro.sexo = registro.sexo.ljust(30, " ")
     registro.rol = registro.rol.ljust(30, " ")
-    # registro.fecha_nacimiento = registro.fecha_nacimiento.ljust(30, " ")
+    registro.fecha_nacimiento = registro.fecha_nacimiento.ljust(30, " ")
     registro.bio = registro.bio.ljust(30, " ")
     registro.hobbies = registro.hobbies.ljust(30, " ")
     registro.materia_favorita = registro.materia_favorita.ljust(30, " ")
@@ -143,6 +153,8 @@ def formatearRegistroEstudiante(registro):
 
     return registro
 # Función para formatear los registros de moderadores
+
+
 def formateoModerador(registro):
     registro.email = registro.email.ljust(30, " ")
     registro.password = registro.password.ljust(30, " ")
@@ -150,11 +162,14 @@ def formateoModerador(registro):
     registro.rol = registro.rol.ljust(30, " ")
 
 # Función para formatear los registros de administradores
+
+
 def formateoAdministrador(registro):
     registro.email = registro.email.ljust(30, " ")
     registro.password = registro.password.ljust(30, " ")
     registro.nombre = registro.nombre.ljust(30, " ")
     registro.rol = registro.rol.ljust(30, " ")
+
 
 def persistirRegistroEstudiante(registro, varibleLogica):
     registro = formatearRegistroEstudiante(registro)
@@ -162,17 +177,20 @@ def persistirRegistroEstudiante(registro, varibleLogica):
     pickle.dump(registro, varibleLogica)
     varibleLogica.flush()
 
+
 def persistirAdministrador(registro, variableLogica):
     variableLogica.seek(0, 2)
     formateoAdministrador(registro)
     pickle.dump(registro, variableLogica)
     variableLogica.flush()
 
+
 def persistirModerador(registro, variableLogica):
     variableLogica.seek(0, 2)
     formateoModerador(registro)
     pickle.dump(registro, variableLogica)
     variableLogica.flush()
+
 
 def inicializarModeradores():
     global ArLoModeradores
@@ -201,6 +219,7 @@ def inicializarModeradores():
 
     persistirModerador(moderador2, ArLoModeradores)
 
+
 def inicializarAdministradores():
     global ArLoAdministradores
 
@@ -212,6 +231,7 @@ def inicializarAdministradores():
     administrador1.rol = "administrador"
 
     persistirAdministrador(administrador1, ArLoAdministradores)
+
 
 def inicializarEstudiantes():
     global ArLoEstudiantes
@@ -321,12 +341,16 @@ def inicializarEstudiantes():
 
     persistirRegistroEstudiante(estudiante5, ArLoEstudiantes)
 
+
 def limpiarConsola():
     os.system('cls' if os.name == 'nt' else 'clear')
 
-# def obtenerPassword():
-#     password = pwinput.pwinput('Introduce tu contraseña: ')
-#     return password
+
+def obtenerPassword():
+    password = pwinput.pwinput('Introduce tu contraseña: ')
+    print(type(password))
+    return password
+
 
 def calcularCantidadRegistros(archLogico, archFisico):
     tamArch = os.path.getsize(archFisico)
@@ -337,6 +361,7 @@ def calcularCantidadRegistros(archLogico, archFisico):
         tamReg = archLogico.tell()
         cantReg = int(tamArch/tamReg)
     return cantReg
+
 
 def buscarEstudiantePorEmailYPassword(email, password):
     email = email.ljust(30, " ")
@@ -356,6 +381,7 @@ def buscarEstudiantePorEmailYPassword(email, password):
     else:
         return -1
 
+
 def buscarUsuarioPorNombre(nombre):
     regEstudiante = Estudiante()
     ArLoEstudiantes.seek(0, 0)
@@ -373,6 +399,7 @@ def buscarUsuarioPorNombre(nombre):
     else:
         return -1
 
+
 def mostrarLikes():
     e = Likes()
     ArLoLikes.seek(0, 0)
@@ -385,6 +412,7 @@ def mostrarLikes():
         print("Destinatario: ", e.destinatario)
         print("Remitente: ", e.remitente)
         print("Estado: ", e.estado)
+
 
 def inicializarInteracciones():
     cantidadEstudiantes = calcularCantidadRegistros(
@@ -405,6 +433,7 @@ def inicializarInteracciones():
                 pickle.dump(registroLike, ArLoLikes)
                 ArLoLikes.flush()
 
+
 def buscarUsuarioPorNombreYDevolverID(nombre):
     regEstudiante = Estudiante()
     ArLoEstudiantes.seek(0, 0)
@@ -420,6 +449,7 @@ def buscarUsuarioPorNombreYDevolverID(nombre):
         return (regEstudiante.id_est)
     else:
         return -1
+
 
 def buscarModeradorPorEmailYPassword(email, password):
     email = email.ljust(30, " ")
@@ -439,6 +469,7 @@ def buscarModeradorPorEmailYPassword(email, password):
     else:
         return -1
 
+
 def buscarAdministradorPorEmailYPassword(email, password):
     email = email.ljust(30, " ")
     password = password.ljust(30, " ")
@@ -457,11 +488,13 @@ def buscarAdministradorPorEmailYPassword(email, password):
     else:
         return -1
 
+
 def tamanioRegistro(archivo):
     archivo.seek(0, 0)
     aux = pickle.load(archivo)
     tamanioRegistro = archivo.tell()
     return tamanioRegistro
+
 
 def pedirFecha():
     fecha_actual = date.today()
@@ -487,6 +520,8 @@ def pedirFecha():
         print("Ingrese un dato correcto por favor.")
 
 # Inicio del Login
+
+
 def login():
     intentos = 0
     cantidadEstudiantes = calcularCantidadRegistros(
@@ -502,14 +537,18 @@ def login():
         print('--------------------')
         while (intentos < 3 and usuario_logueado[0] == -1):
             email = input("Ingresar email: ")
-            password = input("Ingresar password: ")
-            # password = obtenerPassword()
+            password = obtenerPassword()
+
             administradorBusqueda = buscarAdministradorPorEmailYPassword(
                 email, password)
             moderadorBusqueda = buscarModeradorPorEmailYPassword(
                 email, password)
             estudianteBusqueda = buscarEstudiantePorEmailYPassword(
                 email, password)
+
+            print(email)
+            print(password)
+            print(estudianteBusqueda)
 
             if (estudianteBusqueda != -1):
                 ArLoEstudiantes.seek(estudianteBusqueda, 0)
@@ -543,9 +582,11 @@ def login():
                 limpiarConsola()
             else:
                 intentos = intentos+1
-                print("Inicio de sesion incorrecto. Quedan ",(3-intentos), " intentos")
+                print("Inicio de sesion incorrecto. Quedan ",
+                      (3-intentos), " intentos")
     else:
         print('No hay suficientes usuarios creados para el logueo')
+
 
 def reportarCandidatos():
     print("MENU REPORTAR")
@@ -596,6 +637,7 @@ def reportarCandidatos():
         limpiarConsola()
         print("Usuario no encontrado o Ingresaste dato inválido")
 
+
 def calcularEdad(fecha_nacimiento):
 
     fecha_nac = datetime.strptime(fecha_nacimiento.strip(), "%Y-%m-%d")
@@ -606,6 +648,7 @@ def calcularEdad(fecha_nacimiento):
     if (hoy.month, hoy.day) < (fecha_nac.month, fecha_nac.day):
         edad -= 1
     return edad
+
 
 def meGusta(id):
     tamArchvoLikes = os.path.getsize(ArFiLikes)
@@ -621,6 +664,7 @@ def meGusta(id):
         registroLike = pickle.load(ArLoLikes)
 
     return bandera
+
 
 def mostrarEstudiantes():
     e = Estudiante()
@@ -640,6 +684,7 @@ def mostrarEstudiantes():
             print("Hobbies: ", e.hobbies)
             print("----------------------------")
 
+
 def mostrarEstudiantesAdministrador():
     e = Estudiante()
     ArLoEstudiantes.seek(0, 0)
@@ -658,6 +703,7 @@ def mostrarEstudiantesAdministrador():
             print("Hobbies: ", e.hobbies)
             print("----------------------------")
 
+
 def mostrarModeradoresAdministrador():
     moderador = Moderador()
     ArLoModeradores.seek(0, 0)
@@ -674,6 +720,7 @@ def mostrarModeradoresAdministrador():
             print("Activo: ", moderador.activo)
             print("----------------------------")
 
+
 def buscarLike(rem, dest):
     l = Likes()
     ArLoLikes.seek(0, 0)
@@ -684,6 +731,7 @@ def buscarLike(rem, dest):
         if (l.remitente == rem and l.destinatario == dest):
             pos = ArLoLikes.tell()
     return pos-tamReg
+
 
 def verCandidatos():
     mostrarEstudiantes()
@@ -773,6 +821,7 @@ def verCandidatos():
     else:
         limpiarConsola()
 
+
 def matcheosMutuos():
 
     registro = Likes()
@@ -800,6 +849,7 @@ def matcheosMutuos():
 
     return (acum*100/cantidadEstudiantes)
 
+
 def meGustaNoDevueltos():
     registro = Likes()
     ArLoLikes.seek(0, 0)
@@ -823,6 +873,7 @@ def meGustaNoDevueltos():
 
     return acum
 
+
 def leGustoYNoMeGusta():
     registro = Likes()
     ArLoLikes.seek(0, 0)
@@ -845,6 +896,7 @@ def leGustoYNoMeGusta():
         pos = ArLoLikes.tell()
 
     return acum
+
 
 def opMenuEstudiante(num_op):
     volver_principal = False
@@ -916,6 +968,7 @@ def opMenuEstudiante(num_op):
         print('No ha ingresado una opcion valida')
         print('------------------------')
 
+
 def menuEstudiante():
     num_op = ''
     while (num_op != '0'):
@@ -929,6 +982,7 @@ def menuEstudiante():
             num_op = '0'
             usuario_logueado[0] = -1
             usuario_logueado[1] = -1
+
 
 def buscarEstudiantePorId(id):
     regEstudiante = Estudiante()
@@ -946,6 +1000,7 @@ def buscarEstudiantePorId(id):
     else:
         return -1
 
+
 def buscarModeradorPorId(id):
     regModerador = Moderador()
     ArLoModeradores.seek(0, 0)
@@ -961,6 +1016,7 @@ def buscarModeradorPorId(id):
         return (pos)
     else:
         return -1
+
 
 def editarPerfil():
     print("Editar perfil")
@@ -1035,11 +1091,14 @@ def editarPerfil():
         else:
             print('No has elegido una opcion valida.')
             print('------------------------')
-        print("Datos personales \n---------------\nFecha: ", registroAlumno.fecha_nacimiento, "\nBiografía: ", registroAlumno.bio, "\nHobbies: ", registroAlumno.hobbies, "\nMateria favorita: ", registroAlumno.materia_favorita, "\nDeporte favorito: ", registroAlumno.deporte_favorito, '\n---------------')
+        print("Datos personales \n---------------\nFecha: ", registroAlumno.fecha_nacimiento, "\nBiografía: ", registroAlumno.bio, "\nHobbies: ",
+              registroAlumno.hobbies, "\nMateria favorita: ", registroAlumno.materia_favorita, "\nDeporte favorito: ", registroAlumno.deporte_favorito, '\n---------------')
         opEdit = input(
             "1.Fecha \n2.Biografía \n3.Hobbies \n4.Materia favorita \n5.Deporte favorito \n0.Volver \nIngresar qué dato quiere editar (sólo número): ")
         limpiarConsola()
-    print("Datos personales \n---------------\nFecha: ", registroAlumno.fecha_nacimiento,  "\nBiografía: ", registroAlumno.bio, "\nHobbies: ", registroAlumno.hobbies, "\nMateria favorita: ", registroAlumno.materia_favorita, "\nDeporte favorito: ", registroAlumno.deporte_favorito)
+    print("Datos personales \n---------------\nFecha: ", registroAlumno.fecha_nacimiento,  "\nBiografía: ", registroAlumno.bio, "\nHobbies: ",
+          registroAlumno.hobbies, "\nMateria favorita: ", registroAlumno.materia_favorita, "\nDeporte favorito: ", registroAlumno.deporte_favorito)
+
 
 def desactivarPerfil():
     opc = ''
@@ -1068,6 +1127,7 @@ def desactivarPerfil():
         usuario_logueado[2] = 0
     else:
         limpiarConsola()
+
 
 def desactivarEstudiante():
     print('DESACTIVAR ESTUDIANTES')
@@ -1104,6 +1164,7 @@ def desactivarEstudiante():
         limpiarConsola()
         print("Usuario no encontrado o Ingresaste dato inválido")
 
+
 def buscarModeradorPorId(id):
     m = Moderador()
     ArLoModeradores.seek(0, 0)
@@ -1120,6 +1181,7 @@ def buscarModeradorPorId(id):
     else:
         return -1
 
+
 def sumarReporteAceptadoModerador():
     m = Moderador()
     pos = buscarModeradorPorId(usuario_logueado[0])
@@ -1131,6 +1193,7 @@ def sumarReporteAceptadoModerador():
     pickle.dump(m, ArLoModeradores)
     ArLoModeradores.flush()
 
+
 def sumarReporteIgnoradoModerador():
     m = Moderador()
     pos = buscarModeradorPorId(usuario_logueado[0])
@@ -1140,6 +1203,7 @@ def sumarReporteIgnoradoModerador():
     ArLoModeradores.seek(pos, 0)
     pickle.dump(m, ArLoModeradores)
     ArLoModeradores.flush()
+
 
 def verReportes():
 
@@ -1189,8 +1253,10 @@ def verReportes():
 
                 if (r.estado == 0 and remitente.activo and destinatario.activo):
                     print("Reporte n° ", i + 1)
-                    print("Estudiante Reportante - ID ", remitente.id_est, " NOMBRE ", remitente.nombre)
-                    print("Estudiante Reportado - ID ", destinatario.id_est, " NOMBRE ", destinatario.nombre)
+                    print("Estudiante Reportante - ID ",
+                          remitente.id_est, " NOMBRE ", remitente.nombre)
+                    print("Estudiante Reportado - ID ",
+                          destinatario.id_est, " NOMBRE ", destinatario.nombre)
                     print("Razon del reporte: ", r.razon_reporte)
                     print("----------------------------")
             i += 1
@@ -1222,8 +1288,10 @@ def verReportes():
 
             if (reporteElegido.estado == 0 and remitente.activo and destinatario.activo):
                 print("Reporte n° ", eleccion)
-                print("Estudiante Reportante - ID ", remitente.id_est, " NOMBRE ", remitente.nombre)
-                print("Estudiante Reportado - ID ", destinatario.id_est, " NOMBRE ", destinatario.nombre)
+                print("Estudiante Reportante - ID ",
+                      remitente.id_est, " NOMBRE ", remitente.nombre)
+                print("Estudiante Reportado - ID ", destinatario.id_est,
+                      " NOMBRE ", destinatario.nombre)
                 print("Razon del reporte: ", reporteElegido.razon_reporte)
                 print("----------------------------")
 
@@ -1259,6 +1327,7 @@ def verReportes():
             print('Error al ingresar numero de reporte.')
     else:
         print('No hay reportes para mostrar.')
+
 
 def opMenuModerador(num_op):
     volver_principal = False
@@ -1300,6 +1369,7 @@ def opMenuModerador(num_op):
         print('No ha ingresado una opcion valida')
         print('------------------------')
 
+
 def menuModerador():
     num_op = ''
     while num_op != '0':
@@ -1309,6 +1379,7 @@ def menuModerador():
         limpiarConsola()
         opMenuModerador(num_op)
 
+
 def menuAdministrador():
     num_op = ''
     while num_op != '0':
@@ -1317,6 +1388,7 @@ def menuAdministrador():
         num_op = input("Ingresar número de opción (1, 2, 3, 0): ")
         limpiarConsola()
         opMenuAdministrador(num_op)
+
 
 def eliminarUsuario():
     eleccion1 = input(
@@ -1377,6 +1449,7 @@ def eliminarUsuario():
         pickle.dump(moderadorElegido, ArLoModeradores)
         ArLoModeradores.flush()
 
+
 def buscarModeradorPorEmail(email):
     m = Moderador()
     ArLoModeradores.seek(0, 0)
@@ -1387,6 +1460,7 @@ def buscarModeradorPorEmail(email):
         if (m.email == email):
             bandera = True
     return bandera
+
 
 def darAltaModerador():
     moderador = Moderador()
@@ -1411,6 +1485,7 @@ def darAltaModerador():
     pickle.dump(moderador, ArLoModeradores)
     ArLoModeradores.flush()
 
+
 def calcularCantidadReportesIgnorados():
     r = Reportes()
     ArLoReportes.seek(0, 0)
@@ -1421,6 +1496,7 @@ def calcularCantidadReportesIgnorados():
             acum = acum + 1
     return acum
 
+
 def calcularCantidadReportesAceptados():
     r = Reportes()
     ArLoReportes.seek(0, 0)
@@ -1430,6 +1506,7 @@ def calcularCantidadReportesAceptados():
         if (r.estado == 1):
             acum = acum + 1
     return acum
+
 
 def calcularMayorModeradorIgnorados():
     m = Moderador()
@@ -1449,6 +1526,7 @@ def calcularMayorModeradorIgnorados():
     else:
         return 'No hay gestion de reportes actualmente.'
 
+
 def calcularMayorModeradorAceptados():
     m = Moderador()
     ArLoModeradores.seek(0, 0)
@@ -1467,6 +1545,7 @@ def calcularMayorModeradorAceptados():
     else:
         return 'No hay gestion de reportes actualmente.'
 
+
 def calcularMayorModeradorAceptadosIgnorados():
     m = Moderador()
     ArLoModeradores.seek(0, 0)
@@ -1484,6 +1563,7 @@ def calcularMayorModeradorAceptadosIgnorados():
         return email
     else:
         return 'No hay gestion de reportes actualmente.'
+
 
 def opMenuAdministrador(num_op):
     volver_principal = False
@@ -1535,13 +1615,16 @@ def opMenuAdministrador(num_op):
                 mayorModAcepMasIgn = 0
 
             print("Cantidad de Reportes: ", cantReportes)
-            print("Porcentaje de Reportes Ignorados: ", cantRepIgnorados*100/cantReportes, " %")
-            print("Porcentaje de Reportes Aceptados: ", cantRepAceptados*100/cantReportes, " %")
+            print("Porcentaje de Reportes Ignorados: ",
+                  cantRepIgnorados*100/cantReportes, " %")
+            print("Porcentaje de Reportes Aceptados: ",
+                  cantRepAceptados*100/cantReportes, " %")
             print(
                 "Email del moderador con mayor cantidad de reportes ignorados: ", mayorModIgn)
             print(
                 "Email del moderador con mayor cantidad de reportes aceptados: ", mayorModAcep)
-            print("Email del moderador con mayor cantidad de reportes aceptados e ignorados: ",mayorModAcepMasIgn)
+            print("Email del moderador con mayor cantidad de reportes aceptados e ignorados: ",
+                  mayorModAcepMasIgn)
 
             letra_op = input("Ingrese s para salir ")
             if letra_op == "s":
@@ -1557,6 +1640,7 @@ def opMenuAdministrador(num_op):
         print('No ha ingresado una opcion valida')
         print('------------------------')
 
+
 def buscarEstudiantePorEmail(email):
     e = Estudiante()
     ArLoEstudiantes.seek(0, 0)
@@ -1568,6 +1652,27 @@ def buscarEstudiantePorEmail(email):
             bandera = True
     return bandera
 
+
+def generarLikesNuevoUsuario(id):
+
+    l = Likes()
+    ArLoLikes.seek(0, 2)
+    cantidadEstudiantes = calcularCantidadRegistros(
+        ArLoEstudiantes, ArFiEstudiantes)
+
+    for i in range(1, cantidadEstudiantes + 1):
+        if (id != i):
+            l.remitente = id
+            l.destinatario = i
+            l.estado = 0
+            pickle.dump(l, ArLoLikes)
+
+        l.remitente = i
+        l.destinatario = id
+        l.estado = 0
+        pickle.dump(l, ArLoLikes)
+
+
 def registro():
     e_nuevo = Estudiante()
     cantReg = calcularCantidadRegistros(ArLoEstudiantes, ArFiEstudiantes)
@@ -1575,7 +1680,7 @@ def registro():
     while (buscarEstudiantePorEmail(e_nuevo.email) == True):
         print("El email ingresado ya existe. Vuelva a ingresar otro.")
         e_nuevo.email = input("Ingrese email: ")
-    e_nuevo.password = input("Ingrese password: ")
+    e_nuevo.password = obtenerPassword()
     e_nuevo.nombre = input("Ingrese nombre: ")
     e_nuevo.rol = "Estudiante"
     e_nuevo.fecha_nacimiento = pedirFecha()
@@ -1592,12 +1697,14 @@ def registro():
     e_nuevo.pais = "pais"
     e_nuevo.ciudad = "ciudad"
     e_nuevo.super_like = True
-   # e_nuevo.fecha_nacimiento = pedirFecha()
-    formatearRegistroEstudiante(e_nuevo)
+
+    e_nuevo = formatearRegistroEstudiante(e_nuevo)
     ArLoEstudiantes.seek(0, 2)
     pickle.dump(e_nuevo, ArLoEstudiantes)
     ArLoEstudiantes.flush()
-    # persistirRegistroEstudiante(e_nuevo, ArLoEstudiantes)
+
+    generarLikesNuevoUsuario(e_nuevo.id_est)
+
 
 # PROGRAMA PRINCIPAL
 # Inicialización de los archivos
